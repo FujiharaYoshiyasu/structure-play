@@ -24,13 +24,17 @@ svg{font-family:Inter,"Noto Sans JP",Meiryo,system-ui,sans-serif}svg text{paint-
 }
 @media print{.diagram-graphic{overflow:visible}.diagram-graphic svg{min-width:0!important;max-width:100%}}
 
+/* V2: 寸法線と曲線区間の次数注記 */
+svg .svg-dim-label{fill:#647588;font-size:19px;font-weight:700;stroke:#fff;stroke-width:5;stroke-linejoin:round}
+svg .svg-curve-label{fill:#66518d;font-size:18px;font-weight:800;stroke:#fff;stroke-width:5;stroke-linejoin:round}
+
 </style>
 </head>
 <body>
 <nav aria-label="ホームページへ" style="background:#10233e;padding:10px max(16px,calc((100% - 1220px)/2))"><a href="../../index.html#apps" style="color:#dbe9fa;font-size:13px;text-decoration:none">← STRUCTURE &amp; PLAY に戻る</a></nav>
   <header class="hero">
     <div class="shell">
-      <div class="eyebrow"><span class="identity">FL<span class="identity-dot">.</span></span> FRAME LAB <span class="sep">/</span> 構造力学デジタル教材 <span class="ver">BETA · v1.0</span></div>
+      <div class="eyebrow"><span class="identity">FL<span class="identity-dot">.</span></span> FRAME LAB <span class="sep">/</span> 構造力学デジタル教材 <span class="ver">BETA · v2.0</span></div>
       <div class="hero-main">
         <div><p class="kicker">2D FRAME ANALYSIS</p><h1>ラーメン <em>N・Q・M</em> 図</h1><p class="hero-desc">節点・部材・荷重を設定するだけで、反力と断面力を計算。<br>構造を理解するための、ブラウザ上の演習ツールです。</p></div>
         <div class="hero-graphic" aria-hidden="true"><svg width="280" height="130" viewBox="0 0 280 130"><g fill="none" stroke="#b8d1ee" stroke-width="3" stroke-linecap="round"><path d="M52 112V18H205V112"/><path d="M52 18L52 4M205 18L205 4" opacity=".28"/></g><g stroke="#5da9f4" stroke-width="1.8" fill="none"><path d="M52 100L52 112L43 112L43 100ZM205 100L205 112L214 112L214 100Z" opacity=".3"/><path d="M70 17L70 44L82 44L82 18M89 18V54L103 54V18M110 18V61L125 61V18M132 18V56L147 56V18M154 18V47L168 47V18M176 18V38L187 38V18" stroke="#60b9da"/></g><g stroke="#f8b46b" stroke-width="2"><path d="M68 17V48M68 48l-6 -9M68 48l6 -9"/><path d="M194 17V48M194 48l-6 -9M194 48l6 -9"/></g></svg><span>STIFFNESS METHOD / FEM</span></div>
@@ -57,7 +61,7 @@ svg{font-family:Inter,"Noto Sans JP",Meiryo,system-ui,sans-serif}svg text{paint-
         <div class="edit-main">
           <div class="section-heading"><h3>節点 <span class="eng">NODES</span></h3><span class="table-note">支持条件と座標を指定</span></div>
           <div class="table-scroll"><table class="edit-table" id="nodesTable"><thead><tr><th>節点</th><th>X <small>m</small></th><th>Y <small>m</small></th><th>支持条件</th></tr></thead><tbody></tbody></table></div>
-          <div class="section-heading"><h3>部材 <span class="eng">MEMBERS</span></h3><span class="table-note">節点 i → j が局所 x 軸</span></div>
+          <div class="section-heading"><h3>部材 <span class="eng">MEMBERS</span></h3><span class="table-note">節点 A → B が局所 x 軸（i → j）</span></div>
           <div class="table-scroll"><table class="edit-table" id="membersTable"><thead><tr><th>部材</th><th>始点 i</th><th>終点 j</th></tr></thead><tbody></tbody></table></div>
           <details class="material-details"><summary>部材剛性を編集 <small>必要に応じて E・A・I を変更</small></summary><div class="table-scroll"><table class="edit-table" id="propertiesTable"><thead><tr><th>部材</th><th>E <small>kN/m²</small></th><th>A <small>m²</small></th><th>I <small>m⁴</small></th></tr></thead><tbody></tbody></table></div><p class="fine">不静定ラーメンでは部材の軸剛性 EA・曲げ剛性 EI が結果に影響します。初期値はすべて同一の参考値です。</p></details>
           <div class="section-heading"><h3>荷重 <span class="eng">LOADS</span></h3><span class="table-note">P: 節点力 / D: 部材分布荷重 / M: 節点モーメント</span></div>
@@ -71,7 +75,7 @@ svg{font-family:Inter,"Noto Sans JP",Meiryo,system-ui,sans-serif}svg text{paint-
     </section>
 
     <section class="results" id="results" hidden>
-      <div class="result-intro"><div><p class="mini">ANALYSIS RESULTS</p><h2>解析結果 <span class="thin">/ N・Q・M</span></h2><p class="hint">同一の部材形状を基準に、問題図から断面力図へ順に表示します。</p></div><div class="result-actions"><button id="saveSvg" class="btn outline" type="button">4図を SVG 保存</button><button id="savePng" class="btn outline" type="button">PNG 保存</button><button id="printPage" class="btn outline" type="button">印刷</button></div></div>
+      <div class="result-intro"><div><p class="mini">ANALYSIS RESULTS</p><h2>解析結果 <span class="thin">/ N・Q・M</span></h2><p class="hint">寸法は問題図の下・右へ整理し、NQM図では曲線の次数を区間ごとに示します。</p></div><div class="result-actions"><button id="saveSvg" class="btn outline" type="button">4図を SVG 保存</button><button id="savePng" class="btn outline" type="button">PNG 保存</button><button id="printPage" class="btn outline" type="button">印刷</button></div></div>
       <div id="balanceBanner" class="balance-banner"></div>
       <article class="diagram-panel"><div class="diagram-head"><span class="panel-index">01</span><div><h3>問題図</h3><p>FRAME &amp; LOADING</p></div><span class="diagram-tag">支持条件・荷重を表示</span></div><div id="problemOutput" class="diagram-graphic"></div></article>
       <article class="diagram-panel"><div class="diagram-head"><span class="panel-index">02</span><div><h3>N 図 <small>軸力図</small></h3><p>AXIAL FORCE DIAGRAM</p></div><span class="unit">kN <span class="swatch swatch-n"></span></span></div><div id="nOutput" class="diagram-graphic"></div></article>
@@ -81,7 +85,7 @@ svg{font-family:Inter,"Noto Sans JP",Meiryo,system-ui,sans-serif}svg text{paint-
       <div class="disclaimer">このツールは教育用の一次線形解析です。部材は一様な Euler–Bernoulli 梁、節点は剛接合、微小変形を仮定しています。せん断変形・座屈・塑性化・部材端ピン解除・剛床・荷重の組合せは未対応です。実設計への利用には別途検証が必要です。</div>
     </section>
   </main>
-  <footer class="footer shell"><span>FRAME LAB <b>·</b> NQM DIAGRAM GENERATOR</span><span>Educational prototype — Version 1</span></footer>
+  <footer class="footer shell"><span>FRAME LAB <b>·</b> NQM DIAGRAM GENERATOR</span><span>Educational prototype — Version 2</span></footer>
   <script>
 /* 平面ラーメン（2D frame）線形弾性・微小変形・剛接合。単位 kN, m。 */
 (function (root) {
@@ -279,22 +283,24 @@ svg{font-family:Inter,"Noto Sans JP",Meiryo,system-ui,sans-serif}svg text{paint-
 'use strict';
 const $=id=>document.getElementById(id);
 const DEFAULT={E:'210000000',A:'0.01',I:'0.00008'};
+// 節点名は A...Z, AA...AN の大文字ローマ字（最大40節点）
+const alphabetId=i=>{let n=i+1,t='';while(n>0){n--;t=String.fromCharCode(65+n%26)+t;n=Math.floor(n/26);}return t;};
 const PRESETS={
   portal:{nodes:[
-    {id:'1',x:'0',y:'0',support:'fixed'},
-    {id:'2',x:'0',y:'3',support:'free'},
-    {id:'3',x:'6',y:'3',support:'free'},
-    {id:'4',x:'6',y:'0',support:'fixed'}
-  ],members:[{id:'1',start:'1',end:'2'},{id:'2',start:'2',end:'3'},{id:'3',start:'4',end:'3'}],
-  loads:[{type:'P',target:'2',direction:'X',p:'12',p2:'0'}, {type:'D',target:'2',direction:'Y',p:'-6',p2:'-6'}]},
+    {id:'A',x:'0',y:'0',support:'fixed'},
+    {id:'B',x:'0',y:'3',support:'free'},
+    {id:'C',x:'6',y:'3',support:'free'},
+    {id:'D',x:'6',y:'0',support:'fixed'}
+  ],members:[{id:'1',start:'A',end:'B'},{id:'2',start:'B',end:'C'},{id:'3',start:'D',end:'C'}],
+  loads:[{type:'P',target:'B',direction:'X',p:'12',p2:'0'}, {type:'D',target:'2',direction:'Y',p:'-6',p2:'-6'}]},
   simple:{nodes:[
-    {id:'1',x:'0',y:'0',support:'pin'},
-    {id:'2',x:'3',y:'0',support:'free'},
-    {id:'3',x:'6',y:'0',support:'rollerY'}
-  ],members:[{id:'1',start:'1',end:'2'},{id:'2',start:'2',end:'3'}],
-  loads:[{type:'P',target:'2',direction:'Y',p:'-20',p2:'0'}]},
-  cantilever:{nodes:[{id:'1',x:'0',y:'0',support:'fixed'}, {id:'2',x:'4',y:'0',support:'free'}],
-  members:[{id:'1',start:'1',end:'2'}],loads:[{type:'P',target:'2',direction:'Y',p:'-12',p2:'0'}]}
+    {id:'A',x:'0',y:'0',support:'pin'},
+    {id:'B',x:'3',y:'0',support:'free'},
+    {id:'C',x:'6',y:'0',support:'rollerY'}
+  ],members:[{id:'1',start:'A',end:'B'},{id:'2',start:'B',end:'C'}],
+  loads:[{type:'P',target:'B',direction:'Y',p:'-20',p2:'0'}]},
+  cantilever:{nodes:[{id:'A',x:'0',y:'0',support:'fixed'}, {id:'B',x:'4',y:'0',support:'free'}],
+  members:[{id:'1',start:'A',end:'B'}],loads:[{type:'P',target:'B',direction:'Y',p:'-12',p2:'0'}]}
 };
 let chosen='portal';
 let state=null;
@@ -328,9 +334,9 @@ function initState() {
     state.members.forEach(m=>Object.assign(m,DEFAULT));
   } else {
     state={
-      nodes:Array.from({length:nc},(_,i)=>({id:String(i+1),x:String(i*2),y:'0',support:i===0?'pin':i===nc-1?'rollerY':'free'})),
-      members:Array.from({length:mc},(_,i)=>({id:String(i+1),start:String(i%nc+1),end:String((i+1)%nc+1),...DEFAULT})),
-      loads:Array.from({length:lc},()=>({type:'P',target:String(nc),direction:'Y',p:'-10',p2:'0'}))
+      nodes:Array.from({length:nc},(_,i)=>({id:alphabetId(i),x:String(i*2),y:'0',support:i===0?'pin':i===nc-1?'rollerY':'free'})),
+      members:Array.from({length:mc},(_,i)=>({id:String(i+1),start:alphabetId(i%nc),end:alphabetId((i+1)%nc),...DEFAULT})),
+      loads:Array.from({length:lc},()=>({type:'P',target:alphabetId(nc-1),direction:'Y',p:'-10',p2:'0'}))
     };
   }
 }
@@ -367,13 +373,13 @@ function geometry(model) {
   const members=model.members.map(m=>({...m,a:lookup[m.start],b:lookup[m.end]})).filter(m=>m.a&&m.b&&Math.hypot(m.b.x-m.a.x,m.b.y-m.a.y)>1e-9);
   const xx=nodes.map(n=>n.x),yy=nodes.map(n=>n.y),minX=Math.min(...xx,0),maxX=Math.max(...xx,0),minY=Math.min(...yy,0),maxY=Math.max(...yy,0);
   const dx=maxX-minX,dy=maxY-minY;
-  const W=1100,H=Math.round(Math.max(300,Math.min(620,230+610*dy/Math.max(dx,1))));
-  const scale=Math.min(800/Math.max(dx,.6),(H-176)/Math.max(dy,.6));
+  const W=1200,H=Math.round(Math.max(360,Math.min(780,280+550*dy/Math.max(dx,1))));
+  const scale=Math.min(760/Math.max(dx,.6),(H-230)/Math.max(dy,.6));
   const centerX=(minX+maxX)/2,centerY=(minY+maxY)/2;
-  const map=(x,y)=>[W/2+(x-centerX)*scale,H/2-(y-centerY)*scale];
+  const map=(x,y)=>[W/2-35+(x-centerX)*scale,H/2-24-(y-centerY)*scale];
   return {nodes,members,lookup,W,H,scale,map};
 }
-function defs(){return `<defs><marker id="forceTip" markerWidth="7" markerHeight="7" refX="5.3" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3.5 L0,7Z" fill="#c47b37"/></marker><marker id="momentTip" markerWidth="7" markerHeight="7" refX="5.3" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3.5 L0,7Z" fill="#c47b37"/></marker></defs>`;}
+function defs(){return `<defs><marker id="forceTip" markerWidth="7" markerHeight="7" refX="5.3" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3.5 L0,7Z" fill="#c47b37"/></marker><marker id="momentTip" markerWidth="7" markerHeight="7" refX="5.3" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3.5 L0,7Z" fill="#c47b37"/></marker><marker id="dimensionTip" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,1 L8,4.5 L1,8" fill="none" stroke="#627489" stroke-width="1.4"/></marker></defs>`;}
 function baseSvg(ctx,inner,extra='') {return `<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(extra)}" viewBox="0 0 ${ctx.W} ${ctx.H}">${defs()}${inner}</svg>`;}
 const line=(x1,y1,x2,y2,stroke='#1a3450',width=3,dash='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${width}" ${dash?`stroke-dasharray="${dash}"`:''} stroke-linecap="round"/>`;
 const txt=(x,y,text,cl='svg-label',anchor='middle',attrs='')=>`<text x="${x}" y="${y}" class="${cl}" text-anchor="${anchor}" ${attrs}>${esc(text)}</text>`;
@@ -396,6 +402,84 @@ function supportSvg(n,ctx) {
   const cir=n.support==='pin'?'' : `<circle cx="-10" cy="26" r="4" fill="white" stroke="#18334d" stroke-width="1.6"/><circle cx="10" cy="26" r="4" fill="white" stroke="#18334d" stroke-width="1.6"/>${line(-22,33,22,33,'#18334d',1.7)}`;
   return `<g transform="translate(${x} ${y}) rotate(${angle})"><path d="M0 0 L-18 18 L18 18 Z" fill="white" stroke="#18334d" stroke-width="2"/>${n.support==='pin'?line(-21,20,21,20,'#18334d',2):cir}</g>`;
 }
+// 節点座標から下側・右側の寸法をまとめる。基準図形から寸法線まで延長線を引く。
+function dimensionSvg(ctx){
+  const nodes=ctx.nodes;
+  if(!nodes.length)return '';
+  const xx=[...new Set(nodes.map(n=>n.x))].sort((a,b)=>a-b);
+  const yy=[...new Set(nodes.map(n=>n.y))].sort((a,b)=>a-b);
+  const canvasNodes=nodes.map(n=>({...n,screen:ctx.map(n.x,n.y)}));
+  const maxPx=Math.max(...canvasNodes.map(n=>n.screen[0])),bottomPy=Math.max(...canvasNodes.map(n=>n.screen[1]));
+  const dimensionY=bottomPy+76,dimensionX=maxPx+76;
+  const col='#8492a3';
+  let output='';
+  if(xx.length>1){
+    for(const x of xx){
+      const cx=ctx.map(x,0)[0];
+      const lowest=Math.max(...canvasNodes.filter(n=>n.x===x).map(n=>n.screen[1]));
+      output+=line(cx,lowest+12,cx,dimensionY+12,col,1.15);
+    }
+    for(let i=0;i<xx.length-1;i++){
+      const a=ctx.map(xx[i],0)[0],b=ctx.map(xx[i+1],0)[0];
+      if(Math.abs(b-a)<1)continue;
+      output+=`<line x1="${a}" y1="${dimensionY}" x2="${b}" y2="${dimensionY}" stroke="${col}" stroke-width="1.6" marker-start="url(#dimensionTip)" marker-end="url(#dimensionTip)"/>`;
+      output+=txt((a+b)/2,dimensionY-11,`${fmt(xx[i+1]-xx[i],2).replace(/\.?0+$/,'')} m`,'svg-dim-label');
+    }
+  }
+  if(yy.length>1){
+    for(const y of yy){
+      const cy=ctx.map(0,y)[1];
+      const rightmost=Math.max(...canvasNodes.filter(n=>n.y===y).map(n=>n.screen[0]));
+      output+=line(rightmost+12,cy,dimensionX+12,cy,col,1.15);
+    }
+    for(let i=0;i<yy.length-1;i++){
+      const a=ctx.map(0,yy[i])[1],b=ctx.map(0,yy[i+1])[1];
+      if(Math.abs(a-b)<1)continue;
+      output+=`<line x1="${dimensionX}" y1="${a}" x2="${dimensionX}" y2="${b}" stroke="${col}" stroke-width="1.6" marker-start="url(#dimensionTip)" marker-end="url(#dimensionTip)"/>`;
+      output+=txt(dimensionX+20,(a+b)/2+5,`${fmt(yy[i+1]-yy[i],2).replace(/\.?0+$/,'')} m`,'svg-dim-label','start');
+    }
+  }
+  return output;
+}
+// 使用部材に対する分布荷重の合成係数から、式の実際の最高次数を判定。
+// N は最大二次、Q は最大二次、M は最大三次となる。
+function curveOrder(member,key){
+  const loadParts=member.loads||[];
+  const p0=loadParts.reduce((v,p)=>v+p.px0,0),p1=loadParts.reduce((v,p)=>v+p.px1,0);
+  const q0=loadParts.reduce((v,p)=>v+p.py0,0),q1=loadParts.reduce((v,p)=>v+p.py1,0);
+  const tol=1e-9*Math.max(1,Math.abs(p0),Math.abs(p1),Math.abs(q0),Math.abs(q1));
+  if(key==='N')return Math.abs(p1-p0)>tol?2:1;
+  if(key==='Q')return Math.abs(q1-q0)>tol?2:1;
+  if(Math.abs(q1-q0)>tol)return 3;
+  return Math.abs(q0)>tol?2:1;
+}
+// 曲線区間の始点・終点に端印を付け、区間全長と次数を一緒に示す。
+function curveSpanSvg(ctx,member,key,normal){
+  const degree=curveOrder(member,key);
+  if(degree<2)return '';
+  const a=ctx.lookup[member.start],b=ctx.lookup[member.end];
+  const [ax,ay]=ctx.map(a.x,a.y),[bx,by]=ctx.map(b.x,b.y);
+  const midpoint=[(ax+bx)/2,(ay+by)/2],length=Math.hypot(bx-ax,by-ay);
+  const midpointSample=member.samples[Math.floor(member.samples.length/2)];
+  const dominant=midpointSample[key];
+  const candidates=[-1,1].map(side=>{
+    const offset=side*110,px=midpoint[0]+normal[0]*offset,py=midpoint[1]+normal[1]*offset;
+    const minEdge=Math.min(px-70,ctx.W-px-70,py-43,ctx.H-py-43);
+    const opposite=Math.sign(dominant)*side<0?12:0;
+    return {side,score:minEdge+opposite};
+  });
+  const side=candidates[0].score>=candidates[1].score?candidates[0].side:candidates[1].side;
+  const offset=side*110, ux=(bx-ax)/length,uy=(by-ay)/length;
+  const x0=ax+normal[0]*offset,y0=ay+normal[1]*offset;
+  const x1=bx+normal[0]*offset,y1=by+normal[1]*offset;
+  const cap=10,ink='#706096';
+  const bracket=line(x0,y0,x1,y1,ink,1.9)
+    +line(x0-normal[0]*cap,y0-normal[1]*cap,x0+normal[0]*cap,y0+normal[1]*cap,ink,2.3)
+    +line(x1-normal[0]*cap,y1-normal[1]*cap,x1+normal[0]*cap,y1+normal[1]*cap,ink,2.3);
+  // ラベルを区間の中央に配置。白い縁取りで図の線との重なりを避ける。
+  const tx=(x0+x1)/2+normal[0]*side*19,ty=(y0+y1)/2+normal[1]*side*19;
+  return `<g class="curve-span" data-member="${esc(member.id)}" data-order="${degree}" data-diagram="${key}">${bracket}${txt(tx,ty+5,`${degree}次曲線`,'svg-curve-label')}</g>`;
+}
 function problemSvg(model) {
   const ctx=geometry(model);
   if(!ctx.nodes.length)return baseSvg(ctx,txt(ctx.W/2,ctx.H/2,'座標が未入力です','svg-muted'),'問題図');
@@ -403,9 +487,6 @@ function problemSvg(model) {
   for(const m of ctx.members) {
     const [x0,y0]=ctx.map(m.a.x,m.a.y),[x1,y1]=ctx.map(m.b.x,m.b.y);
     s+=line(x0,y0,x1,y1,'#1d354c',4.2);
-    const L=Math.hypot(m.b.x-m.a.x,m.b.y-m.a.y);
-    const ux=(x1-x0)/Math.hypot(x1-x0,y1-y0),uy=(y1-y0)/Math.hypot(x1-x0,y1-y0);
-    s+=txt((x0+x1)/2-uy*23,(y0+y1)/2+ux*23,`e${m.id} · ${fmt(L,2)} m`,'svg-muted');
   }
   for(const n of ctx.nodes) {
     s+=supportSvg(n,ctx);
@@ -451,7 +532,8 @@ function problemSvg(model) {
       s+=txt(x+38,y-36,`${fmt(p)} kN·m`,'svg-force-label','start');
     }
   }
-  return baseSvg(ctx,s,'問題図（節点・部材・支持条件・荷重）');
+  s+=dimensionSvg(ctx);
+  return baseSvg(ctx,s,'問題図（節点・部材・支持条件・荷重・寸法）');
 }
 function diagramSvg(result,key) {
   const ctx=geometry(result),max=Math.max(0,...result.members.flatMap(m=>m.samples.map(p=>Math.abs(p[key])))),normalizer=max>1e-9?max:1;
@@ -501,6 +583,7 @@ function diagramSvg(result,key) {
       extrema.sort((a,b)=>Math.abs(b.p[key])-Math.abs(a.p[key]));
       extrema.slice(0,2).forEach(x=>label(x.p,'middle'));
     }
+    s+=curveSpanSvg(ctx,m,key,normal);
   }
   const label=key==='N'?'軸力 N':key==='Q'?'せん断力 Q':'曲げモーメント M';
   return baseSvg(ctx,s,`${label}図`);
@@ -525,7 +608,7 @@ function showResults(r) {
 function svgDocument(){
   if(!lastResult)return null;
   const svgs=['problemOutput','nOutput','qOutput','mOutput'].map(id=>$(id).querySelector('svg'));
-  const width=1100, gap=49, top=65;
+  const width=1200, gap=49, top=65;
   const heights=svgs.map(s=>Number(s.viewBox.baseVal.height));
   const total=top+heights.reduce((s,h)=>s+h+gap,0)+24;
   let yy=top,sections='';
@@ -552,7 +635,7 @@ async function savePng(){
     URL.revokeObjectURL(src);
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
     if(!blob)throw Error('画像の変換に失敗しました。');
-    download('ramen_NQM_diagrams.png',blob);
+    download('ramen_NQM_diagrams_v2.png',blob);
   }catch(e){alert('PNG出力に失敗しました。SVG保存をお試しください。\n'+e.message);}
 }
 document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>fillCountPreset(b.dataset.preset)));
@@ -569,7 +652,7 @@ $('calculate').addEventListener('click',()=>{
   try{clearError('calcError');const r=FrameNQMSolver.analyze(state);showResults(r);}
   catch(e){$('results').hidden=true;issueError('calcError',e.message);$('calcError').scrollIntoView({behavior:'smooth',block:'center'});}
 });
-$('saveSvg').addEventListener('click',()=>{const d=svgDocument();if(d)download('ramen_NQM_diagrams.svg',new Blob([d.xml],{type:'image/svg+xml;charset=utf-8'}));});
+$('saveSvg').addEventListener('click',()=>{const d=svgDocument();if(d)download('ramen_NQM_diagrams_v2.svg',new Blob([d.xml],{type:'image/svg+xml;charset=utf-8'}));});
 $('savePng').addEventListener('click',savePng);
 $('printPage').addEventListener('click',()=>window.print());
 })();
