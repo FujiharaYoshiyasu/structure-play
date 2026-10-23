@@ -250,6 +250,96 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 @media(max-width:760px){.setup-layout .panel{padding:7px;gap:4px}.setup-rules #limit-input{font-size:20px;padding:4px}.setup-rules .setup-preview{height:28px}}
 
 </style>
+<title>MOMENT BATTLE v0.7 | 梁のモーメント対戦</title>
+</head>
+<body data-turn-theme="blue">
+<div class="app-shell">
+  <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">STRUCTURAL MECHANICS / BIRD EDITION / TIMED MATCH</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">BIRD BRIDGE · 2P</span></header>
+
+  <main class="screens">
+    <section id="setup-screen" class="screen setup-screen" aria-label="ゲーム設定画面">
+      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>ゲーム設定</h2><p>鳥たちのブランコを選んで、橋を守りながら対戦しよう！</p></div><span class="section-tag">LOCAL 2 PLAYER</span></div>
+      <div class="setup-layout">
+        <section class="panel setup-beam"><div class="panel-head"><div><span class="eyebrow">BEAM LAYOUT</span><h3>梁の配置を選ぶ</h3></div></div>
+          <div id="stage-options" class="stage-options" role="group" aria-label="ステージ選択"></div>
+          <div class="custom-head"><strong>区間寸法のカスタマイズ</strong><span>左支点 → フック1 → フック2 → フック3 → 右支点</span></div>
+          <div class="interval-grid" id="interval-inputs"></div>
+          <p class="setup-hint">4区間はすべて正の数（m）。合計が梁の長さになります。</p>
+        </section>
+        <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>勝敗の条件</h3>
+          <label class="limit-input-label" for="limit-input">限界曲げモーメント <strong>N·m</strong></label>
+          <input id="limit-input" type="number" min="1" max="10000" step="1" inputmode="decimal" value="100" required>
+          <p class="setup-hint">最大曲げモーメントがこの数値以上になった手番のプレイヤーが負けです。</p>
+          <div class="time-setting">
+            <div class="time-heading"><label for="turn-seconds">1手の制限時間</label><output id="turn-seconds-value" for="turn-seconds">30秒</output></div>
+            <input type="range" id="turn-seconds" min="10" max="60" step="5" value="30" aria-label="1手の制限時間 10秒から60秒">
+            <div class="range-labels"><span>10秒</span><span>60秒</span></div>
+            <label class="no-time-label"><input type="checkbox" id="no-time-limit"><span>制限時間なし</span></label>
+            <p class="setup-hint">時間切れになると、その手番の10Nの鳥がランダムなブランコに自動で止まります。5Nの使用権は消費しません。</p>
+          </div>
+          <div class="rules-chips"><span>通常 <b>10 N</b></span><span>各チーム1回だけ <b>5 N</b></span><span>初期はM非表示</span></div>
+          <p class="beam-preview-title">ステージの寸法プレビュー</p>
+          <div id="setup-preview" class="setup-preview" role="img" aria-label="梁の寸法プレビュー"></div>
+          <p class="error-text" id="setup-error" role="alert" hidden></p>
+          <button type="button" id="start-game" class="primary-button">対戦スタート <span>→</span></button>
+        </section>
+      </div>
+      <p class="setup-footnote">両端単純支持／自重・せん断破壊・たわみ破壊を無視した学習用モデルです。</p>
+    </section>
+
+    <section id="battle-screen" class="screen battle-screen" aria-label="ゲーム対戦画面" hidden>
+      <div class="battle-topline">
+        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● 青チーム</strong><small id="bonus0">5N · 残り1回</small></div>
+        <div class="turn-center"><span id="turn-indicator">● BLUE TURN</span><strong id="turn-label">青チームの手番</strong><div class="turn-clock" id="turn-clock" aria-live="off"><span class="clock-icon" aria-hidden="true">◷</span><strong id="turn-timer">30</strong><span id="timer-unit">秒</span></div></div>
+        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● 橙チーム</strong><small id="bonus1">5N · 残り1回</small></div>
+      </div>
+      <div class="battle-toolbar">
+        <span class="stage-info" id="battle-stage-info">STAGE 01 · 1 / 2 / 3 / 4 m</span>
+        <div class="toolbar-actions"><button type="button" id="undo" disabled>↶ 1手戻る</button><button type="button" id="back-setup">⚙ 設定</button><button type="button" id="restart">↻ 最初から</button></div>
+      </div>
+      <div class="battle-columns">
+        <section class="panel play-panel">
+          <div class="panel-head"><div><span class="eyebrow">BEAM SIMULATOR</span><h3>鳥をとまらせる場所を選ぼう</h3></div><span class="small-tag" id="span-label">L = 10 m</span></div>
+          <div class="beam-stage"><svg id="beam-svg" viewBox="0 0 900 298" role="img" aria-label="梁の載荷図"></svg></div>
+          <div class="load-picker"><div class="load-picker-title"><span class="eyebrow">SELECT LOAD</span><strong>鳥を選ぼう</strong></div>
+          <div class="load-options"><button type="button" id="weight10" data-weight="10" aria-pressed="true" class="load-option active">🐦 10 N <small>約1kgの鳥</small></button><button type="button" id="weight5" data-weight="5" aria-pressed="false" class="load-option special">🐤 5 N <small id="weight5-status">各自1回</small></button></div></div>
+          <div class="hook-actions" id="hook-buttons" aria-label="フック選択"></div>
+          <p class="action-note" id="turn-help">鳥を選んでブランコをクリック！ 何羽でもとまれます。</p>
+        </section>
+        <aside class="battle-side">
+          <section class="panel limit-panel"><div class="limit-heading"><span class="eyebrow">MOMENT / CRITICAL</span><button id="toggle-moment" type="button" class="visibility-toggle" aria-pressed="false">◎ Mを表示</button></div>
+            <div class="metric"><span id="max-moment">???</span><small id="limit-unit">/ 100 N·m</small></div>
+            <div class="gauge"><div id="gauge-fill"></div></div>
+            <div class="limit-label"><span id="percent-label">現在値は非表示</span><span id="critical-label">限界 100 N·m</span></div>
+            <p class="risk-text" id="risk-text">数字を隠して対戦中。表示ボタンでいつでも確認できます。</p>
+          </section>
+          <section class="panel plot-panel" id="plot-panel" hidden><div class="panel-head"><div><span class="eyebrow">BENDING MOMENT</span><h3>曲げモーメント図</h3></div><span class="small-tag">N·m</span></div><svg id="plot-svg" viewBox="0 0 900 285" role="img"></svg></section>
+          <section class="panel stats-panel" id="stats-panel" hidden><span class="eyebrow">STRUCTURAL DATA</span><div class="stats-grid"><span>左支点反力</span><b id="ra">0 N</b><span>右支点反力</span><b id="rb">0 N</b><span>総荷重</span><b id="total">0 N</b><span>最大M位置</span><b id="max-pos">—</b></div></section>
+          <section class="panel history-panel"><div class="panel-head"><div><span class="eyebrow">TURN HISTORY</span><h3>載荷履歴</h3></div><span class="small-tag" id="turn-count">0 手</span></div><ol id="history-list" class="history-list"><li>まだおもりはありません。</li></ol></section>
+        </aside>
+      </div>
+      <div id="turn-popup" class="turn-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title" hidden>
+        <div class="turn-popup-card" id="turn-popup-card"><span class="popup-kicker" id="popup-kicker">READY?</span><div class="popup-bird" id="popup-bird" aria-hidden="true">🐦</div><h2 id="popup-title">青チームの番！</h2><p id="popup-subtitle">鳥を止まらせよう！</p><button type="button" id="popup-continue" class="primary-button">この手番を開始！ →</button></div>
+      </div>
+    </section>
+
+    <section id="break-screen" class="screen break-screen" aria-label="梁の破壊演出画面" hidden>
+      <div class="break-head"><span class="eyebrow">FAILURE / BEAM FRACTURE</span><h2>あっ！ 梁が折れた！</h2><p>モーメントが限界に！ 鳥たちがびっくりして飛び上がります。</p></div>
+      <div class="fracture-stage" id="fracture-stage"><svg id="fracture-svg" viewBox="0 0 900 360" role="img" aria-label="梁が折れておもりが落ちるアニメーション"></svg><div class="fracture-flash" aria-hidden="true"></div></div>
+      <div class="break-result"><strong id="break-loser">青チームが梁を破壊！</strong><span id="break-moment">MAX 100 N·m</span></div>
+      <button type="button" id="break-continue" class="primary-button break-continue" disabled>リザルトを表示 →</button>
+      <p class="break-hint" id="break-hint">破壊の様子を表示しています…</p>
+    </section>
+
+    <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
+      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
+      <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
+      <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
+      <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
+    </section>
+  </main>
+  <footer>© MOMENT BATTLE · 教育用簡略モデル。実構造物の安全性評価には使用できません。</footer>
+</div>
 <script>
 /* MOMENT BATTLE v0.5 — 2-support simply-supported beam (N, m, N·m).
    Educational illustration, not a structural design tool. */
@@ -852,94 +942,5 @@ buildSetup();openScreen('setup');
 })();
 
 </script>
-<title>MOMENT BATTLE v0.7 | 梁のモーメント対戦</title>
-</head>
-<body data-turn-theme="blue">
-<div class="app-shell">
-  <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">STRUCTURAL MECHANICS / BIRD EDITION / TIMED MATCH</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">BIRD BRIDGE · 2P</span></header>
 
-  <main class="screens">
-    <section id="setup-screen" class="screen setup-screen" aria-label="ゲーム設定画面">
-      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>ゲーム設定</h2><p>鳥たちのブランコを選んで、橋を守りながら対戦しよう！</p></div><span class="section-tag">LOCAL 2 PLAYER</span></div>
-      <div class="setup-layout">
-        <section class="panel setup-beam"><div class="panel-head"><div><span class="eyebrow">BEAM LAYOUT</span><h3>梁の配置を選ぶ</h3></div></div>
-          <div id="stage-options" class="stage-options" role="group" aria-label="ステージ選択"></div>
-          <div class="custom-head"><strong>区間寸法のカスタマイズ</strong><span>左支点 → フック1 → フック2 → フック3 → 右支点</span></div>
-          <div class="interval-grid" id="interval-inputs"></div>
-          <p class="setup-hint">4区間はすべて正の数（m）。合計が梁の長さになります。</p>
-        </section>
-        <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>勝敗の条件</h3>
-          <label class="limit-input-label" for="limit-input">限界曲げモーメント <strong>N·m</strong></label>
-          <input id="limit-input" type="number" min="1" max="10000" step="1" inputmode="decimal" value="100" required>
-          <p class="setup-hint">最大曲げモーメントがこの数値以上になった手番のプレイヤーが負けです。</p>
-          <div class="time-setting">
-            <div class="time-heading"><label for="turn-seconds">1手の制限時間</label><output id="turn-seconds-value" for="turn-seconds">30秒</output></div>
-            <input type="range" id="turn-seconds" min="10" max="60" step="5" value="30" aria-label="1手の制限時間 10秒から60秒">
-            <div class="range-labels"><span>10秒</span><span>60秒</span></div>
-            <label class="no-time-label"><input type="checkbox" id="no-time-limit"><span>制限時間なし</span></label>
-            <p class="setup-hint">時間切れになると、その手番の10Nの鳥がランダムなブランコに自動で止まります。5Nの使用権は消費しません。</p>
-          </div>
-          <div class="rules-chips"><span>通常 <b>10 N</b></span><span>各チーム1回だけ <b>5 N</b></span><span>初期はM非表示</span></div>
-          <p class="beam-preview-title">ステージの寸法プレビュー</p>
-          <div id="setup-preview" class="setup-preview" role="img" aria-label="梁の寸法プレビュー"></div>
-          <p class="error-text" id="setup-error" role="alert" hidden></p>
-          <button type="button" id="start-game" class="primary-button">対戦スタート <span>→</span></button>
-        </section>
-      </div>
-      <p class="setup-footnote">両端単純支持／自重・せん断破壊・たわみ破壊を無視した学習用モデルです。</p>
-    </section>
-
-    <section id="battle-screen" class="screen battle-screen" aria-label="ゲーム対戦画面" hidden>
-      <div class="battle-topline">
-        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● 青チーム</strong><small id="bonus0">5N · 残り1回</small></div>
-        <div class="turn-center"><span id="turn-indicator">● BLUE TURN</span><strong id="turn-label">青チームの手番</strong><div class="turn-clock" id="turn-clock" aria-live="off"><span class="clock-icon" aria-hidden="true">◷</span><strong id="turn-timer">30</strong><span id="timer-unit">秒</span></div></div>
-        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● 橙チーム</strong><small id="bonus1">5N · 残り1回</small></div>
-      </div>
-      <div class="battle-toolbar">
-        <span class="stage-info" id="battle-stage-info">STAGE 01 · 1 / 2 / 3 / 4 m</span>
-        <div class="toolbar-actions"><button type="button" id="undo" disabled>↶ 1手戻る</button><button type="button" id="back-setup">⚙ 設定</button><button type="button" id="restart">↻ 最初から</button></div>
-      </div>
-      <div class="battle-columns">
-        <section class="panel play-panel">
-          <div class="panel-head"><div><span class="eyebrow">BEAM SIMULATOR</span><h3>鳥をとまらせる場所を選ぼう</h3></div><span class="small-tag" id="span-label">L = 10 m</span></div>
-          <div class="beam-stage"><svg id="beam-svg" viewBox="0 0 900 298" role="img" aria-label="梁の載荷図"></svg></div>
-          <div class="load-picker"><div class="load-picker-title"><span class="eyebrow">SELECT LOAD</span><strong>鳥を選ぼう</strong></div>
-          <div class="load-options"><button type="button" id="weight10" data-weight="10" aria-pressed="true" class="load-option active">🐦 10 N <small>約1kgの鳥</small></button><button type="button" id="weight5" data-weight="5" aria-pressed="false" class="load-option special">🐤 5 N <small id="weight5-status">各自1回</small></button></div></div>
-          <div class="hook-actions" id="hook-buttons" aria-label="フック選択"></div>
-          <p class="action-note" id="turn-help">鳥を選んでブランコをクリック！ 何羽でもとまれます。</p>
-        </section>
-        <aside class="battle-side">
-          <section class="panel limit-panel"><div class="limit-heading"><span class="eyebrow">MOMENT / CRITICAL</span><button id="toggle-moment" type="button" class="visibility-toggle" aria-pressed="false">◎ Mを表示</button></div>
-            <div class="metric"><span id="max-moment">???</span><small id="limit-unit">/ 100 N·m</small></div>
-            <div class="gauge"><div id="gauge-fill"></div></div>
-            <div class="limit-label"><span id="percent-label">現在値は非表示</span><span id="critical-label">限界 100 N·m</span></div>
-            <p class="risk-text" id="risk-text">数字を隠して対戦中。表示ボタンでいつでも確認できます。</p>
-          </section>
-          <section class="panel plot-panel" id="plot-panel" hidden><div class="panel-head"><div><span class="eyebrow">BENDING MOMENT</span><h3>曲げモーメント図</h3></div><span class="small-tag">N·m</span></div><svg id="plot-svg" viewBox="0 0 900 285" role="img"></svg></section>
-          <section class="panel stats-panel" id="stats-panel" hidden><span class="eyebrow">STRUCTURAL DATA</span><div class="stats-grid"><span>左支点反力</span><b id="ra">0 N</b><span>右支点反力</span><b id="rb">0 N</b><span>総荷重</span><b id="total">0 N</b><span>最大M位置</span><b id="max-pos">—</b></div></section>
-          <section class="panel history-panel"><div class="panel-head"><div><span class="eyebrow">TURN HISTORY</span><h3>載荷履歴</h3></div><span class="small-tag" id="turn-count">0 手</span></div><ol id="history-list" class="history-list"><li>まだおもりはありません。</li></ol></section>
-        </aside>
-      </div>
-      <div id="turn-popup" class="turn-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title" hidden>
-        <div class="turn-popup-card" id="turn-popup-card"><span class="popup-kicker" id="popup-kicker">READY?</span><div class="popup-bird" id="popup-bird" aria-hidden="true">🐦</div><h2 id="popup-title">青チームの番！</h2><p id="popup-subtitle">鳥を止まらせよう！</p><button type="button" id="popup-continue" class="primary-button">この手番を開始！ →</button></div>
-      </div>
-    </section>
-
-    <section id="break-screen" class="screen break-screen" aria-label="梁の破壊演出画面" hidden>
-      <div class="break-head"><span class="eyebrow">FAILURE / BEAM FRACTURE</span><h2>あっ！ 梁が折れた！</h2><p>モーメントが限界に！ 鳥たちがびっくりして飛び上がります。</p></div>
-      <div class="fracture-stage" id="fracture-stage"><svg id="fracture-svg" viewBox="0 0 900 360" role="img" aria-label="梁が折れておもりが落ちるアニメーション"></svg><div class="fracture-flash" aria-hidden="true"></div></div>
-      <div class="break-result"><strong id="break-loser">青チームが梁を破壊！</strong><span id="break-moment">MAX 100 N·m</span></div>
-      <button type="button" id="break-continue" class="primary-button break-continue" disabled>リザルトを表示 →</button>
-      <p class="break-hint" id="break-hint">破壊の様子を表示しています…</p>
-    </section>
-
-    <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
-      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
-      <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
-      <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
-      <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
-    </section>
-  </main>
-  <footer>© MOMENT BATTLE · 教育用簡略モデル。実構造物の安全性評価には使用できません。</footer>
-</div>
 </body></html>
