@@ -92,6 +92,9 @@ h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:
 .setting-select{appearance:auto;background:rgba(255,255,255,.55);color:var(--ink);border:1px solid var(--line);border-radius:9px;font-size:12px;padding:8px;min-height:35px;box-shadow:0 3px 8px rgba(91,72,48,.05)}
 .setting-select:focus-visible{outline:2px solid #eef2ff;outline-offset:2px}
 @media(max-width:540px){.actions{gap:6px}.game-settings{gap:7px}.setting-label{font-size:11px;gap:4px}.setting-select{font-size:11px;padding:6px 4px}}
+.play-guide{margin:2px 0 12px;background:#fff3d6;border:2px solid #e5bb69;border-radius:12px;color:#64472a;padding:11px 14px;font-size:14px;font-weight:750;line-height:1.65}
+.input-cell.target-cell{outline:4px solid #e9a42c;outline-offset:-3px;box-shadow:0 0 0 4px rgba(231,159,36,.24)}
+@media(max-width:540px){.play-guide{font-size:12px;padding:9px 11px;margin-bottom:8px}}
 </style>
 </head>
 <body>
@@ -115,6 +118,7 @@ h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:
   <main class="layout">
     <section class="stage" aria-label="ゲーム盤面">
       <div class="turn-title" aria-live="polite"><strong id="turnText"></strong><small id="progressText"></small></div>
+      <div class="play-guide" id="play-guide" aria-live="polite">STEP 1：数字を選ぶ → STEP 2：中央のマスに置く</div>
       <div class="arena"><div class="board" id="board" role="group" aria-label="4×4の数字配置マスと10の積の表示マス"></div></div>
       <div class="legend"><span><i class="dot red"></i>赤の計算方向</span><span><i class="dot blue"></i>青の計算方向</span><span>数字を置き切ると積を表示</span></div>
       <p class="howto">右の4マスは各行の積、下の4マスは各列の積。左下は右上から左下への斜め4マス、右下は左上から右下への斜め4マスの積です。それぞれ自分の色の<strong>最大値1つ</strong>を得点とし、先手・後手を交代して2回戦の合計を競います。</p>
@@ -172,14 +176,14 @@ const roundScore=board=>{
 function endCpuJob(){cpuJob++;if(cpuTimer!==null){clearTimeout(cpuTimer);cpuTimer=null;}}
 function reset(){
  endCpuJob();
- s={round:1,board:Array(16).fill(null),used:{red:0,blue:0},turn:'red',selected:null,phase:'playing',scores:[],mode:$('mode').value,difficulty:$('difficulty').value};
+ s={round:1,board:Array(16).fill(null),used:{red:0,blue:0},turn:'red',selected:null,targetCell:null,phase:'playing',scores:[],mode:$('mode').value,difficulty:$('difficulty').value};
  message=cvcmode()?'コンピューター同士の対戦を開始します。赤が先手です。':'赤（プレイヤー A）の数字を選び、中央の空きマスに置いてください。';
  render();scheduleCpu();
 }
 function validMove(color,n,index){return s.phase==='playing'&&s.turn===color&&s.board[index]===null&&!(s.used[color]&(1<<n));}
 function place(index,n,color){
  if(!validMove(color,n,index))return;
- s.board[index]=n; s.used[color]|=1<<n; s.selected=null;
+ s.board[index]=n; s.used[color]|=1<<n; s.selected=null;s.targetCell=null;
  const count=s.board.filter(v=>v!==null).length;
  if(count===16){
   const {red,blue}=roundScore(s.board);
@@ -196,11 +200,11 @@ function place(index,n,color){
 }
 function clickCell(i){
  if(s.phase!=='playing'||cpuTurn()||s.board[i]!==null)return;
- if(s.selected===null){message='右の数字を選んでから空いているマスを押してください。';render();return;}
+ if(s.selected===null){s.targetCell=i;message='マスを選択しました。次に右側から置きたい数字を選択してください。';render();return;}
  place(i,s.selected,s.turn);
 }
 function startSecond(){
- endCpuJob();s.round=2;s.board=Array(16).fill(null);s.used={red:0,blue:0};s.turn='red';s.selected=null;s.phase='playing';
+ endCpuJob();s.round=2;s.board=Array(16).fill(null);s.used={red:0,blue:0};s.turn='red';s.selected=null;s.targetCell=null;s.phase='playing';
  message=cvcmode()?'2回戦：コンピューター同士の対戦です。':(cpumode()?'2回戦：コンピューターが赤・先手です。':'2回戦：プレイヤー Bが赤・先手です。');
  render();scheduleCpu();
 }
@@ -273,7 +277,7 @@ function renderBoard(){
   const n=s.board[i],r=Math.floor(i/4),c=i%4;
   const el=document.createElement('button');el.type='button';el.dataset.input=i;
   el.style.gridColumn=String(c+3);el.style.gridRow=String(r+1);
-  el.className='cell input-cell '+(n!==null?('locked occupied-'+(s.boardPlayers?.[i]||'red')):'empty interactive');
+  el.className='cell input-cell '+(n!==null?('locked occupied-'+(s.boardPlayers?.[i]||'red')):'empty interactive')+(s.targetCell===i?' target-cell':'');
   el.disabled=n!==null||s.phase!=='playing'||cpuTurn();
   const playedBy=s.boardPlayers?.[i];
   el.setAttribute('aria-label',`${r+1}行${c+1}列、${n!==null?cn[playedBy||'red']+n:'空き'}`);
@@ -306,7 +310,7 @@ function renderChips(p){
   el.className='chip'+(used?' used':'')+(s.selected===n&&enabled?' selected':'');
   el.disabled=!enabled;el.setAttribute('aria-pressed',String(s.selected===n&&enabled));
   el.setAttribute('aria-label',`${ownerName(p)}の数字${n}${used?'（使用済み）':''}`);
-  el.addEventListener('click',()=>{s.selected=n;message=`${cn[color]}の${n}を選択中。空いているマスを選んでください。`;render();});
+  el.addEventListener('click',()=>{if(s.targetCell!==null&&s.targetCell!==undefined){place(s.targetCell,n,color);return;}s.selected=n;message=`${cn[color]}の${n}を選択中。空いているマスを選んでください。`;render();});
   wrap.append(el);
  }
 }
@@ -325,6 +329,13 @@ function renderScores(){
  $('difficultyWrap').style.display=anyCpuMode()?'inline-flex':'none';
 }
 function render(){
+ const guide=$('play-guide');
+ if(s.phase==='playing'){
+  if(cpuTurn())guide.textContent='コンピューターの手番です。次の一手を計算しています。';
+  else if(s.targetCell!==null&&s.targetCell!==undefined)guide.textContent='STEP 2 / 2：選んだマスに置く数字を選択してください。';
+  else if(s.selected!==null)guide.textContent='STEP 2 / 2：中央の空きマスをクリックして「'+s.selected+'」を置いてください。';
+  else guide.textContent='STEP 1 / 2：数字（0〜7）を1つ選択してください。中央のマスを先に選ぶこともできます。';
+ } else guide.textContent=s.phase==='between'?'1回戦終了：下の「2回戦へ」をクリックしてください。':'2回戦終了：結果を確認してください。';
  $('roundTag').textContent=`ROUND ${s.round} / 2`;
  const filled=s.board.filter(v=>v!==null).length;
  const text=$('turnText');text.replaceChildren();
