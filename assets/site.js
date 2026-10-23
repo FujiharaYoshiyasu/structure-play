@@ -1,8 +1,8 @@
 /* サイトの公開ステータス: アプリを配置したら preparing → published に変更します。 */
 const APP_STATUS = {
-  'moment-battle': 'preparing',
+  'moment-battle': 'published',
   '765': 'published',
-  'nqm': 'preparing',
+  'nqm': 'published',
 };
 
 (() => {
