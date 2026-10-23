@@ -494,6 +494,7 @@ function openScreen(next){
  for(const id of ['setup','battle','break','result'])$(`${id}-screen`).hidden=id!==next;
  $('header-stage').textContent=next==='setup'?'BEAM STRATEGY · 2P':`${stage.name} · ${fmt(span())} m · LIMIT ${fmt(limit)} N·m`;
  document.body.dataset.turnTheme=next==='battle'?history.length%2?'orange':'blue':next==='break'?'orange':'blue';
+ window.scrollTo(0,0);
 }
 function buildSetup(){
  const slider=$('turn-seconds'),noLimit=$('no-time-limit');
