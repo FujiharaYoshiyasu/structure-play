@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fffaf2">
+  <meta name="description" content="構造力学の学習ツールからオリジナル数字ゲームまで。触って、試して、発見する小さなWebアプリ集。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="つくって、あそんで、学ぶ。 | STRUCTURE & PLAY">
+  <meta property="og:description" content="構造力学とゲームの、小さな実験室。">
+  <title>STRUCTURE & PLAY | つくって、あそんで、学ぶ。</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+  <script defer src="assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#apps">アプリ一覧へ移動</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a href="./index.html" class="brand" aria-label="STRUCTURE AND PLAY トップページ">
+        <span class="brand-mark" aria-hidden="true"><span class="mark-dot"></span><span class="mark-line"></span><span class="mark-bubble"></span></span>
+        <span class="brand-word">STRUCTURE<span class="brand-amp">&</span>PLAY<span class="brand-sub">遊びと学びの実験室</span></span>
+      </a>
+      <nav class="top-nav" aria-label="メインメニュー">
+        <a href="#apps">アプリ一覧</a>
+        <a href="#about">このサイトについて</a>
+        <a class="nav-pill" href="#apps">さっそく見る <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span> WELCOME TO OUR LITTLE WEB LAB</div>
+        <h1 id="hero-title">つくって、<br><em>あそんで、</em><br>学ぶ<span class="period">。</span></h1>
+        <p class="hero-description">構造のしくみを見える形に。<br>数字の面白さを、ゲームに。<br>ちょっと触ってみたくなる、3つのWebアプリを集めました。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#apps">アプリを見てみる <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#about">このサイトについて <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-metadata" aria-label="サイトの特徴">
+          <span><i aria-hidden="true">✓</i> インストール不要</span>
+          <span><i aria-hidden="true">✓</i> ブラウザで利用</span>
+        </div>
+      </div>
+      <div class="hero-graphic" role="img" aria-label="梁と鳥、765の数字盤、NQM図をイメージしたイラスト">
+        <div class="hero-backdrop"></div>
+        <div class="doodle doodle-star d1" aria-hidden="true">✳</div>
+        <div class="doodle doodle-star d2" aria-hidden="true">✳</div>
+        <div class="doodle doodle-dot" aria-hidden="true"></div>
+        <div class="hero-panel hero-panel-frame" aria-hidden="true">
+          <div class="mini-label">N · Q · M</div>
+          <svg viewBox="0 0 190 130" focusable="false"><path d="M38 99V25H146V99" fill="none" stroke="#23324b" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><path d="M25 105h26m-13-7-12 7 12 6m95-6h26m-13-7-12 7 12 6" stroke="#23324b" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M38 25Q91 83 146 25" fill="none" stroke="#fa6a42" stroke-width="5" stroke-linecap="round"/><path d="M92 5v19m-7-6 7 7 7-7" stroke="#23324b" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="hero-panel hero-panel-game" aria-hidden="true">
+          <div class="small-brand">765 <span>GO!</span></div>
+          <div class="number-preview"><b>7</b><b>6</b><b>5</b><b>3</b><b>2</b><b>0</b><b>4</b><b>1</b><b>5</b><b>4</b><b>7</b><b>6</b><b>1</b><b>2</b><b>3</b><b>0</b></div>
+        </div>
+        <div class="hero-panel hero-panel-birds" aria-hidden="true">
+          <div class="mini-label">MOMENT BATTLE</div>
+          <svg viewBox="0 0 286 115" focusable="false"><path d="M17 84h251" stroke="#37465c" stroke-width="10" stroke-linecap="round"/><path d="M141 87l-17 19h34z" fill="#567bda" stroke="#37465c" stroke-width="2"/><g fill="#ffb93e" stroke="#35425d" stroke-width="2.8"><circle cx="65" cy="65" r="17"/><circle cx="100" cy="65" r="17"/><circle cx="216" cy="65" r="17"/></g><g fill="#24334b"><circle cx="69" cy="61" r="2.8"/><circle cx="104" cy="61" r="2.8"/><circle cx="220" cy="61" r="2.8"/></g><g fill="#fa6c47"><path d="M81 64l11 4-11 4z"/><path d="M116 64l11 4-11 4z"/><path d="M231 64l11 4-11 4z"/></g><path d="M22 20c9-12 22-11 29-1M236 14c14-12 27-5 29 6" stroke="#a8c9e8" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <span class="orbit-badge" aria-hidden="true">PLAY<br>& LEARN</span>
+      </div>
+    </section>
+
+    <section class="apps-section" id="apps" aria-labelledby="apps-heading">
+      <div class="shell">
+        <div class="section-kicker">OUR WEB APPS / 001—003</div>
+        <div class="section-header">
+          <div><h2 id="apps-heading">アプリを探す<span class="section-spark">✳</span></h2><p>気になるものから、自由にのぞいてみてください。</p></div>
+          <p class="app-count"><strong id="visible-count">03</strong><span>APPS</span></p>
+        </div>
+        <div class="filter-row" role="group" aria-label="アプリの種類で絞り込み">
+          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true">すべて <small>3</small></button>
+          <button type="button" class="filter-button" data-filter="game" aria-pressed="false">ゲーム <small>2</small></button>
+          <button type="button" class="filter-button" data-filter="study" aria-pressed="false">学習ツール <small>1</small></button>
+        </div>
+
+        <div class="app-grid" id="app-grid">
+          <article class="app-card" data-category="game" data-app="moment-battle">
+            <div class="card-media media-moment"><img src="assets/moment.svg" alt="鳥が梁の上に並ぶモーメント対戦ゲームのイメージ" loading="lazy"><span class="media-index">01 / GAME</span></div>
+            <div class="card-content"><div class="card-tags"><span class="category-tag tag-orange">構造力学 × ゲーム</span><span class="status-tag" data-status="moment-battle">公開準備中</span></div><h3>MOMENT BATTLE</h3><p class="app-jp-title">梁モーメント対戦</p><p class="card-description">鳥を梁にのせて、モーメントで勝負！ 力が加わる位置によって変わる「曲げ」の感覚を、遊びながら体験するゲーム。</p><a class="card-link" href="apps/moment-battle/index.html" aria-label="梁モーメント対戦のページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+          </article>
+          <article class="app-card" data-category="game" data-app="765">
+            <div class="card-media media-seven"><img src="assets/765.svg" alt="赤と青の数字が置かれた数字配置ゲーム765のイメージ" loading="lazy"><span class="media-index">02 / GAME</span></div>
+            <div class="card-content"><div class="card-tags"><span class="category-tag tag-blue">オリジナル思考ゲーム</span><span class="status-tag" data-status="765">公開準備中</span></div><h3>765</h3><p class="app-jp-title">数字の配置ゲーム</p><p class="card-description">0〜7の数字を交互に配置。行・列・斜めの「積」を競う、ひらめきと戦略のオリジナル対戦ゲーム。</p><a class="card-link" href="apps/765/index.html" aria-label="765のページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+          </article>
+          <article class="app-card" data-category="study" data-app="nqm">
+            <div class="card-media media-nqm"><img src="assets/nqm.svg" alt="ラーメン構造の骨組と応力図のイメージ" loading="lazy"><span class="media-index">03 / TOOL</span></div>
+            <div class="card-content"><div class="card-tags"><span class="category-tag tag-green">構造力学 × 学習ツール</span><span class="status-tag" data-status="nqm">公開準備中</span></div><h3>NQM DIAGRAM</h3><p class="app-jp-title">ラーメンのN・Q・M図作成</p><p class="card-description">節点・部材・支持条件・荷重を設定して、軸力図N、せん断力図Q、曲げモーメント図Mを視覚的に確認するための学習ツール。</p><a class="card-link" href="apps/nqm/index.html" aria-label="NQM図作成ツールのページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+          </article>
+        </div>
+        <p class="list-note" id="app-list-status" aria-live="polite">現在3つのアプリを表示しています。</p>
+      </div>
+    </section>
+
+    <section class="about-section shell" id="about" aria-labelledby="about-heading">
+      <div class="about-art" aria-hidden="true"><span class="about-big">?</span><span class="about-small small-one">!</span><span class="about-small small-two">✦</span><span class="about-ring"></span></div>
+      <div class="about-copy"><p class="section-kicker">ABOUT THIS LAB</p><h2 id="about-heading">「わかった！」のきっかけを、<br>もっと身近に。</h2><p>ここは、構造力学の学びや、数字を使った遊びから生まれたWebアプリを紹介する場所です。難しい式も、身近なゲームも、実際に触ってみることで違った発見があるかもしれません。</p><p>授業で使っても、友達と遊んでも。思い思いに試してみてください。</p><div class="about-chips"><span>STRUCTURAL MECHANICS</span><span>ORIGINAL GAMES</span><span>WEB APPS</span></div></div>
+    </section>
+
+    <section class="footer-cta" aria-label="アプリ一覧へのご案内"><div class="shell footer-cta-inner"><div><span>LET'S EXPLORE!</span><h2>気になるアプリは<br>見つかりましたか？</h2></div><a class="button button-white" href="#apps">アプリ一覧に戻る <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer class="site-footer"><div class="shell footer-inner"><span class="footer-brand">STRUCTURE <b>&</b> PLAY</span><span>つくって、あそんで、学ぶ。</span><a href="#hero-title">ページの上へ ↑</a></div><div class="shell footer-bottom"><small>© <span id="copyright-year">2026</span> STRUCTURE & PLAY. All rights reserved.</small><small>各アプリは学習・娯楽目的の試作ソフトウェアです。</small></div></footer>
+</body>
+</html>
