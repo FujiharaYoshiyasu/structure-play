@@ -1,3 +1,945 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fffaf2"><title>MOMENT BATTLE | STRUCTURE &amp; PLAY</title><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>
-*{box-sizing:border-box}body{margin:0;background:#fffaf2;color:#293550;font-family:system-ui,-apple-system,"Yu Gothic",Meiryo,sans-serif;line-height:1.8}.wrap{width:min(680px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid #eee7de;padding:20px 0;font-weight:900;letter-spacing:.07em}header a{color:inherit;text-decoration:none}header b{color:#fb744e}main{min-height:calc(100vh - 170px);display:grid;place-items:center;padding:60px 0}.panel{width:100%;background:white;border:1px solid #e4e7eb;border-radius:24px;overflow:hidden;box-shadow:0 15px 50px #2935500a}img{display:block;width:100%;height:250px;object-fit:contain;background:#fff0db}.content{padding:32px;text-align:center}.badge{display:inline-block;background:#f5f5f4;color:#747d8e;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:800}h1{font-size:clamp(31px,6vw,46px);line-height:1.3;letter-spacing:-.04em;margin:20px 0 0}.jp{font-size:15px;font-weight:800;margin:3px 0 15px}.desc{font-size:13px;color:#6b7280;margin:12px auto 18px;max-width:430px}.notice{border-top:1px solid #e6e6e6;padding-top:22px;color:#58657c;font-size:14px;margin-bottom:24px}.btn{display:inline-block;background:#2d3b57;color:white;font-weight:800;padding:12px 22px;border-radius:14px;text-decoration:none;font-size:14px}.btn:focus-visible{outline:3px solid #577bd6;outline-offset:3px}footer{text-align:center;color:#7b8596;font-size:11px;padding:20px}
-</style></head><body><header><div class="wrap"><a href="../../index.html">STRUCTURE <b>&amp;</b> PLAY</a></div></header><main class="wrap"><article class="panel"><img src="../../assets/moment.svg" alt="梁モーメント対戦のイメージ"><div class="content"><span class="badge">公開準備中</span><h1>MOMENT BATTLE</h1><p class="jp">梁モーメント対戦</p><p class="desc">鳥を梁にのせて、力とモーメントを体感する対戦ゲーム。</p><p class="notice">このアプリは、現在ホームページへの組み込み準備中です。<br>公開後はこちらからご利用いただけます。</p><a href="../../index.html#apps" class="btn">← アプリ一覧に戻る</a></div></article></main><footer>© STRUCTURE &amp; PLAY</footer></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#93e0ff">
+<meta name="description" content="荷重10N・5Nを交互に載せて、梁を壊したほうが負ける構造力学ゲーム">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2217%22%20fill%3D%22%23a4e6ff%22/%3E%0A%3Ccircle%20cx%3D%2231%22%20cy%3D%2232%22%20r%3D%2224%22%20fill%3D%22%23ffdc68%22%20stroke%3D%22%23317b54%22%20stroke-width%3D%224%22/%3E%0A%3Cellipse%20cx%3D%2228%22%20cy%3D%2231%22%20rx%3D%2217%22%20ry%3D%2216%22%20fill%3D%22%233289ee%22%20stroke%3D%22%23245b7c%22%20stroke-width%3D%222%22/%3E%0A%3Cellipse%20cx%3D%2229%22%20cy%3D%2240%22%20rx%3D%2210%22%20ry%3D%226%22%20fill%3D%22%23d6edff%22/%3E%0A%3Ccircle%20cx%3D%2237%22%20cy%3D%2227%22%20r%3D%225%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%2239%22%20cy%3D%2227%22%20r%3D%222%22%20fill%3D%22%23233a4c%22/%3E%0A%3Cpath%20d%3D%22M43%2033l13%204-12%207z%22%20fill%3D%22%23ffa733%22%20stroke%3D%22%23ac6323%22%20stroke-width%3D%222%22/%3E%0A%3Cpath%20d%3D%22M17%2019l3-9%206%208%22%20fill%3D%22%23277dc9%22/%3E%0A%3C/svg%3E%0A" type="image/svg+xml">
+<style>
+:root{font-family:Inter,"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif;color:#e6edf8;background:#0b1424;font-synthesis:none}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#173250 0%,transparent 55%),#0c1424;transition:background .35s}body[data-turn-theme="orange"]{background:radial-gradient(ellipse at 10% 2%,#644025 0%,transparent 56%),#111522}body[data-turn-theme="blue"]{background:radial-gradient(ellipse at 10% 2%,#173d69 0%,transparent 53%),#0c1424}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible{outline:3px solid #9ed7ff;outline-offset:2px}svg{display:block;max-width:100%}[hidden]{display:none!important}.app-shell{height:100dvh;min-height:510px;width:min(100%,1400px);padding:12px 22px 7px;margin:auto;display:flex;flex-direction:column;gap:8px;overflow:hidden}.masthead{height:54px;flex:none;display:flex;align-items:center;gap:12px}.brandmark{border:2px solid #4bb5df;border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;gap:4px;transform:rotate(-5deg)}.brandmark i{display:block;width:4px;height:22px;background:#4bb5df;transform:skew(-20deg)}.brandmark i:nth-child(2){height:15px;transform:skew(20deg)}.brand-text{flex:1;min-width:0}.brand-text h1{font-size:22px;letter-spacing:.5px;margin:0;line-height:1.2}.brand-text em{color:#80cbfa;font-weight:900}.eyebrow{font-size:9px;color:#7fadd5;font-weight:900;letter-spacing:1.65px}.tag,.section-tag,.small-tag{border:1px solid #416180;border-radius:20px;color:#b9cddd;padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap}.screens{flex:1;min-height:0;display:flex;flex-direction:column}.screen{height:100%;min-height:0;display:flex;flex-direction:column;gap:10px;animation:appear .28s ease-out}@keyframes appear{from{opacity:.2;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}footer{flex:none;height:14px;line-height:14px;text-align:center;font-size:9px;color:#738caa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.panel{background:linear-gradient(150deg,#17293f,#122034);border:1px solid #34506d;border-radius:14px;min-width:0;min-height:0}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.panel h3{font-size:17px;margin:4px 0 0}.panel h2{margin:0}.screen-heading,.result-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex:none}.screen-heading h2,.result-heading h2{font-size:27px;margin:2px 0}.screen-heading p,.result-heading p{color:#acbfd6;font-size:12px;margin:0}.primary-button{background:linear-gradient(110deg,#f4a95d,#f8c181);border:1px solid #ffd6a2;color:#1a2940;font-weight:900;border-radius:11px;padding:13px 22px;white-space:nowrap;box-shadow:0 6px 18px #0004}.primary-button:hover:not(:disabled){filter:brightness(1.12)}
+/* Settings */
+.setup-layout{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,.78fr);gap:12px;flex:1;min-height:0}.setup-layout .panel{padding:clamp(12px,2vh,23px);display:flex;flex-direction:column;gap:12px;min-height:0}.stage-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stage-card{text-align:left;padding:14px;background:#1c334e;border:1px solid #47627e;border-radius:10px;color:#e1efff;display:flex;flex-direction:column;gap:7px;min-width:0}.stage-card[aria-pressed="true"]{border-color:#7dccfc;background:#284c70;box-shadow:inset 0 0 0 1px #86c7ec77}.stage-card:hover{border-color:#8dbbe0}.stage-card strong{font-size:15px}.stage-card small{color:#aecae0;font-size:10px}.stage-segments,.setup-preview{display:flex;width:100%;gap:3px}.stage-segments{height:27px}.stage-segments span,.setup-preview span{display:flex;align-items:center;justify-content:center;min-width:0;border:1px solid #7ea8c6;border-radius:4px;background:#375f80;font-size:11px;font-weight:800;overflow:hidden}.custom-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.custom-head strong{font-size:14px}.custom-head span{font-size:10px;color:#a9bfd7}.interval-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.interval-field{display:flex;flex-direction:column;gap:5px;font-size:12px;color:#b9cde2}.interval-field input,#limit-input{background:#0d1c2e;color:#f0f8ff;border:1px solid #587490;border-radius:9px;padding:11px 12px;min-width:0;width:100%;font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}.setup-hint{font-size:11px;color:#acc0d5;line-height:1.65;margin:0}.limit-input-label{font-weight:800;font-size:14px;display:flex;justify-content:space-between;gap:8px}.limit-input-label strong{color:#80c8f8}.setup-rules #limit-input{font-size:29px;padding:13px}.rules-chips{display:flex;gap:7px;flex-wrap:wrap}.rules-chips span{font-size:11px;background:#243a53;border:1px solid #4b6684;border-radius:8px;padding:8px}.rules-chips b{color:#f7c48b}.beam-preview-title{font-size:11px;color:#a9cce7;margin:2px 0 0}.setup-preview{height:54px;align-items:stretch}.setup-preview span{font-size:14px}.error-text{color:#ffb6ab;font-size:11px;margin:0}.setup-rules .primary-button{margin-top:auto;width:100%;font-size:16px;display:flex;justify-content:space-between}.setup-footnote{margin:0;text-align:center;color:#8ba5c3;font-size:10px;flex:none}
+/* Arena */
+.battle-topline{flex:none;height:72px;display:grid;grid-template-columns:1fr minmax(145px,1fr) 1fr;gap:9px}.battle-team{border:1px solid #496584;border-radius:12px;padding:8px 14px;display:flex;align-items:center;gap:8px;justify-content:space-between;min-width:0;background:#1b2c44}.battle-team strong{font-size:16px;white-space:nowrap}.battle-team small{font-size:10px;color:#a0b9d3;white-space:nowrap}.battle-team .eyebrow{display:none}.player-blue.active{border-color:#54aeff;background:#1a3f68;box-shadow:inset 0 0 0 1px #5c9fdb55}.player-blue strong{color:#8acbff}.player-orange.active{border-color:#f8b468;background:#634021;box-shadow:inset 0 0 0 1px #ca924d55}.player-orange strong{color:#ffcb8f}.turn-center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:1px solid #425d7a;border-radius:12px;background:#17283f}.turn-center span{font-size:11px;font-weight:900;letter-spacing:1px;color:#a8c5df}.turn-center strong{font-size:18px}.battle-toolbar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;height:40px}.stage-info{font-size:12px;color:#c5d7e9;font-weight:800}.toolbar-actions,.load-options{display:flex;gap:7px}.toolbar-actions button,.visibility-toggle,.result-top-actions button:not(.primary-button),.result-controls button{background:#253d58;color:#ebf5ff;border:1px solid #6b8fac;border-radius:9px;font-weight:800;padding:8px 13px;font-size:11px;white-space:nowrap}.toolbar-actions button:hover:not(:disabled),.visibility-toggle:hover,.result-controls button:hover{background:#3c5877}.battle-columns{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(290px,.80fr);gap:10px}.play-panel{display:flex;flex-direction:column;gap:9px;padding:12px 15px}.beam-stage{min-height:0;flex:1;border:1px solid #365572;border-radius:10px;background:linear-gradient(#172c44,#172438);display:flex;align-items:center;justify-content:center;overflow:hidden}.beam-stage svg{width:100%;height:100%;max-height:330px}.load-picker{display:flex;align-items:center;justify-content:space-between;flex:none;gap:9px}.load-picker-title{display:flex;flex-direction:column;gap:1px}.load-picker-title strong{font-size:13px}.load-option{font-size:15px;font-weight:900;color:#dceefb;background:#243a51;border:1px solid #546f89;border-radius:9px;padding:8px 14px;min-width:110px}.load-option small{font-size:10px;font-weight:600;color:#bad0df}.load-option.active{background:#315e81;border-color:#8bcdf9}.load-option.special.active{background:#27635f;border-color:#8deadd}.load-option:hover:not(:disabled){filter:brightness(1.18)}.hook-actions{flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hook-button{display:flex;flex-direction:column;gap:4px;text-align:left;background:#1e3550;color:#eaf4ff;border:1px solid #53799c;padding:10px 12px;border-radius:10px;min-width:0}.hook-button:hover:not(:disabled){background:#305477;border-color:#9ed5ff}.hook-pos{color:#8abde5;font-weight:900;font-size:10px;letter-spacing:1px}.hook-button strong{font-size:15px}.hook-sub,.hook-result{font-size:10px;color:#b6c9dd}.hook-result{font-weight:700;color:#c8e9ff}.hook-result.danger{color:#ffa2a2}.action-note{font-size:10px;color:#9dbad5;margin:0;flex:none}.battle-side{display:flex;flex-direction:column;gap:9px;min-height:0}.battle-side .panel{padding:12px 15px}.limit-panel{flex:none}.limit-heading{display:flex;align-items:center;justify-content:space-between;gap:9px}.metric{display:flex;align-items:baseline;gap:9px;margin:9px 0}.metric span{font-size:clamp(34px,5vh,55px);font-weight:950;letter-spacing:-1px;font-variant-numeric:tabular-nums}.metric small{font-size:12px;color:#b9cde0;font-weight:800}.gauge{height:9px;background:#253953;border:1px solid #344f68;border-radius:8px;overflow:hidden}#gauge-fill{background:linear-gradient(90deg,#4bc4ff,#ff936a);height:100%;width:0%;transition:width .25s}.limit-label{display:flex;justify-content:space-between;gap:5px;color:#a2c1dc;font-size:10px;margin-top:8px}.risk-text{font-size:10px;color:#aac4dc;line-height:1.6;margin:8px 0 0}.plot-panel{flex:1;display:flex;flex-direction:column;gap:5px}.plot-panel svg{height:100%;min-height:0;width:100%;background:#122339;border-radius:8px}.stats-panel{flex:none}.stats-grid{display:grid;grid-template-columns:1fr auto;gap:5px;font-size:10px;margin-top:8px;color:#b6c7d9}.stats-grid b{color:#e2efff;text-align:right}.history-panel{flex:1;min-height:0;display:flex;flex-direction:column}.history-list{margin:7px 0 0;padding:0;list-style:none;overflow:auto;min-height:0;flex:1;display:flex;flex-direction:column;gap:6px}.history-list li{display:flex;justify-content:space-between;gap:8px;font-size:11px;border-bottom:1px solid #324862;padding:5px 2px}.history-list .blue{color:#8bcfff}.history-list .orange{color:#ffc38a}
+body[data-turn-theme="orange"] .play-panel{border-color:#885f3a}body[data-turn-theme="orange"] .beam-stage{border-color:#74583b;background:linear-gradient(#303344,#252436)}body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#664628;border-color:#edab64}
+/* Failure screen: designed to settle into a frozen broken beam, no automatic navigation */
+.break-screen{align-items:center;justify-content:space-evenly;gap:8px;text-align:center}.break-head h2{font-size:clamp(22px,4vw,44px);margin:5px 0;color:#ffc5ac;letter-spacing:1px}.break-head p{margin:0;color:#bbccdb;font-size:14px}.fracture-stage{position:relative;border:1px solid #874e54;border-radius:20px;background:radial-gradient(ellipse at 50% 55%,#5a252c,#172336 65%);width:min(100%,920px);max-height:50vh;flex:1;min-height:200px;display:flex;align-items:center;justify-content:center;overflow:hidden}.fracture-stage svg{width:100%;height:100%}.fracture-stage .fracture-left{transform-box:fill-box;transform-origin:100% 50%;animation:crack-left 1.45s cubic-bezier(.3,.8,.4,1) both}.fracture-stage .fracture-right{transform-box:fill-box;transform-origin:0% 50%;animation:crack-right 1.45s cubic-bezier(.3,.8,.4,1) both}.fracture-stage .fall-weight{animation:fall-weight 1.45s cubic-bezier(.2,.65,.4,1) both}.fracture-stage .crack-spark{animation:crack-spark 1.45s ease-out both}.fracture-flash{position:absolute;inset:0;pointer-events:none;background:#fff;opacity:0;animation:fracture-flash 1.45s ease-out both}.break-result{display:flex;align-items:center;gap:15px;justify-content:center;flex-wrap:wrap}.break-result strong{color:#ffc3a5;font-size:clamp(17px,3vw,27px)}.break-result span{color:#f2dfd5;font-size:16px;font-weight:800}.break-continue{font-size:17px;padding:14px 36px}.break-hint{color:#b9cbdb;font-size:12px;margin:0}.fracture-stage.ready{cursor:pointer}.fracture-stage.ready:hover{border-color:#e6ac82}@keyframes crack-left{0%,25%{transform:none}43%{transform:translate(-6px,-2px) rotate(-3deg)}100%{transform:translate(-12px,14px) rotate(12deg)}}@keyframes crack-right{0%,25%{transform:none}43%{transform:translate(8px,2px) rotate(4deg)}100%{transform:translate(12px,18px) rotate(-12deg)}}@keyframes fall-weight{0%,26%{transform:none;opacity:1}100%{transform:translateY(170px) rotate(12deg);opacity:.7}}@keyframes crack-spark{0%,24%{opacity:0;transform:scale(.1)}38%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(2)}}@keyframes fracture-flash{0%,24%{opacity:0}32%{opacity:.7}46%,100%{opacity:0}}
+/* Result view — internal history can scroll, but page does not */
+.result-heading{flex:none}.result-heading h2{font-size:22px}.result-heading h2 span{color:#ffbd80}.result-top-actions{display:flex;gap:8px;align-items:center}.result-columns{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(245px,.8fr);gap:10px}.result-columns .panel{padding:15px}.result-inspection{display:flex;flex-direction:column;gap:8px}.result-inspection svg{flex:1;min-height:0;width:100%;background:#14263c;border:1px solid #34516d;border-radius:9px}.result-m{font-size:15px;font-variant-numeric:tabular-nums}.plot-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#b8cee0}.plot-legend span{display:flex;align-items:center;gap:6px}.plot-legend i{width:20px;height:3px;background:#65baff}.plot-legend .previous-line{background:repeating-linear-gradient(90deg,#8b9caf 0 6px,transparent 6px 10px)}.plot-legend .failure-line{background:repeating-linear-gradient(90deg,#ed8989 0 6px,transparent 6px 10px)}.result-detail{font-size:11px;color:#cbdbe9;line-height:1.5;margin:0}.result-controls{display:flex;justify-content:space-between;gap:7px;align-items:center}.result-controls span{font-size:12px;font-weight:900}.result-timeline-panel{display:flex;flex-direction:column;gap:12px}.result-timeline{min-height:0;flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px}.result-turn-button{flex:none;display:flex;justify-content:space-between;align-items:center;text-align:left;gap:6px;border:1px solid #4c6882;border-radius:10px;background:#1d344d;padding:9px;color:#eaf2ff;width:100%}.result-turn-button.selected{border-color:#91d0ff;background:#2d4f6c}.result-turn-button:hover{background:#365a78}.result-turn-meta{display:flex;flex-direction:column;gap:3px;min-width:0}.result-turn-meta span{color:#9cd6ff;font-size:10px}.result-turn-meta span.orange{color:#ffc184}.result-turn-meta strong{font-size:12px}.result-turn-meta small{font-size:10px;color:#b5c8d9}.result-mini{flex:0 0 100px;width:100px;height:45px;background:#11253b;border-radius:6px}
+@media(max-height:740px) and (min-width:760px){.app-shell{gap:5px;padding-top:6px}.masthead{height:45px}.battle-topline{height:57px}.battle-toolbar{height:33px}.play-panel{gap:5px;padding:9px 12px}.load-option{padding:5px 10px}.hook-button{padding:6px 9px;gap:2px}.battle-side{gap:5px}.battle-side .panel{padding:8px 12px}.metric{margin:3px 0}.risk-text{margin:5px 0 0}.history-list li{padding:3px}.setup-layout .panel{gap:8px}.stage-card{padding:9px}.interval-field input{padding:6px}.results-columns .panel{padding:8px}}
+@media(max-width:760px){.app-shell{padding:5px 8px;gap:5px;min-height:0}.masthead{height:40px;gap:8px}.brandmark{width:30px;height:30px}.brand-text h1{font-size:16px}.eyebrow{font-size:8px;letter-spacing:1px}.tag{font-size:8px;padding:4px 6px}.screen{gap:6px}.screen-heading h2{font-size:20px}.screen-heading p{font-size:10px}.setup-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:7px;overflow:hidden}.setup-layout .panel{padding:10px;gap:6px}.stage-card{padding:7px;gap:4px}.stage-card strong{font-size:12px}.stage-card small{font-size:9px}.stage-segments{height:18px}.custom-head{margin-top:0}.custom-head strong{font-size:11px}.custom-head span{font-size:9px}.interval-field{font-size:9px}.interval-field input{font-size:15px;padding:5px}.setup-hint{font-size:9px}.setup-rules h3{font-size:13px}.setup-rules #limit-input{font-size:21px;padding:5px}.rules-chips span{font-size:9px;padding:4px}.setup-preview{height:27px}.setup-rules .primary-button{font-size:12px;padding:8px}.setup-footnote{font-size:8px}.battle-topline{height:48px;gap:3px;grid-template-columns:1fr 1fr 1fr}.battle-team{padding:4px 6px;display:flex;flex-direction:column;justify-content:center;gap:1px}.battle-team strong{font-size:10px}.battle-team small{font-size:8px}.turn-center span{font-size:7px}.turn-center strong{font-size:11px}.battle-toolbar{height:34px}.stage-info{font-size:9px;max-width:35%;line-height:1.3}.toolbar-actions{gap:3px}.toolbar-actions button{font-size:9px;padding:7px 6px}.battle-columns{grid-template-columns:1fr;grid-template-rows:minmax(0,1.8fr) minmax(130px,.8fr);gap:6px}.play-panel{gap:4px;padding:6px}.panel h3{font-size:13px}.beam-stage svg{max-height:none}.load-picker-title strong{font-size:10px}.load-option{font-size:12px;padding:4px 7px;min-width:87px}.load-option small{font-size:8px}.hook-actions{gap:4px}.hook-button{padding:5px 7px;gap:1px}.hook-button strong{font-size:11px}.hook-pos,.hook-sub,.hook-result{font-size:8px}.action-note{font-size:8px}.battle-side{display:grid;grid-template-columns:1fr 1fr;gap:5px}.battle-side .panel{padding:7px}.limit-panel{grid-column:1}.metric{margin:3px 0}.metric span{font-size:25px}.metric small{font-size:9px}.limit-label{font-size:8px;margin-top:2px}.risk-text{font-size:8px;margin:3px 0 0}.visibility-toggle{font-size:9px;padding:5px}.history-panel{grid-column:2;grid-row:1 / span 2}.history-list{margin-top:2px}.history-list li{font-size:8px;gap:3px;padding:2px}.history-list li b{font-size:8px}.plot-panel{grid-column:1;grid-row:2;padding:5px}.stats-panel{display:none!important}.result-heading h2{font-size:15px}.result-heading p{font-size:9px}.result-top-actions{gap:3px}.result-top-actions button,.result-top-actions .primary-button{font-size:9px;padding:7px}.result-columns{grid-template-columns:1fr;grid-template-rows:minmax(0,1.1fr) minmax(0,.9fr);gap:6px}.result-columns .panel{padding:7px}.result-inspection{gap:4px}.result-m{font-size:10px}.result-detail,.plot-legend{font-size:9px}.result-controls button{font-size:9px;padding:5px}.result-timeline{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:5px}.result-turn-button{padding:5px}.result-turn-meta strong{font-size:9px}.result-mini{width:68px;flex-basis:68px;height:35px}.break-head h2{font-size:23px}.break-head p{font-size:11px}.fracture-stage{min-height:100px;max-height:45vh}.break-result{gap:5px}.break-result strong{font-size:17px}.break-result span{font-size:11px}.break-continue{padding:11px 20px;font-size:13px}footer{height:10px;line-height:10px;font-size:8px}}
+@media(max-height:650px) and (max-width:760px){.screen-heading p,.setup-footnote,.setup-hint,.action-note,.risk-text{display:none}.setup-layout .panel{gap:4px;padding:5px}.setup-preview{height:18px}.stage-card{padding:5px}.stage-segments{height:15px}.battle-topline{height:38px}.battle-toolbar{height:25px}.hook-button{padding:3px}.battle-columns{grid-template-rows:minmax(0,1.8fr) minmax(95px,.8fr)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* MOMENT BATTLE 0.6 — Cartoon canyon / bird swing visual theme
+   Visual-only overrides. Keep gameplay control ids and core logic intact. */
+:root{font-family:system-ui,"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:#254656;background:#c7f3ff;font-synthesis:none;--ink:#234654;--blue:#267cdd;--orange:#ef7a29;--green:#37ac55;--paper:#fffefa;--edge:#91c9b2;--shadow:0 5px 0 #4e9a7670,0 9px 20px #35738f1b}
+body,body[data-turn-theme="blue"]{background:linear-gradient(155deg,#9ae1ff 0%,#d9f6ff 60%,#fff7d8 100%);color:var(--ink)}
+body[data-turn-theme="orange"]{background:linear-gradient(160deg,#ffe7b1 0%,#d7f5ff 53%,#fff4dc 100%)}
+button:focus-visible,input:focus-visible{outline:3px solid #faaf42;outline-offset:2px}
+.app-shell{max-width:1460px;gap:9px;padding:9px 18px 7px}
+.masthead{height:59px;background:#fffefaee;border:3px solid #4cab68;border-radius:20px;padding:5px 16px;box-shadow:0 5px 0 #69b682;gap:14px}
+.brandmark{width:43px;height:42px;background:#ffda6b;border:3px solid #2d724c;border-radius:50%;transform:rotate(-8deg);box-shadow:2px 3px 0 #e99e3a;position:relative;overflow:visible}
+.brandmark i{display:none}
+.brandmark::before{content:"";position:absolute;left:10px;top:9px;width:19px;height:17px;background:#3284eb;border-radius:60% 60% 45% 45%;box-shadow:inset -5px -2px #1964be;border:2px solid #28516e}
+.brandmark::after{content:"";position:absolute;left:28px;top:18px;border-left:10px solid #ff9941;border-top:5px solid transparent;border-bottom:5px solid transparent;transform:rotate(-6deg)}
+.brand-text h1{font-size:clamp(19px,2.2vw,27px);letter-spacing:.2px;color:#235067;font-weight:950}
+.brand-text em{color:#e47a2a;font-weight:1000;text-shadow:1px 2px #ffe5a8}
+.eyebrow{color:#408b79;font-size:10px;letter-spacing:1.4px}
+.tag,.section-tag,.small-tag{color:#366d57;border:2px solid #9ddab1;background:#eaffea;font-weight:900}
+.panel{border:3px solid #79bea2;background:#fffcf2;box-shadow:var(--shadow);border-radius:19px;color:#264954}
+.panel h3{color:#225c57;font-weight:950}
+.screen{gap:10px}
+.screen-heading h2,.result-heading h2{color:#235b53;font-weight:950;text-shadow:1px 2px #fff}
+.screen-heading p,.result-heading p{color:#476775}
+.primary-button{background:#ffb740;border:3px solid #d67a2a;color:#513c25;font-size:14px;font-weight:950;box-shadow:0 5px 0 #c27d35;padding:10px 18px;transition:transform .14s,box-shadow .14s}
+.primary-button:hover:not(:disabled){filter:brightness(1.05);transform:translateY(-2px);box-shadow:0 7px 0 #c27d35}
+.primary-button:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #c27d35}
+footer{color:#4c8694;font-size:10px;font-weight:650}
+/* setup */
+.setup-layout .panel{padding:clamp(12px,1.8vh,21px)}
+.stage-card{background:#f3ffed;color:#2b6057;border:2px solid #9fd4a5;box-shadow:0 3px 0 #83bd94;padding:12px}
+.stage-card strong{color:#265c4d}
+.stage-card small{color:#567f6c}
+.stage-card[aria-pressed="true"]{background:#d4f9cd;border-color:#2da858;box-shadow:0 4px 0 #73bd78,inset 0 0 0 2px #faffee}
+.stage-card:hover{border-color:#39ae6b}
+.stage-segments span,.setup-preview span{background:#ffcb77;color:#704424;border:2px solid #c99445;font-weight:950;border-radius:6px}
+.stage-segments span:nth-child(even),.setup-preview span:nth-child(even){background:#ffecaa}
+.custom-head strong,.limit-input-label{color:#285f56}
+.custom-head span,.setup-hint,.interval-field,.beam-preview-title{color:#587d72}
+.interval-field input,#limit-input{background:#fff;color:#275469;border:2px solid #9ac8b4;box-shadow:inset 0 2px 3px #d9eae488}
+.interval-field input:focus,#limit-input:focus{border-color:#40ae77}
+.limit-input-label strong{color:#e27b29}
+.rules-chips span{background:#e8f9d9;border:2px solid #91ca9a;color:#385e50;font-weight:800}
+.rules-chips b{color:#d76b25}
+.setup-rules .primary-button{margin-top:auto}
+.error-text{color:#b43628}
+.setup-footnote{color:#497b81}
+/* current turn and navigation */
+.battle-topline{height:69px;gap:10px}
+.battle-team{border:3px solid #a9c9dd;background:#f7fcff;border-radius:16px;padding:7px 16px;box-shadow:0 4px 0 #9ccddd}
+.battle-team strong{font-weight:950;color:#3179b8}
+.battle-team small{color:#618299;font-weight:800}
+.player-blue.active{background:#d6efff;border-color:#2489e8;box-shadow:0 4px 0 #429ad4}
+.player-blue strong{color:#176dc2}
+.player-orange.active{background:#ffdfac;border-color:#e88b38;box-shadow:0 4px 0 #e4a051}
+.player-orange strong{color:#c85d25}
+.turn-center{background:#fffefa;border:3px solid #83c49f;border-radius:16px;box-shadow:0 4px 0 #81be98;color:#2c6659}
+.turn-center span{color:#59917e}
+.turn-center strong{font-weight:950}
+body[data-turn-theme="orange"] .turn-center{background:#fff0d2;border-color:#eba24e;box-shadow:0 4px 0 #edbd75}
+.battle-toolbar{height:36px}
+.stage-info{color:#316e65;font-size:12px}
+.toolbar-actions button,.visibility-toggle,.result-top-actions button:not(.primary-button),.result-controls button{background:#e5f8ee;color:#286057;border:2px solid #75bfa5;border-radius:11px;font-weight:900;padding:6px 12px;box-shadow:0 2px 0 #a3c8a7}
+.toolbar-actions button:hover:not(:disabled),.visibility-toggle:hover,.result-controls button:hover{background:#c5f4df}
+/* play area */
+.battle-columns{grid-template-columns:minmax(0,1.65fr) minmax(290px,.79fr);gap:12px}
+.play-panel{padding:11px 13px;gap:8px}
+.beam-stage{border:3px solid #65ad91;border-radius:16px;background:#93e0ff;min-height:0;overflow:hidden;box-shadow:inset 0 2px 8px #5faed566}
+.beam-stage svg{height:100%;max-height:none}
+body[data-turn-theme="orange"] .play-panel,body[data-turn-theme="orange"] .beam-stage{border-color:#e6a252}
+body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
+.load-picker-title strong{color:#3c6554}
+.load-option{background:#eaf8ff;color:#205f82;border:2px solid #8dc5d4;border-radius:13px;box-shadow:0 3px 0 #b0d4db;padding:7px 13px;font-weight:950}
+.load-option small{color:#497989}
+.load-option.active{background:#d0ecff;border-color:#3488df;box-shadow:0 3px 0 #68a5db}
+.load-option.special.active{background:#fff0bd;border-color:#e9a13b;box-shadow:0 3px 0 #e9bb73}
+.load-option:hover:not(:disabled){filter:brightness(1.045)}
+.hook-actions{gap:8px}
+.hook-button{background:#e8fbe7;color:#225e59;border:2px solid #7abc92;border-radius:13px;box-shadow:0 3px 0 #9bcda2;padding:9px 11px;gap:2px}
+.hook-button:hover:not(:disabled),body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#fff0c9;color:#5f4a2c;border-color:#edab52;transform:translateY(-1px)}
+.hook-pos{color:#3ca474}
+.hook-button strong{color:#255c59;font-weight:950}
+.hook-sub,.hook-result{color:#557c72}
+.hook-result.danger{color:#b53a3e}
+.action-note{color:#56837b;font-size:10px}
+/* right hand sidebar */
+.battle-side{gap:8px}
+.battle-side .panel{padding:11px 13px}
+.limit-panel{background:#fefaf2;border-color:#efba6d;box-shadow:0 4px 0 #eac18d}
+.visibility-toggle{background:#fff2d3;border-color:#e7b061;color:#a26224}
+.metric span{color:#2a795f}
+.metric small{color:#607d74}
+.gauge{background:#c3e3d4;border:1px solid #94c0b2}
+#gauge-fill{background:linear-gradient(90deg,#38bf6b,#ffd345,#f48443)}
+.limit-label,.risk-text{color:#618174}
+.plot-panel svg,.result-inspection svg{background:#f3fcfd;border:2px solid #a3d9dc;border-radius:12px}
+.stats-grid{color:#577c77}
+.stats-grid b{color:#235b6a}
+.history-panel{background:#f7fff4}
+.history-list li{border-bottom:1px solid #c8e4d4;color:#40645e}
+.history-list .blue{color:#1c77ce}
+.history-list .orange{color:#d86a20}
+/* bright cartoon breaking screen */
+.break-screen{gap:8px;justify-content:space-evenly}
+.break-head .eyebrow{color:#b06a29}
+.break-head h2{font-size:clamp(23px,3.2vw,41px);font-weight:1000;letter-spacing:.4px;color:#e36a3d;text-shadow:3px 3px 0 #ffec9f,-2px -1px 0 #fff}
+.break-head p{color:#436e64;font-weight:800}
+.fracture-stage{background:#94e3ff;border:4px solid #e8a357;border-radius:24px;box-shadow:0 7px 0 #cb8551;min-height:160px;max-height:49vh;isolation:isolate}
+.fracture-stage svg{height:100%;width:100%}
+.fracture-stage .fracture-left{transform-box:fill-box;transform-origin:0 50%;animation:cartoon-break-left 1.86s ease-in-out both}
+.fracture-stage .fracture-right{transform-box:fill-box;transform-origin:100% 50%;animation:cartoon-break-right 1.86s ease-in-out both}
+.fracture-stage .swing-break{transform-box:fill-box;transform-origin:50% 0;animation:cartoon-swing 1.86s ease-in-out both}
+.fracture-stage .crack-burst{transform-box:fill-box;transform-origin:50% 65%;animation:cartoon-impact 1.86s ease-out both}
+.fracture-stage .escape-bird{transform-box:fill-box;transform-origin:50% 50%;animation:cartoon-fly 1.86s ease-out both}
+.fracture-stage .escape-0{--fly-x:-45px;--fly-rot:-20deg}
+.fracture-stage .escape-1{--fly-x:45px;--fly-rot:20deg}
+.fracture-stage .wood-chip{animation:cartoon-chip 1.86s ease-out both}
+.fracture-flash{background:#fff8d3;animation:cartoon-flash 1.86s ease-out both;mix-blend-mode:screen}
+.break-result{padding:8px 24px;background:#fff9e6;border:3px solid #ebac55;border-radius:18px;box-shadow:0 4px 0 #f3d99e}
+.break-result strong{color:#bb5528;font-weight:950}
+.break-result span{color:#39685b}
+.break-hint{color:#356b68;font-size:13px;font-weight:850}
+.fracture-stage.ready:hover{border-color:#f2bc49}
+@keyframes cartoon-break-left{0%,25%{transform:none}31%{transform:translateY(5px) rotate(-1deg)}46%{transform:translateY(-4px) rotate(-3deg)}65%,100%{transform:translate(-2px,15px) rotate(14deg)}}
+@keyframes cartoon-break-right{0%,25%{transform:none}32%{transform:translateY(5px) rotate(2deg)}46%{transform:translateY(-5px) rotate(4deg)}65%,100%{transform:translate(2px,15px) rotate(-14deg)}}
+@keyframes cartoon-swing{0%,27%{transform:rotate(0)}35%{transform:rotate(13deg)}56%{transform:rotate(-19deg)}78%{transform:rotate(12deg)}100%{transform:rotate(-8deg)}}
+@keyframes cartoon-impact{0%,36%{opacity:0;transform:scale(.4)}43%{opacity:1;transform:scale(1.2)}61%,100%{opacity:1;transform:scale(1)}}
+@keyframes cartoon-fly{0%,37%{opacity:0;transform:none}44%{opacity:1}67%,100%{opacity:1;transform:translate(var(--fly-x),-76px) rotate(var(--fly-rot))}}
+@keyframes cartoon-chip{0%,40%{opacity:0}55%{opacity:1}100%{opacity:.85;transform:translateY(45px) rotate(10deg)}}
+@keyframes cartoon-flash{0%,40%{opacity:0}43%{opacity:.55}49%,100%{opacity:0}}
+/* results */
+.result-heading{background:#f4ffeed9;border:2px solid #a9d5ab;border-radius:17px;padding:9px 15px}
+.result-heading h2 span{color:#d76b20}
+.result-m{font-weight:950}
+.plot-legend,.result-detail{color:#4c786f}
+.plot-legend .current-line{background:#2985e9}
+.plot-legend .previous-line{background:repeating-linear-gradient(90deg,#839c9d 0 6px,transparent 6px 10px)}
+.plot-legend .failure-line{background:repeating-linear-gradient(90deg,#d95d59 0 6px,transparent 6px 10px)}
+.result-turn-button{border:2px solid #b8dcc4;background:#f8fff7;color:#28545a;border-radius:13px;padding:7px 9px;box-shadow:0 2px 0 #d1e4d0}
+.result-turn-button.selected{background:#fff1ba;border-color:#e7a34c;box-shadow:0 2px 0 #eccf87}
+.result-turn-button:hover{background:#e0f7e1}
+.result-turn-meta span{color:#2779ca;font-weight:900}
+.result-turn-meta span.orange{color:#d26a28}
+.result-turn-meta small{color:#557d76}
+.result-mini{background:#effcff;border:1px solid #c6e3e7}
+/* small laptop window retains no document scrolling; content panels can scroll if necessary */
+@media(max-height:740px) and (min-width:761px){.app-shell{padding-top:5px;gap:5px}.masthead{height:45px}.battle-topline{height:54px}.battle-toolbar{height:32px}.play-panel{gap:5px;padding:8px}.load-option{padding:5px 9px}.hook-button{padding:6px 8px}.battle-side{gap:5px}.battle-side .panel{padding:7px 10px}.setup-layout .panel{gap:7px}.stage-card{padding:8px}.result-columns .panel{padding:9px}.break-head h2{font-size:27px}}
+@media(max-width:760px){
+ .app-shell{padding:5px 7px 3px;gap:5px}.masthead{height:43px;padding:3px 9px;border-width:2px;border-radius:13px;box-shadow:0 3px 0 #69b682}.brandmark{width:28px;height:28px;border-width:2px}.brandmark::before{left:5px;top:5px;width:14px;height:13px}.brandmark::after{left:19px;top:10px}.brand-text h1{font-size:16px}.tag{font-size:8px}.panel{border-width:2px;border-radius:12px;box-shadow:0 2px 0 #a7cbb1}.battle-topline{height:50px;gap:3px}.battle-team{padding:4px;border-width:2px;border-radius:10px;box-shadow:0 2px 0 #a5cfe1}.battle-team strong{font-size:10px}.battle-team small{font-size:8px}.turn-center{border-width:2px;border-radius:10px}.battle-toolbar{height:32px}.stage-info{font-size:9px}.toolbar-actions button{font-size:9px;padding:5px}.battle-columns{grid-template-columns:1fr;grid-template-rows:minmax(0,1.6fr) minmax(135px,.85fr);gap:5px}.play-panel{padding:5px;gap:4px}.beam-stage{border-width:2px}.load-option{min-width:82px;padding:4px 6px}.hook-button{padding:4px 6px;border-width:2px}.hook-pos,.hook-sub,.hook-result{font-size:8px}.battle-side{gap:5px}.battle-side .panel{padding:6px}.limit-panel{box-shadow:none}.risk-text{font-size:8px}.metric span{font-size:25px}.result-heading{padding:5px 7px}.result-turn-button{padding:3px}.result-inspection svg{border-width:1px}.fracture-stage{min-height:115px;max-height:43vh;border-width:3px;box-shadow:0 4px 0 #d39c65}.break-result{padding:5px 10px;border-width:2px}.setup-layout .panel{padding:7px;gap:5px}.stage-card{padding:6px;border-width:2px}.stage-segments span,.setup-preview span{border-width:1px}.setup-rules #limit-input{font-size:20px;padding:4px}}
+@media(prefers-reduced-motion:reduce){.fracture-stage .fracture-left,.fracture-stage .fracture-right,.fracture-stage .swing-break,.fracture-stage .crack-burst,.fracture-stage .escape-bird,.fracture-stage .wood-chip,.fracture-flash{animation-duration:.01ms!important;animation-delay:0ms!important}}
+/* Keep the compact mobile masthead strictly on one line. */
+@media(max-width:760px){.masthead .brand-text .eyebrow{display:none}.brand-text h1{font-size:clamp(14px,4.2vw,18px);white-space:nowrap}.brand-text{display:flex;align-items:center}.masthead .tag{font-size:7px}.masthead{gap:8px}}
+/* Allocate meaningful space for the bending-moment chart when revealed. */
+@media(min-width:761px){
+ body[data-moments="shown"] .battle-side .panel{padding:8px 12px}
+ body[data-moments="shown"] .metric{margin:1px 0 4px}
+ body[data-moments="shown"] .metric span{font-size:34px}
+ body[data-moments="shown"] .risk-text{margin-top:3px;line-height:1.2}
+ body[data-moments="shown"] .limit-label{margin-top:3px}
+ body[data-moments="shown"] .plot-panel{flex:2.2;min-height:125px;gap:2px}
+ body[data-moments="shown"] .plot-panel svg{flex:1;min-height:88px}
+ body[data-moments="shown"] .stats-panel{flex:none}
+ body[data-moments="shown"] .stats-grid{gap:2px;margin-top:4px}
+ body[data-moments="shown"] .history-panel{flex:.5;min-height:65px}
+}
+/* v0.7: sunny countdown / bird migration mode */
+.time-setting{border:2px dashed #96d4ac;border-radius:15px;background:#f0fff4;padding:10px 13px;display:grid;gap:5px}
+.time-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.time-heading label{font-size:14px;font-weight:950;color:#326d5b}
+.time-heading output{background:#ffdf7d;border:2px solid #e4aa43;border-radius:10px;color:#81501c;font-size:18px;font-weight:950;min-width:83px;text-align:center;padding:3px 8px}
+#turn-seconds{width:100%;accent-color:#3cae77;cursor:pointer;min-height:24px}
+#turn-seconds:disabled{opacity:.35;cursor:not-allowed}
+.range-labels{display:flex;justify-content:space-between;color:#617e6f;font-size:10px;font-weight:850;margin-top:-4px}
+.no-time-label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:850;color:#37695a;cursor:pointer}
+.no-time-label input{width:18px;height:18px;accent-color:#42ad78}
+.time-setting .setup-hint{font-size:10px;line-height:1.45}
+.turn-center{position:relative;gap:0}
+.turn-center>span{font-size:10px}
+.turn-center>strong{font-size:15px}
+.turn-clock{display:flex;align-items:center;gap:3px;border:2px solid #83c6ad;background:#fffef3;border-radius:15px;padding:1px 10px;color:#176d54;font-variant-numeric:tabular-nums;white-space:nowrap;box-shadow:0 2px 0 #b6e3c3}
+.turn-clock strong{font-size:20px;font-weight:1000;min-width:2ch;text-align:right}
+.turn-clock span{font-size:11px;font-weight:900}
+.turn-clock .clock-icon{font-size:18px}
+.turn-clock.urgent{color:#bf382f;border-color:#e7795d;background:#fff0d2;animation:timer-pulse .65s ease-in-out infinite alternate}
+@keyframes timer-pulse{from{transform:scale(1)}to{transform:scale(1.065)}}
+/* Full game viewport centered hand-off: timer does not run behind it. */
+.turn-popup{position:fixed;z-index:50;inset:0;display:flex;align-items:center;justify-content:center;background:#18495f6e;backdrop-filter:blur(4px);padding:14px}
+.turn-popup-card{width:min(440px,93vw);background:#ecfaff;border:5px solid #2587d9;border-radius:34px;box-shadow:0 16px 0 #16518b,0 26px 48px #29516b5f;text-align:center;padding:23px 28px 25px;color:#195a91;animation:popup-hop .38s cubic-bezier(.16,1.5,.36,1) both}
+.turn-popup[data-player="orange"] .turn-popup-card{background:#fff5dd;border-color:#f19438;box-shadow:0 16px 0 #ba591f,0 26px 48px #8b562b66;color:#b15a16}
+.popup-kicker{font-size:12px;font-weight:950;letter-spacing:2px}
+.popup-bird{font-size:54px;line-height:1.2;margin:5px 0 0;filter:drop-shadow(2px 4px 0 #ffffff88)}
+.turn-popup-card h2{font-size:clamp(26px,4vw,39px);margin:3px 0 8px;font-weight:1000;letter-spacing:1px}
+.turn-popup-card p{font-size:14px;font-weight:850;margin:0 0 16px}
+.turn-popup-card button{border-radius:15px;padding:10px 25px;background:#fffdf5;border:2px solid currentColor;color:inherit;font-weight:950;box-shadow:0 3px 0 #8884}
+@keyframes popup-hop{from{transform:translateY(35px) scale(.75);opacity:.2}to{transform:translateY(0) scale(1);opacity:1}}
+/* Larger public point load and EVERY bird: generated directly from moves. */
+.beam-stage .hook-load-badge{filter:drop-shadow(0 3px 2px #4a917777)}
+.beam-stage .hook-load-value{paint-order:stroke;stroke:#fff9e7;stroke-width:1px}
+@media(max-height:740px) and (min-width:761px){
+ .time-setting{padding:6px 10px;gap:1px}
+ .time-heading output{font-size:15px;padding:1px 6px}
+ .time-setting .setup-hint{font-size:9px}
+ .setup-rules .rules-chips span{padding:5px}
+ .turn-clock strong{font-size:16px}
+ .turn-center>span{font-size:8px}
+ .turn-center>strong{font-size:12px}
+}
+@media(max-width:760px){
+ .time-setting{padding:5px 8px;gap:2px}
+ .time-heading label{font-size:10px}
+ .time-heading output{font-size:12px;padding:1px 5px;min-width:52px}
+ #turn-seconds{min-height:19px}
+ .no-time-label{font-size:10px;gap:5px}
+ .no-time-label input{width:14px;height:14px}
+ .time-setting .setup-hint{font-size:9px;line-height:1.2}
+ .turn-center>strong{font-size:11px}
+ .turn-center>span{font-size:7px}
+ .turn-clock{padding:0 3px;gap:1px;border-width:1px}
+ .turn-clock strong{font-size:15px}
+ .turn-clock span{font-size:8px}
+ .turn-clock .clock-icon{font-size:12px}
+ .turn-popup-card{padding:18px 14px;border-radius:25px}
+}
+@media(prefers-reduced-motion:reduce){.turn-popup-card,.turn-clock.urgent{animation:none!important}}
+/* Keep the new countdown controls inside the setup card, including at 768px. */
+.setup-layout .panel{gap:7px;padding:12px 15px}
+.setup-rules .primary-button{padding:9px 16px}
+.setup-rules #limit-input{font-size:26px;padding:9px 12px}
+.setup-rules .rules-chips span{padding:6px}
+.setup-rules .setup-preview{height:44px}
+@media(max-width:760px){.setup-layout .panel{padding:7px;gap:4px}.setup-rules #limit-input{font-size:20px;padding:4px}.setup-rules .setup-preview{height:28px}}
+
+</style>
+<script>
+/* MOMENT BATTLE v0.5 — 2-support simply-supported beam (N, m, N·m).
+   Educational illustration, not a structural design tool. */
+(function(root,factory){
+  const api=factory();
+  if(typeof module==='object'&&module.exports)module.exports=api;
+  else root.BeamPhysics=api;
+})(typeof globalThis!=='undefined'?globalThis:this,function(){
+  'use strict';
+  const WEIGHT=10,SPECIAL_WEIGHT=5,LIMIT=100,EPS=1e-8;
+  function createStage(intervals,meta={}){
+    if(!Array.isArray(intervals)||intervals.length!==4||intervals.some(v=>typeof v!=='number'||!Number.isFinite(v)||v<=0)){
+      throw new TypeError('4 positive finite beam intervals are required');
+    }
+    const span=intervals.reduce((a,b)=>a+b,0);
+    if(span<1||span>100)throw new RangeError('beam length must be between 1 and 100 metres');
+    let pos=0;
+    const hooks=intervals.slice(0,-1).map(v=>(pos+=v));
+    return Object.freeze({id:meta.id||'custom',name:meta.name||'CUSTOM',title:meta.title||'自由設定',span,
+      intervals:Object.freeze(intervals.slice()),hooks:Object.freeze(hooks)});
+  }
+  const STAGES=Object.freeze({
+    stage1:createStage([1,2,3,4],{id:'stage1',name:'STAGE 01',title:'基本の梁'}),
+    stage2:createStage([2,4,1,3],{id:'stage2',name:'STAGE 02',title:'変則フック配置'})
+  });
+  const DEFAULT_STAGE='stage1';
+  function getStage(stage=DEFAULT_STAGE){
+    if(typeof stage==='string'){
+      if(!Object.prototype.hasOwnProperty.call(STAGES,stage))throw new RangeError('unknown stage');
+      return STAGES[stage];
+    }
+    if(stage&&Array.isArray(stage.intervals))return createStage(stage.intervals,{id:stage.id,name:stage.name,title:stage.title});
+    throw new TypeError('invalid stage');
+  }
+  function checkLimit(limit){if(typeof limit!=='number'||!Number.isFinite(limit)||limit<=0)throw new RangeError('limit must be positive');}
+  function analyzeLoads(loads,stage=DEFAULT_STAGE,limit=LIMIT){
+    const {span,hooks}=getStage(stage);checkLimit(limit);
+    if(!Array.isArray(loads)||loads.some(v=>!v||!hooks.includes(v.x)||!Number.isFinite(v.p)||v.p<0))throw new TypeError('invalid load');
+    const normalized=loads.map(v=>({x:v.x,p:v.p}));
+    const RA=normalized.reduce((s,v)=>s+v.p*(span-v.x)/span,0);
+    const RB=normalized.reduce((s,v)=>s+v.p*v.x/span,0);
+    function momentAt(x){
+      if(typeof x!=='number'||!Number.isFinite(x)||x<0||x>span)throw new RangeError('x outside span');
+      const m=RA*x-normalized.reduce((s,v)=>s+v.p*Math.max(0,x-v.x),0);
+      return Math.abs(m)<EPS?0:m;
+    }
+    const points=[0,...hooks,span].map(x=>({x,m:momentAt(x)}));
+    const max=points.reduce((a,b)=>b.m>a.m?b:a,points[0]);
+    return {stageId:getStage(stage).id,span,hooks:hooks.slice(),counts:hooks.map(x=>normalized.filter(v=>v.x===x).length),
+      loads:normalized,RA,RB,totalLoad:normalized.reduce((s,v)=>s+v.p,0),points,maxMoment:max.m,
+      maxPosition:max.x,limit,failed:max.m>=limit-EPS,momentAt};
+  }
+  function analyze(counts,stage=DEFAULT_STAGE,limit=LIMIT){
+    const {hooks}=getStage(stage);
+    if(!Array.isArray(counts)||counts.length!==hooks.length||counts.some(n=>!Number.isSafeInteger(n)||n<0))throw new TypeError('invalid counts');
+    return analyzeLoads(hooks.map((x,i)=>({x,p:counts[i]*WEIGHT})),stage,limit);
+  }
+  function normalizeHistory(history,stage=DEFAULT_STAGE){
+    const {hooks}=getStage(stage);
+    if(!Array.isArray(history))throw new TypeError('history must be an array');
+    const bonus=[0,0];
+    return history.map((e,i)=>{
+      const m=typeof e==='number'?{x:e,p:WEIGHT}:e;
+      if(!m||!hooks.includes(m.x)||![WEIGHT,SPECIAL_WEIGHT].includes(m.p))throw new TypeError('invalid move: 10N or 5N only');
+      if(m.p===SPECIAL_WEIGHT&&++bonus[i%2]>1)throw new RangeError('5N is once per player');
+      return {x:m.x,p:m.p};
+    });
+  }
+  const fromHistory=(history,stage=DEFAULT_STAGE,limit=LIMIT)=>analyzeLoads(normalizeHistory(history,stage),stage,limit);
+  const previewHistory=(h,x,p=WEIGHT,stage=DEFAULT_STAGE,limit=LIMIT)=>fromHistory([...h,{x,p}],stage,limit);
+  function specialUsed(history,player,stage=DEFAULT_STAGE){
+    if(player!==0&&player!==1)throw new RangeError('player must be 0 or 1');
+    return normalizeHistory(history,stage).some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);
+  }
+  function preview(counts,x,stage=DEFAULT_STAGE,limit=LIMIT){
+    const n=counts.slice(),i=getStage(stage).hooks.indexOf(x);
+    if(i<0)throw new RangeError('not a hook');n[i]++;return analyze(n,stage,limit);
+  }
+  return Object.freeze({WEIGHT,SPECIAL_WEIGHT,LIMIT,STAGES,DEFAULT_STAGE,SPAN:10,HOOKS:STAGES.stage1.hooks,
+    createStage,getStage,analyzeLoads,analyze,normalizeHistory,fromHistory,previewHistory,preview,specialUsed});
+});
+
+</script>
+<script>
+(function(root,factory){
+  const physics=typeof module==='object'&&module.exports?require('./physics.js'):root.BeamPhysics;
+  const api=factory(physics);
+  if(typeof module==='object'&&module.exports)module.exports=api;
+  else root.MomentGameState=api;
+})(typeof globalThis!=='undefined'?globalThis:this,function(physics){
+  'use strict';
+  function undoHistory(history){if(!Array.isArray(history))throw new TypeError('invalid history');return history.slice(0,-1);}
+  function resultTimeline(history,stage=physics.DEFAULT_STAGE,limit=physics.LIMIT){
+    if(!Array.isArray(history))throw new TypeError('invalid history');
+    return history.map((move,i)=>({turn:i+1,player:i%2,move:{x:move.x,p:move.p,auto:Boolean(move.auto)},
+      analysis:physics.fromHistory(history.slice(0,i+1),stage,limit),
+      previousMax:i?physics.fromHistory(history.slice(0,i),stage,limit).maxMoment:0}));
+  }
+  function normalizeTurnSeconds(raw,unlimited=false){
+    if(unlimited)return null;
+    const n=Number(raw);
+    if(!Number.isInteger(n)||n<10||n>60||n%5!==0)throw new RangeError('turn seconds must be 10..60 in 5-second steps');
+    return n;
+  }
+  function timeoutMove(stage,random=Math.random){
+    if(!stage||!Array.isArray(stage.hooks)||stage.hooks.length===0)throw new TypeError('invalid stage');
+    const value=Number(random());
+    if(!Number.isFinite(value)||value<0||value>=1)throw new RangeError('random must be in [0,1)');
+    return {x:stage.hooks[Math.floor(value*stage.hooks.length)],p:physics.WEIGHT,auto:true};
+  }
+  return Object.freeze({undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove});
+});
+
+</script>
+<script>
+(function(){
+'use strict';
+const {STAGES,getStage,createStage,WEIGHT,SPECIAL_WEIGHT,LIMIT,fromHistory,previewHistory,specialUsed}=BeamPhysics;
+const {undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove}=MomentGameState;
+const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
+const names=['青チーム','橙チーム'];
+let mode='setup',stage=getStage('stage1'),stageChoice='stage1',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
+let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false;
+const history=[];let breakTimer=null,breakReady=false;
+const fmt=n=>Number.isInteger(n)?String(n):Number(n.toFixed(2)).toString();
+const pos=()=>stage.hooks,span=()=>stage.span;
+const hookName=x=>{const i=pos().indexOf(x);return i<0?`${fmt(x)}m断面`:`フック${i+1}`;};
+const segments=s=>s.intervals.map(x=>`${fmt(x)}m`).join(' / ');
+const svg=(tag,attrs={},parent)=>{const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,String(v)));if(parent)parent.appendChild(e);return e;};
+const label=(parent,x,y,text,attrs={})=>{const e=svg('text',{x,y,'text-anchor':'middle',fill:'#295e76','font-size':15,...attrs},parent);e.textContent=text;return e;};
+function openScreen(next){
+ mode=next;
+ for(const id of ['setup','battle','break','result'])$(`${id}-screen`).hidden=id!==next;
+ $('header-stage').textContent=next==='setup'?'BEAM STRATEGY · 2P':`${stage.name} · ${fmt(span())} m · LIMIT ${fmt(limit)} N·m`;
+ document.body.dataset.turnTheme=next==='battle'?history.length%2?'orange':'blue':next==='break'?'orange':'blue';
+}
+function buildSetup(){
+ const slider=$('turn-seconds'),noLimit=$('no-time-limit');
+ function refreshTimeSetting(){
+   slider.disabled=noLimit.checked;
+   $('turn-seconds-value').textContent=noLimit.checked?'無制限':`${slider.value}秒`;
+ }
+ slider.addEventListener('input',refreshTimeSetting);
+ noLimit.addEventListener('change',refreshTimeSetting);
+ refreshTimeSetting();
+ const options=$('stage-options');options.replaceChildren();
+ Object.values(STAGES).forEach(s=>{
+   const b=document.createElement('button');b.type='button';b.className='stage-card';b.dataset.stage=s.id;
+   const code=document.createElement('span');code.className='eyebrow';code.textContent=s.name;
+   const title=document.createElement('strong');title.textContent=s.title;
+   const bar=document.createElement('div');bar.className='stage-segments';
+   s.intervals.forEach(n=>{const e=document.createElement('span');e.style.flex=String(n);e.textContent=`${n}m`;bar.appendChild(e);});
+   const sub=document.createElement('small');sub.textContent=`全長 ${fmt(s.span)}m · 3フック`;
+   b.append(code,title,bar,sub);
+   b.addEventListener('click',()=>{stageChoice=s.id;fillIntervals(s.intervals);updateSetup();});options.append(b);
+ });
+ const inputs=$('interval-inputs');inputs.replaceChildren();
+ for(let i=0;i<4;i++){
+   const field=document.createElement('label');field.className='interval-field';field.textContent=`区間 ${i+1} (m)`;
+   const input=document.createElement('input');input.type='number';input.min='.1';input.max='100';input.step='.1';input.id=`interval-${i}`;input.required=true;
+   input.addEventListener('input',()=>{stageChoice='custom';updateSetup();});field.append(input);inputs.append(field);
+ }
+ fillIntervals(STAGES.stage1.intervals);
+ $('limit-input').addEventListener('input',updateSetup);
+ $('start-game').addEventListener('click',start);
+ updateSetup();
+}
+function fillIntervals(intervals){intervals.forEach((n,i)=>{$(`interval-${i}`).value=String(n);});}
+function readSetup(){
+ const lengths=[0,1,2,3].map(i=>{const el=$(`interval-${i}`);return el.value.trim()===''?NaN:Number(el.value);});
+ if(lengths.some(n=>!Number.isFinite(n)||n<=0))throw new Error('区間寸法はすべて0より大きい数で指定してください。');
+ const sum=lengths.reduce((a,b)=>a+b,0);
+ if(sum<1||sum>100)throw new Error('梁の全長は1〜100mにしてください。');
+ const entered=$('limit-input').value.trim(),m=entered===''?NaN:Number(entered);
+ if(!Number.isFinite(m)||m<1||m>10000)throw new Error('限界曲げモーメントは1〜10000 N·mで設定してください。');
+ const seconds=normalizeTurnSeconds($('turn-seconds').value,$('no-time-limit').checked);
+ const s=stageChoice==='custom'?createStage(lengths):getStage(stageChoice);
+ return {stage:s,limit:m,turnSeconds:seconds};
+}
+function updateSetup(){
+ document.querySelectorAll('[data-stage]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stage===stageChoice)));
+ const values=[0,1,2,3].map(i=>Number($(`interval-${i}`).value));
+ $('setup-preview').replaceChildren();
+ if(values.every(v=>v>0&&Number.isFinite(v))){
+   values.forEach(v=>{const el=document.createElement('span');el.style.flex=String(v);el.textContent=`${fmt(v)}m`;$('setup-preview').append(el);});
+   $('setup-preview').setAttribute('aria-label',`区間 ${values.map(fmt).join('m、')}m`);
+ }
+ try{readSetup();$('setup-error').hidden=true;$('start-game').disabled=false;}
+ catch(err){$('setup-error').hidden=false;$('setup-error').textContent=err.message;$('start-game').disabled=true;}
+}
+function start(){
+ let config;try{config=readSetup();}catch(err){updateSetup();return;}
+ stopClock();clearHandoff();
+ stage=config.stage;limit=config.limit;turnSeconds=config.turnSeconds;history.length=0;selectedWeight=WEIGHT;showMoments=false;
+ prepareGame();openScreen('battle');render();showHandoff(true);
+}
+function prepareGame(){
+ const out=$('hook-buttons');out.replaceChildren();
+ pos().forEach((x,i)=>{
+   const b=document.createElement('button');b.type='button';b.className='hook-button';b.dataset.hook=String(i);
+   b.innerHTML=`<span class="hook-pos">HOOK ${String(i+1).padStart(2,'0')}</span><strong>フック ${i+1}</strong><span class="hook-sub"></span><span class="hook-result"></span>`;
+   out.append(b);
+ });
+ $('span-label').textContent=`L = ${fmt(span())} m`;
+ $('battle-stage-info').textContent=`${stage.name} · ${segments(stage)} · LIMIT ${fmt(limit)} N·m · ${turnSeconds===null?'時間無制限':`${turnSeconds}秒/手`}`;
+ $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
+}
+function loadsAt(x){return history.filter(m=>m.x===x);}
+// v0.6 outdoor cartoon artwork. The SVG scene is generated from the same
+// calculated hook coordinates and load history used by the physics engine.
+function grassTuft(root,x,y,scale=1){
+ svg('path',{d:`M${x-8*scale} ${y} Q${x-11*scale} ${y-17*scale} ${x-15*scale} ${y-14*scale} M${x} ${y} Q${x-3*scale} ${y-22*scale} ${x+2*scale} ${y-24*scale} M${x+8*scale} ${y} Q${x+10*scale} ${y-17*scale} ${x+16*scale} ${y-18*scale}`,stroke:'#198947','stroke-width':3*scale,fill:'none','stroke-linecap':'round'},root);
+}
+function scenery(root,h,beamY,left=82,right=822){
+ svg('rect',{x:0,y:0,width:900,height:h,fill:'#93e0ff'},root);
+ svg('path',{d:`M0 ${h*.72} Q185 ${h*.55} 342 ${h*.74} Q550 ${h*.58} 900 ${h*.76} V${h} H0Z`,fill:'#c2eff0'},root);
+ svg('path',{d:`M0 ${h*.91} Q175 ${h*.78} 390 ${h*.93} Q590 ${h*.78} 900 ${h*.91} V${h} H0Z`,fill:'#8ed8d9'},root);
+ // Friendly clouds and a sunny corner.
+ [[154,48,.78],[350,68,.54],[690,44,.75]].forEach(([x,y,k])=>{
+  const g=svg('g',{transform:`translate(${x} ${y}) scale(${k})`},root);
+  svg('ellipse',{cx:0,cy:7,rx:47,ry:15,fill:'#fff','fill-opacity':'.92'},g);
+  svg('circle',{cx:-22,cy:-4,r:19,fill:'#fff'},g);
+  svg('circle',{cx:9,cy:-12,r:27,fill:'#fff'},g);
+  svg('circle',{cx:33,cy:0,r:17,fill:'#fff'},g);
+ });
+ const sun=svg('g',{class:'sun-art'},root);
+ const sx=847,sy=40;
+ for(let k=0;k<12;k++){
+  const a=k*Math.PI/6;
+  svg('line',{x1:sx+32*Math.cos(a),y1:sy+32*Math.sin(a),x2:sx+41*Math.cos(a),y2:sy+41*Math.sin(a),stroke:'#ffd136','stroke-width':5,'stroke-linecap':'round'},sun);
+ }
+ svg('circle',{cx:sx,cy:sy,r:27,fill:'#ffcd38',stroke:'#f5a925','stroke-width':3},sun);
+ svg('circle',{cx:sx-9,cy:sy-3,r:2.5,fill:'#8e5921'},sun);svg('circle',{cx:sx+9,cy:sy-3,r:2.5,fill:'#8e5921'},sun);
+ svg('path',{d:`M${sx-8} ${sy+8} Q${sx} ${sy+16} ${sx+9} ${sy+8}`,stroke:'#8e5921','stroke-width':2.5,fill:'none','stroke-linecap':'round'},sun);
+ // A canyon: two cliffs, visible bright grass cap and textured earth.
+ const grassTop=beamY+25;
+ for(const [side,a,b] of [['left',0,left],['right',right,900]]){
+  const path=side==='left'?`M0 ${grassTop} H${left-8} L${left+2} ${grassTop+18} L${left-4} ${h} H0Z`:`M${right+8} ${grassTop} H900 V${h} H${right+4} L${right-3} ${grassTop+19} Z`;
+  svg('path',{d:path,fill:'#c8894c',stroke:'#986139','stroke-width':3},root);
+  const startX=side==='left'?0:right+6,capWidth=side==='left'?left-6:900-right-6;
+  svg('path',{d:`M${startX} ${grassTop+7} H${startX+capWidth} L${startX+capWidth} ${grassTop-2} Q${startX+capWidth/2} ${grassTop-9} ${startX} ${grassTop-2}Z`,fill:'#46c85a',stroke:'#218d42','stroke-width':2},root);
+  for(const [xx,yy] of (side==='left'?[[18,grassTop+47],[52,grassTop+90],[19,grassTop+127]]:[[845,grassTop+48],[872,grassTop+84],[843,grassTop+123]])){
+   if(yy<h-4)svg('path',{d:`M${xx} ${yy} l15 -5 M${xx+3} ${yy+18} l18 7`,stroke:'#a76e3e','stroke-width':3,'stroke-linecap':'round'},root);
+  }
+ }
+ [22,52,841,878].forEach(x=>grassTuft(root,x,grassTop-2,.77));
+ // Flowers and small bushes on the cliff tops.
+ [[40,grassTop-20],[864,grassTop-19]].forEach(([x,y])=>{
+  svg('ellipse',{cx:x,cy:y+13,rx:21,ry:10,fill:'#25ae4a'},root);
+  svg('circle',{cx:x-10,cy:y+7,r:11,fill:'#65db5b'},root);
+  svg('circle',{cx:x+9,cy:y+2,r:14,fill:'#35b94a'},root);
+  svg('circle',{cx:x+9,cy:y-5,r:3.5,fill:'#fff9d9'},root);
+  svg('circle',{cx:x+9,cy:y-5,r:1.9,fill:'#ffa63b'},root);
+ });
+}
+function drawBird(parent,x,y,player,force,scale=1,classes=''){
+ const small=force===SPECIAL_WEIGHT;
+ const k=scale*(small?.74:1);
+ const g=svg('g',{class:classes,transform:`translate(${x} ${y}) scale(${k})`},parent);
+ const base=player===0?'#2584ec':'#ff8a31';
+ const dark=player===0?'#1558a9':'#c45a20';
+ const belly=player===0?'#bfe7ff':'#ffe3ba';
+ svg('ellipse',{cx:0,cy:2,rx:18,ry:17,fill:base,stroke:'#34384b','stroke-width':2},g);
+ svg('ellipse',{cx:1,cy:10,rx:12,ry:7,fill:belly},g);
+ svg('path',{d:'M-9 -13 Q-13 -27 -3 -21 M1 -13 Q-1 -28 8 -23',fill:'none',stroke:dark,'stroke-width':4,'stroke-linecap':'round'},g);
+ svg('path',{d:'M-12 0 Q-26 -1 -20 11 Q-9 14 -7 4',fill:dark,stroke:dark,'stroke-width':1},g);
+ svg('circle',{cx:8,cy:-4,r:5.1,fill:'white'},g);
+ svg('circle',{cx:9.7,cy:-4,r:2.2,fill:'#263249'},g);
+ svg('path',{d:'M16 0 l11 4 -11 7 Z',fill:'#ffd34b',stroke:'#b37828','stroke-width':1.4},g);
+ svg('circle',{cx:9,cy:7,r:2.7,fill:player===0?'#fa9db5':'#e85b5b','fill-opacity':'.8'},g);
+ svg('path',{d:'M-6 18 l-1 5 m8 -5 v5',stroke:'#87572b','stroke-width':2,'stroke-linecap':'round'},g);
+ return g;
+}
+function drawWoodBeam(root,x1,x2,y){
+ svg('rect',{x:x1,y,width:x2-x1,height:18,rx:4,fill:'#ac682d',stroke:'#7a472a','stroke-width':2.5},root);
+ svg('rect',{x:x1+3,y:y+2,width:x2-x1-6,height:6,rx:2,fill:'#ffd079'},root);
+ svg('path',{d:`M${x1+25} ${y+13} Q${(x1+x2)/2} ${y+10} ${x2-30} ${y+14}`,stroke:'#ce853d','stroke-width':2,fill:'none'},root);
+}
+function drawSupports(root,x1,x2,y){
+ [x1,x2].forEach((x,i)=>{
+  svg('path',{d:`M${x} ${y+18} l-16 24 h32Z`,fill:'#58829d',stroke:'#284e68','stroke-width':2},root);
+  if(i) [-9,9].forEach(dx=>svg('circle',{cx:x+dx,cy:y+48,r:5,fill:'#f3fbff',stroke:'#365979','stroke-width':2},root));
+ });
+}
+function drawSwing(root,x,top,bottom,moves,hookIndex,compact=false){
+ const w=compact?25:28;
+ svg('line',{x1:x-w+7,y1:top,x2:x-w,y2:bottom,stroke:'#8b562e','stroke-width':3,'stroke-linecap':'round'},root);
+ svg('line',{x1:x+w-7,y1:top,x2:x+w,y2:bottom,stroke:'#8b562e','stroke-width':3,'stroke-linecap':'round'},root);
+ svg('rect',{x:x-w-4,y:bottom,width:w*2+8,height:8,rx:3,fill:'#a76a38',stroke:'#754624','stroke-width':2},root);
+ svg('rect',{x:x-w-1,y:bottom+1,width:w*2+2,height:2,fill:'#ebbd7d'},root);
+ const count=moves.length,load=moves.reduce((total,m)=>total+m.p,0);
+ if(!count){
+   svg('circle',{cx:x,cy:bottom-18,r:12,fill:'#fff','fill-opacity':'.8',stroke:'#5bba68','stroke-width':2,'stroke-dasharray':'4 3'},root);
+   label(root,x,bottom-13,'+',{'font-size':21,fill:'#27855b','font-weight':900});
+ }else{
+   // Every single bird is drawn. Rows recede upward and diminish subtly in size,
+   // producing a fan of birds in depth instead of a count badge / multiplication sign.
+   // Rendering back-to-front keeps each new near bird visible.
+   const columns=compact?3:4;
+   const rows=Math.ceil(count/columns);
+   for(let row=rows-1;row>=0;row--){
+     const rowStart=row*columns,rowCount=Math.min(columns,count-rowStart);
+     const k=Math.max(.49,(compact?.68:.76)-row*.024);
+     for(let column=0;column<rowCount;column++){
+       const move=moves[rowStart+column];
+       const dx=(column-(rowCount-1)/2)*(compact?16:17)+row*1.5;
+       const dy=bottom-18-row*13-(column%2)*2;
+       const bird=drawBird(root,x+dx,dy,move.player,move.p,k,'perch-bird');
+       bird.setAttribute('data-bird-index',String(rowStart+column));
+       bird.setAttribute('data-bird-force',String(move.p));
+     }
+   }
+ }
+ // Loads remain PUBLIC regardless of whether the hidden M diagram is shown.
+ const text=`${fmt(load)} N`;
+ const badgeWidth=Math.max(71,text.length*15+21);
+ svg('rect',{x:x-badgeWidth/2,y:bottom+13,width:badgeWidth,height:33,rx:15,fill:'#fffef4',stroke:'#278f76','stroke-width':2.5,class:'hook-load-badge'},root);
+ label(root,x,bottom+37,text,{'font-size':24,'font-weight':950,fill:'#166a59',class:'hook-load-value'});
+ label(root,x,bottom+60,`${count}羽`,{'font-size':13,'font-weight':900,fill:'#225d70',class:'hook-bird-total'});
+}
+function drawBeam(data){
+ const root=$('beam-svg');root.replaceChildren();
+ const X=x=>82+740*x/span();
+ const y=99,pts=[0,...pos(),span()];
+ scenery(root,298,y,82,822);
+ stage.intervals.forEach((d,i)=>{
+  const l=X(pts[i]),r=X(pts[i+1]);
+  svg('line',{x1:l,x2:r,y1:51,y2:51,stroke:'#34738c','stroke-width':1.8},root);
+  svg('line',{x1:l,y1:44,x2:l,y2:59,stroke:'#34738c','stroke-width':1.8},root);
+  label(root,(l+r)/2,40,`${fmt(d)}m`,{'font-size':19,'font-weight':950,fill:'#205773',stroke:'#fff','stroke-width':3,'paint-order':'stroke'});
+ });
+ svg('line',{x1:X(span()),x2:X(span()),y1:44,y2:59,stroke:'#34738c','stroke-width':1.8},root);
+ drawWoodBeam(root,X(0),X(span()),y);drawSupports(root,X(0),X(span()),y);
+ pos().forEach((p,i)=>{
+  const moves=history.map((m,j)=>({...m,player:j%2})).filter(m=>m.x===p);
+  const leftGutter=i>0?X(p)-X(pos()[i-1]):999;
+  const rightGutter=i<pos().length-1?X(pos()[i+1])-X(p):999;
+  drawSwing(root,X(p),y+17,199,moves,i,Math.min(leftGutter,rightGutter)<80);
+ });
+ root.setAttribute('aria-label',`青空と崖の間にかかる両端単純支持梁、区間${segments(stage)}。茶色のブランコ3か所。青とオレンジの鳥の合計${history.length}羽。`);
+}
+function plotCoords(data,width,height,margin=60){
+ const max=Math.max(limit*1.15,data.maxMoment*1.15,1);
+ return {X:x=>margin+(width-2*margin)*x/span(),Y:m=>20+(height-60)*m/max,max};
+}
+function drawPlot(el,data,previous=null,player=null){
+ el.replaceChildren();
+ const {X,Y}=plotCoords(data,900,285,64);
+ const failure=Y(limit);
+ [0,.25,.5,.75,1].forEach(n=>{
+   const m=limit*n,y=Y(m);
+   svg('line',{x1:64,x2:836,y1:y,y2:y,stroke:n===1?'#e97d7d':'#35516b','stroke-dasharray':n===1?'9 6':'3 7'},el);
+   label(el,30,y+5,fmt(m),{'font-size':12,fill:n===1?'#c0524e':'#52768a'});
+ });
+ const path=pts=>pts.map((p,i)=>`${i?'L':'M'} ${X(p.x)} ${Y(p.m)}`).join(' ');
+ if(previous)svg('path',{d:path(previous.points),fill:'none',stroke:'#92a6a9','stroke-dasharray':'8 7','stroke-width':3},el);
+ const color=player===1?'#f1852d':'#267bdc';
+ svg('path',{d:path(data.points)+` L ${X(span())} ${Y(0)} Z`,fill:color,'fill-opacity':'.16'},el);
+ svg('path',{d:path(data.points),fill:'none',stroke:color,'stroke-width':5,'stroke-linejoin':'round','stroke-linecap':'round'},el);
+ data.points.forEach(pt=>svg('circle',{cx:X(pt.x),cy:Y(pt.m),r:4,fill:'#ffffff',stroke:color,'stroke-width':2},el));
+ [0,...pos(),span()].forEach(x=>label(el,X(x),274,x===0?'0m':x===span()?`${fmt(span())}m`:`H${pos().indexOf(x)+1}`,{'font-size':14}));
+ label(el,775,failure-9,`LIMIT ${fmt(limit)}`,{'font-size':13,fill:'#c0524e','font-weight':900});
+ el.setAttribute('aria-label',`最大曲げモーメント${fmt(data.maxMoment)} N·m、限界${fmt(limit)} N·m`);
+}
+function render(){
+ if(mode!=='battle')return;
+ const data=fromHistory(history,stage,limit),turn=history.length%2,used=specialUsed(history,turn,stage);
+ document.body.dataset.turnTheme=turn?'orange':'blue';
+ document.body.dataset.moments=showMoments?'shown':'hidden';
+ $('turn-indicator').textContent=turn?'● ORANGE TURN':'● BLUE TURN';
+ $('turn-label').textContent=`${names[turn]}の手番`;
+ $('undo').disabled=!history.length;
+ for(let i=0;i<2;i++){
+   $(`player${i}`).classList.toggle('active',turn===i);
+   $(`bonus${i}`).textContent=specialUsed(history,i,stage)?'5N · 使用済み':'5N · 残り1回';
+ }
+ if(selectedWeight===SPECIAL_WEIGHT&&used)selectedWeight=WEIGHT;
+ for(const force of [WEIGHT,SPECIAL_WEIGHT]){
+   const b=$(`weight${force}`);b.disabled=force===SPECIAL_WEIGHT&&used;
+   b.classList.toggle('active',selectedWeight===force);
+   b.setAttribute('aria-pressed',String(selectedWeight===force));
+ }
+ $('weight5-status').textContent=used?'使用済み':'各自1回';
+ $('toggle-moment').textContent=showMoments?'◉ Mを隠す':'◎ Mを表示';
+ $('toggle-moment').setAttribute('aria-pressed',String(showMoments));
+ $('plot-panel').hidden=!showMoments;$('stats-panel').hidden=!showMoments;
+ $('max-moment').textContent=showMoments?fmt(data.maxMoment):'???';
+ $('gauge-fill').style.width=showMoments?`${Math.min(100,data.maxMoment/limit*100)}%`:'0%';
+ $('percent-label').textContent=showMoments?`${fmt(data.maxMoment/limit*100)}% 到達`:'現在値は非表示';
+ $('critical-label').textContent=showMoments?`余裕 ${fmt(Math.max(0,limit-data.maxMoment))} N·m`:`限界 ${fmt(limit)} N·m`;
+ $('risk-text').textContent=showMoments?'集中荷重を重ね合わせてM図を計算します。':'M図・予測値・履歴のM値を隠して対戦中です。';
+ $('ra').textContent=`${fmt(data.RA)} N`;$('rb').textContent=`${fmt(data.RB)} N`;
+ $('total').textContent=`${fmt(data.totalLoad)} N`;$('max-pos').textContent=data.maxMoment?hookName(data.maxPosition):'—';
+ pos().forEach((x,i)=>{
+   const b=$('hook-buttons').children[i],next=showMoments?previewHistory(history,x,selectedWeight,stage,limit):null;
+   const applied=loadsAt(x).reduce((n,m)=>n+m.p,0);
+   b.querySelector('.hook-sub').textContent=`現在 ${fmt(applied)} N · ${selectedWeight} Nを追加`;
+   b.querySelector('.hook-result').textContent=next?`次の最大M ${fmt(next.maxMoment)}`:'予測Mは非表示';
+   b.querySelector('.hook-result').classList.toggle('danger',Boolean(next?.failed));
+   b.setAttribute('aria-label',`${hookName(x)}に${selectedWeight} Nを追加${next?`、追加後の最大Mは${fmt(next.maxMoment)} N·m`:''}`);
+ });
+ const list=$('history-list');list.replaceChildren();$('turn-count').textContent=`${history.length} 手`;
+ if(!history.length){const li=document.createElement('li');li.textContent='まだおもりはありません。';list.append(li);}
+ history.map((move,i)=>({move,i})).reverse().forEach(({move,i})=>{
+   const li=document.createElement('li'),a=document.createElement('span'),b=document.createElement('b');
+   a.className=i%2?'orange':'blue';a.textContent=`${i+1}手 · ${names[i%2]}`;
+   const m=showMoments?` · M=${fmt(fromHistory(history.slice(0,i+1),stage,limit).maxMoment)}`:'';
+   b.textContent=`${hookName(move.x)} / ${move.p}N${move.auto?' (時間切れ自動)':''}${m}`;li.append(a,b);list.append(li);
+ });
+ drawBeam(data);if(showMoments)drawPlot($('plot-svg'),data);
+}
+function place(index){
+ if(mode!=='battle'||handoffActive)return;
+ const x=pos()[index],player=history.length%2;
+ if(x===undefined)return;
+ if(selectedWeight===SPECIAL_WEIGHT&&specialUsed(history,player,stage))return;
+ applyMove({x,p:selectedWeight});
+}
+function applyMove(move){
+ if(mode!=='battle')return;
+ stopClock();clearHandoff();
+ const player=history.length%2;
+ history.push(move);selectedWeight=WEIGHT;
+ const data=fromHistory(history,stage,limit);
+ if(data.failed)showBreak(data,player);
+ else{render();showHandoff(false,Boolean(move.auto));}
+}
+function stopClock(){
+ if(clockInterval!==null){clearInterval(clockInterval);clockInterval=null;}
+ deadline=0;
+}
+function updateClock(left){
+ const display=$('turn-timer'),clock=$('turn-clock');
+ if(turnSeconds===null){display.textContent='∞';$('timer-unit').textContent='';clock.classList.remove('urgent');return;}
+ display.textContent=String(Math.max(0,Math.ceil(left/1000)));
+ $('timer-unit').textContent='秒';
+ clock.classList.toggle('urgent',left<=5000);
+}
+function tickClock(){
+ if(mode!=='battle'||handoffActive||deadline===0)return;
+ const remain=Math.max(0,deadline-Date.now());updateClock(remain);
+ if(remain<=0){
+   // Always place 10N and preserve the 5N special privilege on a timed-out turn.
+   applyMove(timeoutMove(stage));
+ }
+}
+function beginClock(){
+ stopClock();
+ if(mode!=='battle'||handoffActive)return;
+ if(turnSeconds===null){updateClock(0);return;}
+ deadline=Date.now()+turnSeconds*1000;
+ updateClock(turnSeconds*1000);
+ clockInterval=setInterval(tickClock,100);
+}
+function clearHandoff(){
+ if(handoffTimeout!==null){clearTimeout(handoffTimeout);handoffTimeout=null;}
+ handoffActive=false;
+ $('turn-popup').hidden=true;
+}
+function dismissHandoff(){
+ if(!handoffActive||mode!=='battle')return;
+ clearHandoff();beginClock();
+}
+function showHandoff(initial=false,automatic=false){
+ if(mode!=='battle')return;
+ stopClock();clearHandoff();
+ handoffActive=true;
+ const player=history.length%2;
+ const popup=$('turn-popup');
+ popup.hidden=false;popup.dataset.player=player===0?'blue':'orange';
+ $('popup-bird').textContent=player===0?'🐦':'🐤';
+ $('popup-kicker').textContent=initial?'READY?':'NEXT TURN!';
+ $('popup-title').textContent=`${names[player]}の番！`;
+ $('popup-subtitle').textContent=automatic?'時間切れ！ 10Nの鳥が自動でとまりました。':initial?'さあ、鳥をとまらせよう！':'次の鳥をとまらせよう！';
+ $('popup-continue').textContent=initial?'対戦スタート！ →':'この手番を開始！ →';
+ updateClock(turnSeconds===null?0:turnSeconds*1000);
+ // Short playful overlay: it can also be dismissed immediately by clicking.
+ handoffTimeout=setTimeout(dismissHandoff,1500);
+}
+
+function undo(){
+ if(!history.length)return;
+ stopClock();clearHandoff();
+ history.splice(0,history.length,...undoHistory(history));selectedWeight=WEIGHT;
+ cancelBreak();openScreen('battle');render();showHandoff(false);
+}
+function restart(){stopClock();clearHandoff();cancelBreak();history.length=0;selectedWeight=WEIGHT;showMoments=false;openScreen('battle');render();showHandoff(true);}
+function cancelBreak(){if(breakTimer!==null)clearTimeout(breakTimer);breakTimer=null;breakReady=false;}
+function fractureArtwork(data){
+ const el=$('fracture-svg');el.replaceChildren();
+ const X=x=>100+700*x/span();
+ const x=X(data.maxPosition ?? span()/2),a=X(0),b=X(span()),y=174;
+ scenery(el,360,y,a,b);
+ // Keep the cliff supports fixed; animate the two halves around the failure.
+ drawSupports(el,a,b,y);
+ const left=svg('g',{class:'fracture-left'},el);
+ const right=svg('g',{class:'fracture-right'},el);
+ svg('path',{d:`M${a} ${y} H${x-11} l11 6 -7 7 7 6 H${a} Z`,fill:'#e9ad59',stroke:'#724629','stroke-width':3},left);
+ svg('path',{d:`M${x+3} ${y} H${b} V${y+19} H${x+4} l-8 -7 8 -6 -8 -6Z`,fill:'#d89548',stroke:'#724629','stroke-width':3},right);
+ svg('line',{x1:a+5,x2:Math.max(a+6,x-14),y1:y+4,y2:y+4,stroke:'#ffdc91','stroke-width':4},left);
+ svg('line',{x1:Math.min(b-6,x+15),x2:b-5,y1:y+4,y2:y+4,stroke:'#ffdc91','stroke-width':4},right);
+ for(const [i,p] of pos().entries()){
+  const x0=X(p),which=x0<x?left:right;
+  const moves=history.map((m,j)=>({...m,player:j%2})).filter(m=>m.x===p);
+  const swingGroup=svg('g',{class:'swing-break'},which);
+  drawSwing(swingGroup,x0,y+18,268,moves,i,true);
+ }
+ // Cartoon impact burst, floating wood chips and friendly birds flying away.
+ const burst=svg('g',{class:'crack-burst'},el);
+ svg('path',{d:`M${x-33} ${y-33} l15 -10 -3 19 18 -11 -4 23 19 0 -17 14 13 15 -27 -5 -5 16 -8 -22 -22 11 13 -23 -18 -6 22 -4Z`,fill:'#fff071',stroke:'#ff8f37','stroke-width':4},burst);
+ label(burst,x,y-52,'パキッ！',{'font-size':35,'font-weight':950,fill:'#e96930',stroke:'white','stroke-width':5,'paint-order':'stroke'});
+ for(const [dx,dy,angle] of [[-53,19,-30],[32,29,25],[69,-19,55]]){
+  svg('rect',{x:x+dx,y:y+dy,width:14,height:7,rx:2,fill:'#eeb36c',stroke:'#915b35','stroke-width':2,transform:`rotate(${angle} ${x+dx} ${y+dy})`,class:'wood-chip'},el);
+ }
+ // Little birds emerge from the splitting beam as a comical reaction.
+ for(const [i,shift] of [-74,75].entries()){
+  const fly=svg('g',{class:`escape-bird escape-${i}`},el);
+  drawBird(fly,x+shift,y-16,i,WEIGHT,1,'flying-bird');
+ }
+ el.setAttribute('aria-label',`青空の下、最大曲げモーメント位置${fmt(data.maxPosition)}mで梁が折れ、ブランコが揺れて鳥が飛び上がる演出`);
+}
+function showBreak(data,loser){
+ cancelBreak();openScreen('break');
+ $('break-loser').textContent=`${names[loser]}が梁を破壊！　${names[1-loser]}の勝利`;
+ $('break-moment').textContent=`MAX ${fmt(data.maxMoment)} N·m / LIMIT ${fmt(limit)} N·m`;
+ $('break-continue').disabled=true;$('break-hint').textContent='梁の破壊アニメーションを再生中…';
+ $('fracture-stage').classList.remove('ready');fractureArtwork(data);
+ // Rebuild the graphic before starting animation to allow repeated matches to replay.
+ $('fracture-svg').getBoundingClientRect();
+ breakTimer=setTimeout(()=>{
+   if(mode!=='break')return;
+   breakReady=true;$('break-continue').disabled=false;
+   $('fracture-stage').classList.add('ready');
+   $('break-hint').textContent='ここで停止中。ボタンまたは梁をクリックするとリザルトに進みます。';
+   $('break-continue').focus({preventScroll:true});
+ },1950);
+}
+function toResult(){if(mode!=='break'||!breakReady)return;cancelBreak();openScreen('result');buildResults();}
+function resultSteps(){return resultTimeline(history,stage,limit);}
+function buildResults(){
+ const steps=resultSteps(),last=steps.at(-1);
+ if(!last)return;
+ $('result-winner').textContent=`— ${names[1-last.player]} の勝利！`;
+ $('result-description').textContent=`${names[last.player]}が${hookName(last.move.x)}に${last.move.p} Nを載せ、最大 ${fmt(last.analysis.maxMoment)} N·mで梁が破壊されました。`;
+ const box=$('result-timeline');box.replaceChildren();
+ steps.forEach((step,i)=>{
+   const b=document.createElement('button');b.type='button';b.className='result-turn-button';
+   const meta=document.createElement('div');meta.className='result-turn-meta';
+   const name=document.createElement('span');name.className=step.player?'orange':'';name.textContent=`${step.turn}手目 · ${names[step.player]}`;
+   const act=document.createElement('strong');act.textContent=`${hookName(step.move.x)} +${step.move.p} N${step.move.auto?' · 時間切れ':''}`;
+   const moment=document.createElement('small');moment.textContent=`MAX ${fmt(step.analysis.maxMoment)} N·m${step.analysis.failed?' · 破壊':''}`;
+   meta.append(name,act,moment);
+   const mini=svg('svg',{viewBox:'0 0 120 54','aria-hidden':'true'});mini.classList.add('result-mini');
+   const X=x=>5+x/span()*110,Y=m=>5+m/Math.max(limit*1.1,step.analysis.maxMoment*1.1)*44;
+   const d=step.analysis.points.map((p,j)=>`${j?'L':'M'} ${X(p.x)} ${Y(p.m)}`).join(' ');
+   svg('line',{x1:5,x2:115,y1:Y(limit),y2:Y(limit),stroke:'#dc8181','stroke-dasharray':'4 4'},mini);
+   svg('path',{d,fill:'none',stroke:step.player?'#f1852d':'#267bdc','stroke-width':3},mini);
+   b.append(meta,mini);b.addEventListener('click',()=>selectResult(i));box.append(b);
+ });
+ selectResult(steps.length-1);
+}
+function selectResult(n){
+ const steps=resultSteps();if(!steps.length)return;
+ selectedStep=Math.max(0,Math.min(n,steps.length-1));
+ const s=steps[selectedStep],prev=selectedStep>0?steps[selectedStep-1]:null;
+ $('result-step-label').textContent=`${s.turn}手目 · ${names[s.player]} · ${hookName(s.move.x)}に${s.move.p} N`;
+ $('result-step-m').textContent=`最大M ${fmt(s.analysis.maxMoment)} N·m`;
+ $('result-step-m').style.color=s.player?'#dd6727':'#176cc4';
+ $('result-step-detail').textContent=`${s.move.auto?'時間切れによる自動配置。':''}前の手 ${fmt(s.previousMax)} → 今回 ${fmt(s.analysis.maxMoment)} N·m（+${fmt(s.analysis.maxMoment-s.previousMax)}）。${s.analysis.failed?'この手で梁が破壊されました。':''}`;
+ $('result-progress').textContent=`${s.turn} / ${steps.length} 手`;
+ $('result-prev').disabled=selectedStep===0;$('result-next').disabled=selectedStep===steps.length-1;
+ drawPlot($('result-plot-svg'),s.analysis,prev?.analysis,s.player);
+ document.querySelectorAll('.result-turn-button').forEach((b,i)=>{
+   b.classList.toggle('selected',i===selectedStep);b.setAttribute('aria-pressed',String(i===selectedStep));
+ });
+}
+$('hook-buttons').addEventListener('click',event=>{const b=event.target.closest('[data-hook]');if(b)place(Number(b.dataset.hook));});
+document.querySelectorAll('[data-weight]').forEach(b=>b.addEventListener('click',()=>{if(!b.disabled){selectedWeight=Number(b.dataset.weight);render();}}));
+$('toggle-moment').addEventListener('click',()=>{showMoments=!showMoments;render();});
+$('undo').addEventListener('click',undo);
+$('restart').addEventListener('click',()=>{if(history.length&&!confirm('現在の対戦を最初からやり直しますか？'))return;restart();});
+$('back-setup').addEventListener('click',()=>{if(history.length&&!confirm('設定画面に戻ると、この対戦履歴は消えます。戻りますか？'))return;stopClock();clearHandoff();history.length=0;openScreen('setup');updateSetup();});
+$('popup-continue').addEventListener('click',dismissHandoff);
+$('turn-popup').addEventListener('click',event=>{if(event.target===$('turn-popup'))dismissHandoff();});
+$('break-continue').addEventListener('click',toResult);
+$('fracture-stage').addEventListener('click',toResult);
+$('result-prev').addEventListener('click',()=>selectResult(selectedStep-1));
+$('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
+$('result-undo').addEventListener('click',undo);
+$('rematch').addEventListener('click',restart);
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
+    if(mode==='battle'||mode==='result'){e.preventDefault();undo();}
+  }
+  if(mode==='battle'&&handoffActive&&(e.key==='Enter'||e.key===' ')){e.preventDefault();dismissHandoff();}
+  if(mode==='result'&&e.key==='ArrowLeft')selectResult(selectedStep-1);
+  if(mode==='result'&&e.key==='ArrowRight')selectResult(selectedStep+1);
+});
+buildSetup();openScreen('setup');
+})();
+
+</script>
+<title>MOMENT BATTLE v0.7 | 梁のモーメント対戦</title>
+</head>
+<body data-turn-theme="blue">
+<div class="app-shell">
+  <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">STRUCTURAL MECHANICS / BIRD EDITION / TIMED MATCH</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">BIRD BRIDGE · 2P</span></header>
+
+  <main class="screens">
+    <section id="setup-screen" class="screen setup-screen" aria-label="ゲーム設定画面">
+      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>ゲーム設定</h2><p>鳥たちのブランコを選んで、橋を守りながら対戦しよう！</p></div><span class="section-tag">LOCAL 2 PLAYER</span></div>
+      <div class="setup-layout">
+        <section class="panel setup-beam"><div class="panel-head"><div><span class="eyebrow">BEAM LAYOUT</span><h3>梁の配置を選ぶ</h3></div></div>
+          <div id="stage-options" class="stage-options" role="group" aria-label="ステージ選択"></div>
+          <div class="custom-head"><strong>区間寸法のカスタマイズ</strong><span>左支点 → フック1 → フック2 → フック3 → 右支点</span></div>
+          <div class="interval-grid" id="interval-inputs"></div>
+          <p class="setup-hint">4区間はすべて正の数（m）。合計が梁の長さになります。</p>
+        </section>
+        <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>勝敗の条件</h3>
+          <label class="limit-input-label" for="limit-input">限界曲げモーメント <strong>N·m</strong></label>
+          <input id="limit-input" type="number" min="1" max="10000" step="1" inputmode="decimal" value="100" required>
+          <p class="setup-hint">最大曲げモーメントがこの数値以上になった手番のプレイヤーが負けです。</p>
+          <div class="time-setting">
+            <div class="time-heading"><label for="turn-seconds">1手の制限時間</label><output id="turn-seconds-value" for="turn-seconds">30秒</output></div>
+            <input type="range" id="turn-seconds" min="10" max="60" step="5" value="30" aria-label="1手の制限時間 10秒から60秒">
+            <div class="range-labels"><span>10秒</span><span>60秒</span></div>
+            <label class="no-time-label"><input type="checkbox" id="no-time-limit"><span>制限時間なし</span></label>
+            <p class="setup-hint">時間切れになると、その手番の10Nの鳥がランダムなブランコに自動で止まります。5Nの使用権は消費しません。</p>
+          </div>
+          <div class="rules-chips"><span>通常 <b>10 N</b></span><span>各チーム1回だけ <b>5 N</b></span><span>初期はM非表示</span></div>
+          <p class="beam-preview-title">ステージの寸法プレビュー</p>
+          <div id="setup-preview" class="setup-preview" role="img" aria-label="梁の寸法プレビュー"></div>
+          <p class="error-text" id="setup-error" role="alert" hidden></p>
+          <button type="button" id="start-game" class="primary-button">対戦スタート <span>→</span></button>
+        </section>
+      </div>
+      <p class="setup-footnote">両端単純支持／自重・せん断破壊・たわみ破壊を無視した学習用モデルです。</p>
+    </section>
+
+    <section id="battle-screen" class="screen battle-screen" aria-label="ゲーム対戦画面" hidden>
+      <div class="battle-topline">
+        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● 青チーム</strong><small id="bonus0">5N · 残り1回</small></div>
+        <div class="turn-center"><span id="turn-indicator">● BLUE TURN</span><strong id="turn-label">青チームの手番</strong><div class="turn-clock" id="turn-clock" aria-live="off"><span class="clock-icon" aria-hidden="true">◷</span><strong id="turn-timer">30</strong><span id="timer-unit">秒</span></div></div>
+        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● 橙チーム</strong><small id="bonus1">5N · 残り1回</small></div>
+      </div>
+      <div class="battle-toolbar">
+        <span class="stage-info" id="battle-stage-info">STAGE 01 · 1 / 2 / 3 / 4 m</span>
+        <div class="toolbar-actions"><button type="button" id="undo" disabled>↶ 1手戻る</button><button type="button" id="back-setup">⚙ 設定</button><button type="button" id="restart">↻ 最初から</button></div>
+      </div>
+      <div class="battle-columns">
+        <section class="panel play-panel">
+          <div class="panel-head"><div><span class="eyebrow">BEAM SIMULATOR</span><h3>鳥をとまらせる場所を選ぼう</h3></div><span class="small-tag" id="span-label">L = 10 m</span></div>
+          <div class="beam-stage"><svg id="beam-svg" viewBox="0 0 900 298" role="img" aria-label="梁の載荷図"></svg></div>
+          <div class="load-picker"><div class="load-picker-title"><span class="eyebrow">SELECT LOAD</span><strong>鳥を選ぼう</strong></div>
+          <div class="load-options"><button type="button" id="weight10" data-weight="10" aria-pressed="true" class="load-option active">🐦 10 N <small>約1kgの鳥</small></button><button type="button" id="weight5" data-weight="5" aria-pressed="false" class="load-option special">🐤 5 N <small id="weight5-status">各自1回</small></button></div></div>
+          <div class="hook-actions" id="hook-buttons" aria-label="フック選択"></div>
+          <p class="action-note" id="turn-help">鳥を選んでブランコをクリック！ 何羽でもとまれます。</p>
+        </section>
+        <aside class="battle-side">
+          <section class="panel limit-panel"><div class="limit-heading"><span class="eyebrow">MOMENT / CRITICAL</span><button id="toggle-moment" type="button" class="visibility-toggle" aria-pressed="false">◎ Mを表示</button></div>
+            <div class="metric"><span id="max-moment">???</span><small id="limit-unit">/ 100 N·m</small></div>
+            <div class="gauge"><div id="gauge-fill"></div></div>
+            <div class="limit-label"><span id="percent-label">現在値は非表示</span><span id="critical-label">限界 100 N·m</span></div>
+            <p class="risk-text" id="risk-text">数字を隠して対戦中。表示ボタンでいつでも確認できます。</p>
+          </section>
+          <section class="panel plot-panel" id="plot-panel" hidden><div class="panel-head"><div><span class="eyebrow">BENDING MOMENT</span><h3>曲げモーメント図</h3></div><span class="small-tag">N·m</span></div><svg id="plot-svg" viewBox="0 0 900 285" role="img"></svg></section>
+          <section class="panel stats-panel" id="stats-panel" hidden><span class="eyebrow">STRUCTURAL DATA</span><div class="stats-grid"><span>左支点反力</span><b id="ra">0 N</b><span>右支点反力</span><b id="rb">0 N</b><span>総荷重</span><b id="total">0 N</b><span>最大M位置</span><b id="max-pos">—</b></div></section>
+          <section class="panel history-panel"><div class="panel-head"><div><span class="eyebrow">TURN HISTORY</span><h3>載荷履歴</h3></div><span class="small-tag" id="turn-count">0 手</span></div><ol id="history-list" class="history-list"><li>まだおもりはありません。</li></ol></section>
+        </aside>
+      </div>
+      <div id="turn-popup" class="turn-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title" hidden>
+        <div class="turn-popup-card" id="turn-popup-card"><span class="popup-kicker" id="popup-kicker">READY?</span><div class="popup-bird" id="popup-bird" aria-hidden="true">🐦</div><h2 id="popup-title">青チームの番！</h2><p id="popup-subtitle">鳥を止まらせよう！</p><button type="button" id="popup-continue" class="primary-button">この手番を開始！ →</button></div>
+      </div>
+    </section>
+
+    <section id="break-screen" class="screen break-screen" aria-label="梁の破壊演出画面" hidden>
+      <div class="break-head"><span class="eyebrow">FAILURE / BEAM FRACTURE</span><h2>あっ！ 梁が折れた！</h2><p>モーメントが限界に！ 鳥たちがびっくりして飛び上がります。</p></div>
+      <div class="fracture-stage" id="fracture-stage"><svg id="fracture-svg" viewBox="0 0 900 360" role="img" aria-label="梁が折れておもりが落ちるアニメーション"></svg><div class="fracture-flash" aria-hidden="true"></div></div>
+      <div class="break-result"><strong id="break-loser">青チームが梁を破壊！</strong><span id="break-moment">MAX 100 N·m</span></div>
+      <button type="button" id="break-continue" class="primary-button break-continue" disabled>リザルトを表示 →</button>
+      <p class="break-hint" id="break-hint">破壊の様子を表示しています…</p>
+    </section>
+
+    <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
+      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
+      <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
+      <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
+      <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
+    </section>
+  </main>
+  <footer>© MOMENT BATTLE · 教育用簡略モデル。実構造物の安全性評価には使用できません。</footer>
+</div>
+</body></html>
