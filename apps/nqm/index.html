@@ -1,3 +1,579 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fffaf2"><title>NQM DIAGRAM | STRUCTURE &amp; PLAY</title><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>
-*{box-sizing:border-box}body{margin:0;background:#fffaf2;color:#293550;font-family:system-ui,-apple-system,"Yu Gothic",Meiryo,sans-serif;line-height:1.8}.wrap{width:min(680px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid #eee7de;padding:20px 0;font-weight:900;letter-spacing:.07em}header a{color:inherit;text-decoration:none}header b{color:#fb744e}main{min-height:calc(100vh - 170px);display:grid;place-items:center;padding:60px 0}.panel{width:100%;background:white;border:1px solid #e4e7eb;border-radius:24px;overflow:hidden;box-shadow:0 15px 50px #2935500a}img{display:block;width:100%;height:250px;object-fit:contain;background:#dff1dd}.content{padding:32px;text-align:center}.badge{display:inline-block;background:#f5f5f4;color:#747d8e;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:800}h1{font-size:clamp(31px,6vw,46px);line-height:1.3;letter-spacing:-.04em;margin:20px 0 0}.jp{font-size:15px;font-weight:800;margin:3px 0 15px}.desc{font-size:13px;color:#6b7280;margin:12px auto 18px;max-width:430px}.notice{border-top:1px solid #e6e6e6;padding-top:22px;color:#58657c;font-size:14px;margin-bottom:24px}.btn{display:inline-block;background:#2d3b57;color:white;font-weight:800;padding:12px 22px;border-radius:14px;text-decoration:none;font-size:14px}.btn:focus-visible{outline:3px solid #577bd6;outline-offset:3px}footer{text-align:center;color:#7b8596;font-size:11px;padding:20px}
-</style></head><body><header><div class="wrap"><a href="../../index.html">STRUCTURE <b>&amp;</b> PLAY</a></div></header><main class="wrap"><article class="panel"><img src="../../assets/nqm.svg" alt="ラーメンのN・Q・M図作成のイメージ"><div class="content"><span class="badge">公開準備中</span><h1>NQM DIAGRAM</h1><p class="jp">ラーメンのN・Q・M図作成</p><p class="desc">構造の条件を入力し、軸力・せん断力・曲げモーメントを視覚的に確認する学習ツール。</p><p class="notice">このアプリは、現在ホームページへの組み込み準備中です。<br>公開後はこちらからご利用いただけます。</p><a href="../../index.html#apps" class="btn">← アプリ一覧に戻る</a></div></article></main><footer>© STRUCTURE &amp; PLAY</footer></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10233e">
+  <title>ラーメン NQM 図 | FRAME LAB</title>
+  <style>
+:root{--ink:#15263c;--muted:#67798d;--line:#e0e7ed;--bg:#f4f7fa;--navy:#10233e;--blue:#226bb5;--n:#128c86;--q:#286bc5;--m:#d05b48;--shadow:0 8px 28px rgba(24,49,79,.055)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif;font-size:14px;line-height:1.7}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #7fb4ed;outline-offset:2px}[hidden]{display:none!important}.shell{width:min(1220px,calc(100% - 64px));margin:auto}
+.hero{background:linear-gradient(120deg,#102540 0%,#182f4f 60%,#1a3954 100%);color:#fff;padding:20px 0 42px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;right:-90px;top:-120px;width:500px;height:500px;border:1px solid rgba(180,211,234,.1);border-radius:50%;box-shadow:0 0 0 85px rgba(166,202,231,.018),0 0 0 180px rgba(166,202,231,.012);pointer-events:none}.eyebrow{display:flex;align-items:center;gap:13px;color:#aac4df;letter-spacing:.09em;font-size:11px;font-weight:700}.identity{color:#fff;font-size:19px;letter-spacing:-.06em}.identity-dot{color:#efb879}.sep{opacity:.35}.ver{margin-left:auto;letter-spacing:.1em;padding:4px 12px;border:1px solid #57708b;border-radius:99px;color:#c9daea;font-size:10px}.hero-main{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-top:31px}.kicker{font-size:11px;letter-spacing:.22em;color:#8daac8;font-weight:800;margin:0 0 10px}.hero h1{font-size:clamp(30px,4.4vw,53px);letter-spacing:.005em;line-height:1.28;margin:0;font-weight:800}.hero h1 em{font-style:normal;color:#eab578}.hero-desc{margin:16px 0 0;color:#becfe1;line-height:1.9;font-size:13px}.hero-graphic{padding:12px 35px 5px 10px;display:grid;justify-items:center;opacity:.95}.hero-graphic span{font-size:9px;font-weight:700;letter-spacing:.18em;color:#8aaaca}
+.content{padding:30px 0 0}.panel{background:#fff;border:1px solid #e3e8ed;border-radius:13px;box-shadow:var(--shadow);padding:28px 32px;margin-bottom:23px}.step-title{display:flex;align-items:flex-start;gap:17px}.step-num{background:#e9f0f8;color:#21558a;border-radius:9px;width:50px;height:50px;display:grid;place-items:center;font-weight:900;font-size:18px;flex-shrink:0}.mini{letter-spacing:.16em;font-size:10px;font-weight:800;color:#4e83b2;margin:0 0 4px}.step-title h2,.result-intro h2{margin:0;font-size:24px;letter-spacing:-.02em;line-height:1.45}.hint{color:var(--muted);font-size:12px;margin:6px 0 0}.presets{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:26px 0 17px}.presets-label{color:var(--muted);font-size:12px;font-weight:700;margin-right:9px}.preset{color:#5e7081;background:#fff;border:1px solid var(--line);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;transition:.2s}.preset:hover{border-color:#7da7ce}.preset.active{background:#eaf2fa;color:#23689f;border-color:#a5c8e5}.count-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.35fr;gap:13px;align-items:stretch}.count-card{border:1px solid var(--line);border-radius:9px;padding:10px 16px 7px;display:flex;flex-direction:column;gap:0}.count-card span{font-weight:750;font-size:12px}.count-card small{font-size:9px;letter-spacing:.13em;color:#9aabba;margin-left:4px}.count-card input{width:100%;border:0;background:transparent;color:var(--ink);font-weight:800;font-size:24px;outline:none;padding:3px 0;line-height:1.4}.btn{border-radius:8px;padding:12px 18px;font-weight:800;font-size:13px;border:1px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:15px;transition:background .15s,color .15s,transform .15s}.btn:hover{transform:translateY(-1px)}.primary{background:#1e63a3;color:white;border-color:#1e63a3}.primary:hover{background:#154d82}.count-btn{align-self:stretch}.count-btn span,.calculate span{font-size:20px;font-weight:400}.ghost{background:#f4f7f9;color:#536980}.outline{background:white;border-color:#d6e1eb;color:#345a7a}.outline:hover{background:#eef5fb}.error-msg{background:#fff1ee;color:#a2362a;border:1px solid #f0c1b9;padding:10px 14px;border-radius:7px;font-size:13px;margin-top:16px}
+.step-two{padding-bottom:31px}.edit-grid{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(245px,.92fr);gap:26px;align-items:start;margin-top:18px}.section-heading{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:25px 0 9px}.section-heading:first-child{margin-top:0}.section-heading h3{margin:0;font-size:16px}.eng{color:#a4b6c5;font-size:10px;letter-spacing:.1em;margin-left:5px}.table-note{font-size:10px;color:#94a2ad;text-align:right}.table-scroll{overflow-x:auto;border:1px solid #e3e9ef;border-radius:8px}.edit-table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.edit-table th{text-align:left;padding:8px 9px;background:#f1f5f9;color:#5b7187;font-weight:750}.edit-table th small{font-size:9px;color:#8b9fae}.edit-table td{padding:6px 8px;border-top:1px solid #edf1f4}.edit-table td:first-child{font-weight:800;color:#52718c;min-width:55px}.edit-table input,.edit-table select{width:100%;border:1px solid #d9e2e9;border-radius:5px;background:white;min-height:34px;padding:6px 8px;font-size:12px;color:#21364c}.edit-table input{min-width:72px}.edit-table select{min-width:90px}.edit-table select option{color:#21364c}#loadsTable select{min-width:88px}#loadsTable input{min-width:76px}.material-details{border-radius:8px;background:#f7f9fb;border:1px solid #e3eaf0;margin-top:10px;padding:9px 12px}.material-details summary{cursor:pointer;color:#3f607c;font-weight:700;font-size:12px}.material-details summary small{font-weight:400;color:#8b99a6;margin-left:8px}.material-details .table-scroll{margin-top:10px}.fine{color:#8291a1;font-size:11px;line-height:1.8;margin:10px 0 0}.preview-card{position:sticky;top:16px;background:#fbfdff;border:1px solid #dfe8ef;border-radius:10px;overflow:hidden;margin-top:0}.preview-header{display:flex;align-items:center;gap:9px;padding:13px 14px;border-bottom:1px solid #e8eef3;font-size:12px}.preview-header .dot{width:7px;height:7px;background:#25a5a0;border-radius:50%}.preview-header span:last-child{font-size:9px;color:#9baec0;letter-spacing:.1em;margin-left:auto}.preview-svg{padding:10px;min-height:230px;display:grid;place-items:center}.preview-svg svg{width:100%;height:auto;display:block}.preview-caption{font-size:10px;color:#8c9cab;border-top:1px solid #ebeff4;margin:0;padding:12px 15px;line-height:1.8}.action-row{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:27px;padding-top:23px;border-top:1px solid #edf1f4}.calculate{min-width:260px}
+.results{margin-top:40px}.result-intro{display:flex;justify-content:space-between;align-items:center;gap:22px;margin-bottom:21px}.result-intro h2{font-size:28px}.result-intro .thin{font-weight:400;color:#8494a4;font-size:18px}.result-actions{display:flex;flex-wrap:wrap;gap:8px}.result-actions .btn{font-size:11px;padding:9px 13px}.balance-banner{border:1px solid #cce7df;background:#f1fbf7;color:#276b55;border-radius:8px;font-weight:600;padding:11px 16px;font-size:12px;margin:0 0 14px}.balance-banner.warn{border-color:#ecd7b3;background:#fff8ed;color:#92621e}.diagram-panel{background:#fff;border:1px solid #e1e7ee;border-radius:11px;margin:12px 0;overflow:hidden;box-shadow:var(--shadow)}.diagram-head{display:flex;align-items:center;gap:15px;padding:17px 24px 14px;border-bottom:1px solid #ebeff4}.panel-index{font-size:16px;color:#a3b3c3;font-weight:850}.diagram-head h3{font-size:17px;margin:0;line-height:1.3}.diagram-head h3 small{font-size:12px;color:#62798d;font-weight:500}.diagram-head p{font-size:9px;letter-spacing:.13em;color:#9babb8;margin:3px 0 0;font-weight:700}.diagram-tag,.unit{margin-left:auto;color:#7c8fa0;font-size:11px}.unit{font-weight:750}.swatch{display:inline-block;vertical-align:middle;width:21px;height:3px;margin-left:10px;border-radius:3px}.swatch-n{background:var(--n)}.swatch-q{background:var(--q)}.swatch-m{background:var(--m)}.diagram-graphic{padding:7px 24px 18px}.diagram-graphic svg{display:block;width:100%;height:auto;max-height:560px}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:18px}.info-panel{padding:22px 24px;background:#fff;border:1px solid var(--line);border-radius:10px}.info-panel h3{margin:0 0 11px;font-size:15px}.info-panel h3 small{margin-left:8px;font-size:10px;color:#9dadbb;letter-spacing:.12em}.info-panel p{font-size:12px;line-height:1.9;color:#66798a;margin:8px 0}.reaction-table{border-collapse:collapse;width:100%;font-size:12px}.reaction-table th{text-align:left;color:#71879b;background:#f2f6f9;font-size:11px}.reaction-table th,.reaction-table td{padding:7px;border-bottom:1px solid #eaf0f4}.reaction-table td{font-variant-numeric:tabular-nums}.disclaimer{margin:16px 0 45px;border-left:3px solid #aebcc9;color:#6f8090;font-size:11px;line-height:1.85;padding:3px 12px}.footer{display:flex;justify-content:space-between;gap:10px;font-size:10px;letter-spacing:.12em;font-weight:700;color:#98a8b7;border-top:1px solid #e4e9ef;padding:22px 0 30px}.footer b{color:#d3a268}
+svg{font-family:Inter,"Noto Sans JP",Meiryo,system-ui,sans-serif}svg text{paint-order:stroke;stroke:#fff;stroke-width:3;stroke-linejoin:round}svg .svg-muted{fill:#8a9aab;font-size:14px}svg .svg-label{fill:#26384d;font-weight:750;font-size:15px}svg .svg-force-label{fill:#23384a;font-size:15px;font-weight:700}svg .svg-value{font-weight:750;font-size:17px;stroke:#fff;stroke-width:4px}svg .svg-grid{stroke:#e9edf1;stroke-width:1}svg .svg-marker{stroke:none}svg .svg-node{font-size:15px;fill:#314b60;font-weight:800}
+@media(max-width:950px){.edit-grid{grid-template-columns:1fr}.preview-card{position:static}.preview-svg{max-width:580px;margin:auto;min-height:0}.count-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.count-btn{grid-column:1/-1;padding:14px}.hero-graphic{display:none}.result-intro{align-items:flex-start;flex-direction:column}}@media(max-width:650px){.shell{width:calc(100% - 28px)}.hero{padding:16px 0 30px}.hero-main{padding-top:25px}.hero h1{font-size:31px}.hero-desc{font-size:12px}.panel{padding:19px 15px}.step-num{width:40px;height:40px;font-size:14px}.step-title{gap:11px}.step-title h2{font-size:19px}.count-grid{gap:6px}.count-card{padding:8px}.count-card span{font-size:11px}.count-card small{display:none}.count-card input{font-size:22px}.presets-label{width:100%}.section-heading{flex-direction:column;gap:2px}.action-row{flex-direction:column-reverse}.action-row .btn{width:100%}.diagram-head{padding:13px 14px}.diagram-graphic{padding:6px 3px 9px}.diagram-tag{font-size:9px}.bottom-grid{grid-template-columns:1fr}.result-actions{width:100%}.result-actions .btn{flex:1}.footer{flex-direction:column}}
+@media print{.hero,.step-one,.step-two,.result-actions,.footer,.disclaimer{display:none!important}body{background:white}.shell{width:100%}.content{padding:0}.results{display:block!important;margin:0}.result-intro{margin-bottom:5px}.diagram-panel{box-shadow:none;break-inside:avoid;page-break-inside:avoid;margin:6px 0}.diagram-head{padding:9px 16px}.diagram-graphic{padding:0}.diagram-graphic svg{max-height:230px}.bottom-grid,.balance-banner{break-inside:avoid}.bottom-grid{margin:8px 0}.info-panel{padding:10px 14px}.result-intro h2{font-size:19px}@page{size:A4 portrait;margin:12mm}}
+/* 小画面では入力表と結果図だけを横スクロール可能にする */
+.edit-main{min-width:0}
+@media(max-width:950px){.edit-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:650px){
+  .diagram-graphic{overflow-x:auto;overscroll-behavior-x:contain}
+  .diagram-graphic svg{min-width:690px;max-width:none}
+}
+@media print{.diagram-graphic{overflow:visible}.diagram-graphic svg{min-width:0!important;max-width:100%}}
+
+</style>
+</head>
+<body>
+<nav aria-label="ホームページへ" style="background:#10233e;padding:10px max(16px,calc((100% - 1220px)/2))"><a href="../../index.html#apps" style="color:#dbe9fa;font-size:13px;text-decoration:none">← STRUCTURE &amp; PLAY に戻る</a></nav>
+  <header class="hero">
+    <div class="shell">
+      <div class="eyebrow"><span class="identity">FL<span class="identity-dot">.</span></span> FRAME LAB <span class="sep">/</span> 構造力学デジタル教材 <span class="ver">BETA · v1.0</span></div>
+      <div class="hero-main">
+        <div><p class="kicker">2D FRAME ANALYSIS</p><h1>ラーメン <em>N・Q・M</em> 図</h1><p class="hero-desc">節点・部材・荷重を設定するだけで、反力と断面力を計算。<br>構造を理解するための、ブラウザ上の演習ツールです。</p></div>
+        <div class="hero-graphic" aria-hidden="true"><svg width="280" height="130" viewBox="0 0 280 130"><g fill="none" stroke="#b8d1ee" stroke-width="3" stroke-linecap="round"><path d="M52 112V18H205V112"/><path d="M52 18L52 4M205 18L205 4" opacity=".28"/></g><g stroke="#5da9f4" stroke-width="1.8" fill="none"><path d="M52 100L52 112L43 112L43 100ZM205 100L205 112L214 112L214 100Z" opacity=".3"/><path d="M70 17L70 44L82 44L82 18M89 18V54L103 54V18M110 18V61L125 61V18M132 18V56L147 56V18M154 18V47L168 47V18M176 18V38L187 38V18" stroke="#60b9da"/></g><g stroke="#f8b46b" stroke-width="2"><path d="M68 17V48M68 48l-6 -9M68 48l6 -9"/><path d="M194 17V48M194 48l-6 -9M194 48l6 -9"/></g></svg><span>STIFFNESS METHOD / FEM</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell content">
+    <section class="panel step-one" id="step1">
+      <div class="step-title"><div class="step-num">01</div><div><p class="mini">STEP ONE</p><h2>骨組の規模を設定</h2><p class="hint">まず節点数・部材数・荷重数を決めて、入力欄を作成します。</p></div></div>
+      <div class="presets"><span class="presets-label">例題から始める</span><button class="preset active" type="button" data-preset="portal">門形ラーメン</button><button class="preset" type="button" data-preset="simple">単純梁</button><button class="preset" type="button" data-preset="cantilever">片持ち梁</button></div>
+      <div class="count-grid">
+        <label class="count-card"><span>節点数 <small>NODES</small></span><input id="nodeCount" type="number" inputmode="numeric" min="2" max="40" value="4"></label>
+        <label class="count-card"><span>部材数 <small>MEMBERS</small></span><input id="memberCount" type="number" inputmode="numeric" min="1" max="80" value="3"></label>
+        <label class="count-card"><span>荷重数 <small>LOADS</small></span><input id="loadCount" type="number" inputmode="numeric" min="0" max="80" value="2"></label>
+        <button id="confirmCounts" class="btn primary count-btn" type="button">入力欄を作成する <span aria-hidden="true">→</span></button>
+      </div>
+      <p id="countError" class="error-msg" role="alert" hidden></p>
+    </section>
+
+    <section class="panel step-two" id="step2" hidden>
+      <div class="step-title"><div class="step-num">02</div><div><p class="mini">STEP TWO</p><h2>節点・部材・荷重の入力</h2><p class="hint">座標は m、荷重は kN、分布荷重は kN/m。右・上・反時計回りが正です。</p></div></div>
+      <div class="edit-grid">
+        <div class="edit-main">
+          <div class="section-heading"><h3>節点 <span class="eng">NODES</span></h3><span class="table-note">支持条件と座標を指定</span></div>
+          <div class="table-scroll"><table class="edit-table" id="nodesTable"><thead><tr><th>節点</th><th>X <small>m</small></th><th>Y <small>m</small></th><th>支持条件</th></tr></thead><tbody></tbody></table></div>
+          <div class="section-heading"><h3>部材 <span class="eng">MEMBERS</span></h3><span class="table-note">節点 i → j が局所 x 軸</span></div>
+          <div class="table-scroll"><table class="edit-table" id="membersTable"><thead><tr><th>部材</th><th>始点 i</th><th>終点 j</th></tr></thead><tbody></tbody></table></div>
+          <details class="material-details"><summary>部材剛性を編集 <small>必要に応じて E・A・I を変更</small></summary><div class="table-scroll"><table class="edit-table" id="propertiesTable"><thead><tr><th>部材</th><th>E <small>kN/m²</small></th><th>A <small>m²</small></th><th>I <small>m⁴</small></th></tr></thead><tbody></tbody></table></div><p class="fine">不静定ラーメンでは部材の軸剛性 EA・曲げ剛性 EI が結果に影響します。初期値はすべて同一の参考値です。</p></details>
+          <div class="section-heading"><h3>荷重 <span class="eng">LOADS</span></h3><span class="table-note">P: 節点力 / D: 部材分布荷重 / M: 節点モーメント</span></div>
+          <div class="table-scroll"><table class="edit-table" id="loadsTable"><thead><tr><th>荷重</th><th>形式</th><th>対象</th><th>方向</th><th>大きさ①</th><th>大きさ②</th></tr></thead><tbody></tbody></table></div>
+          <p class="fine">D の大きさ①・②は部材 i 端・j 端の荷重強度です（同じ値なら等分布荷重）。P・M は節点に作用します。斜め部材の D は部材実長 1 m 当たりの全体 X / Y 方向荷重です。</p>
+        </div>
+        <aside class="preview-card"><div class="preview-header"><span class="dot"></span><strong>問題図プレビュー</strong><span>LIVE PREVIEW</span></div><div id="previewSvg" class="preview-svg"><p class="hint">座標を入力すると構造図が表示されます。</p></div><p class="preview-caption">プレビューは構造と荷重の表示です。計算ボタンを押すと反力・断面力を求めます。</p></aside>
+      </div>
+      <div class="action-row"><button class="btn ghost" id="resetExample" type="button">例題の値に戻す</button><button class="btn primary calculate" id="calculate" type="button">反力・NQM 図を計算する <span aria-hidden="true">→</span></button></div>
+      <p id="calcError" class="error-msg" role="alert" hidden></p>
+    </section>
+
+    <section class="results" id="results" hidden>
+      <div class="result-intro"><div><p class="mini">ANALYSIS RESULTS</p><h2>解析結果 <span class="thin">/ N・Q・M</span></h2><p class="hint">同一の部材形状を基準に、問題図から断面力図へ順に表示します。</p></div><div class="result-actions"><button id="saveSvg" class="btn outline" type="button">4図を SVG 保存</button><button id="savePng" class="btn outline" type="button">PNG 保存</button><button id="printPage" class="btn outline" type="button">印刷</button></div></div>
+      <div id="balanceBanner" class="balance-banner"></div>
+      <article class="diagram-panel"><div class="diagram-head"><span class="panel-index">01</span><div><h3>問題図</h3><p>FRAME &amp; LOADING</p></div><span class="diagram-tag">支持条件・荷重を表示</span></div><div id="problemOutput" class="diagram-graphic"></div></article>
+      <article class="diagram-panel"><div class="diagram-head"><span class="panel-index">02</span><div><h3>N 図 <small>軸力図</small></h3><p>AXIAL FORCE DIAGRAM</p></div><span class="unit">kN <span class="swatch swatch-n"></span></span></div><div id="nOutput" class="diagram-graphic"></div></article>
+      <article class="diagram-panel"><div class="diagram-head"><span class="panel-index">03</span><div><h3>Q 図 <small>せん断力図</small></h3><p>SHEAR FORCE DIAGRAM</p></div><span class="unit">kN <span class="swatch swatch-q"></span></span></div><div id="qOutput" class="diagram-graphic"></div></article>
+      <article class="diagram-panel"><div class="diagram-head"><span class="panel-index">04</span><div><h3>M 図 <small>曲げモーメント図</small></h3><p>BENDING MOMENT DIAGRAM</p></div><span class="unit">kN·m <span class="swatch swatch-m"></span></span></div><div id="mOutput" class="diagram-graphic"></div></article>
+      <div class="bottom-grid"><div class="info-panel"><h3>支点反力 <small>REACTIONS</small></h3><div id="reactionsTable"></div></div><div class="info-panel"><h3>図の見方 <small>CONVENTIONS</small></h3><p>N は引張を正、Q は部材 i → j の局所座標に従う正負、M は正曲げ（水平左→右の部材では下側への張り出し）を正としています。</p><p>着色部分が断面力の分布、線が値に応じた大きさ、数字は主な節点位置と極値です。各図の大きさはその図の最大絶対値で自動調整しています。</p></div></div>
+      <div class="disclaimer">このツールは教育用の一次線形解析です。部材は一様な Euler–Bernoulli 梁、節点は剛接合、微小変形を仮定しています。せん断変形・座屈・塑性化・部材端ピン解除・剛床・荷重の組合せは未対応です。実設計への利用には別途検証が必要です。</div>
+    </section>
+  </main>
+  <footer class="footer shell"><span>FRAME LAB <b>·</b> NQM DIAGRAM GENERATOR</span><span>Educational prototype — Version 1</span></footer>
+  <script>
+/* 平面ラーメン（2D frame）線形弾性・微小変形・剛接合。単位 kN, m。 */
+(function (root) {
+  'use strict';
+  const TOL = 1e-10;
+  const number = (v, name) => {
+    if (v === '' || v === null || v === undefined || !Number.isFinite(Number(v))) throw new Error(`${name}には数値を入力してください。`);
+    return Number(v);
+  };
+  const zeros = (r, c) => Array.from({length:r}, () => Array(c).fill(0));
+  const mulMV = (A, x) => A.map(row => row.reduce((sum, v, j) => sum + v*x[j], 0));
+  const transpose = A => A[0].map((_,i)=>A.map(row=>row[i]));
+  const multiply = (A,B) => A.map(row => B[0].map((_,j)=>row.reduce((sum,a,i)=>sum+a*B[i][j],0)));
+  const absMax = x => Math.max(0,...x.map(Math.abs));
+  function solveScaled(K, rhs, free) {
+    const n=free.length;
+    if (!n) return [];
+    const scales=free.map(i=>Math.sqrt(Math.max(K[i][i],0)));
+    if (scales.some(v=>v<=1e-14)) throw new Error('拘束が不足しています（孤立節点、部材のない自由度、または不安定な構造）。');
+    const A=free.map((i,r)=>free.map((j,c)=>K[i][j]/(scales[r]*scales[c])));
+    const b=free.map((i,r)=>rhs[i]/scales[r]);
+    for(let k=0;k<n;k++) {
+      let p=k;
+      for(let i=k+1;i<n;i++) if(Math.abs(A[i][k])>Math.abs(A[p][k])) p=i;
+      if(Math.abs(A[p][k])<1e-11) throw new Error('剛性行列が特異です。支点条件・部材のつながり・剛性を確認してください。');
+      if(p!==k) { [A[p],A[k]]=[A[k],A[p]]; [b[p],b[k]]=[b[k],b[p]]; }
+      for(let i=k+1;i<n;i++) {
+        const v=A[i][k]/A[k][k];
+        if(!v) continue;
+        A[i][k]=0;
+        for(let j=k+1;j<n;j++) A[i][j]-=v*A[k][j];
+        b[i]-=v*b[k];
+      }
+    }
+    const x=Array(n).fill(0);
+    for(let i=n-1;i>=0;i--) {
+      let s=b[i];
+      for(let j=i+1;j<n;j++) s-=A[i][j]*x[j];
+      x[i]=s/A[i][i];
+    }
+    return x.map((v,i)=>v/scales[i]);
+  }
+  function analyze(model) {
+    const nodes=model.nodes.map((raw,i)=>({
+      id: String(raw.id || i+1), x:number(raw.x,`節点${i+1} X`), y:number(raw.y,`節点${i+1} Y`),
+      support:raw.support || 'free'
+    }));
+    const ids=new Set();
+    for(const n of nodes) {
+      if(ids.has(n.id)) throw new Error(`節点番号「${n.id}」が重複しています。`);
+      ids.add(n.id);
+    }
+    const index=Object.fromEntries(nodes.map((n,i)=>[n.id,i]));
+    const mlen=nodes.length*3;
+    if(mlen===0) throw new Error('節点を入力してください。');
+    const K=zeros(mlen,mlen), F=Array(mlen).fill(0);
+    const members=model.members.map((raw,i)=>{
+      const start=String(raw.start), end=String(raw.end);
+      if(!(start in index)||!(end in index)) throw new Error(`部材${i+1}の節点番号が正しくありません。`);
+      if(start===end) throw new Error(`部材${i+1}の両端が同一節点です。`);
+      const E=number(raw.E,`部材${i+1} E`),A=number(raw.A,`部材${i+1} A`),I=number(raw.I,`部材${i+1} I`);
+      if(E<=0||A<=0||I<=0) throw new Error(`部材${i+1}の E・A・I は正の値にしてください。`);
+      const n0=nodes[index[start]], n1=nodes[index[end]];
+      const L=Math.hypot(n1.x-n0.x,n1.y-n0.y);
+      if(L<1e-9) throw new Error(`部材${i+1}の長さが0です。`);
+      const c=(n1.x-n0.x)/L,s=(n1.y-n0.y)/L;
+      const ea=E*A/L, v=12*E*I/L**3, z=6*E*I/L**2, k=4*E*I/L, h=2*E*I/L;
+      const kl=[
+        [ ea,0,0,-ea,0,0 ],
+        [ 0,v,z,0,-v,z ],
+        [ 0,z,k,0,-z,h ],
+        [ -ea,0,0,ea,0,0 ],
+        [ 0,-v,-z,0,v,-z ],
+        [ 0,z,h,0,-z,k ]
+      ];
+      const T=[
+        [c,s,0,0,0,0],[-s,c,0,0,0,0],[0,0,1,0,0,0],
+        [0,0,0,c,s,0],[0,0,0,-s,c,0],[0,0,0,0,0,1]
+      ];
+      const kg=multiply(transpose(T),multiply(kl,T));
+      const dofs=[index[start]*3,index[start]*3+1,index[start]*3+2,index[end]*3,index[end]*3+1,index[end]*3+2];
+      for(let a=0;a<6;a++) for(let b=0;b<6;b++) K[dofs[a]][dofs[b]]+=kg[a][b];
+      return {id:String(raw.id||i+1),start,end,E,A,I,L,c,s,kl,T,dofs,loads:[],feq:Array(6).fill(0)};
+    });
+    const memberIndex={};
+    for(let i=0;i<members.length;i++) {
+      if(memberIndex[members[i].id]!==undefined) throw new Error('部材番号が重複しています。');
+      memberIndex[members[i].id]=i;
+    }
+    const loads=model.loads.map((raw,i)=>{
+      const type=raw.type;
+      const target=String(raw.target || '');
+      const d=raw.direction || 'Y';
+      const p=number(raw.p,`荷重${i+1}の大きさ`);
+      if(type==='D') {
+        if(!(target in memberIndex)) throw new Error(`分布荷重${i+1}の対象部材が見つかりません。`);
+        if(d!=='X'&&d!=='Y') throw new Error(`分布荷重${i+1}の方向が不正です。`);
+        const p2=number(raw.p2,`荷重${i+1}の終端強度`);
+        const mem=members[memberIndex[target]];
+        const qx0=d==='X'?p:0, qx1=d==='X'?p2:0;
+        const qy0=d==='Y'?p:0, qy1=d==='Y'?p2:0;
+        const px0=mem.c*qx0+mem.s*qy0, px1=mem.c*qx1+mem.s*qy1;
+        const py0=-mem.s*qx0+mem.c*qy0, py1=-mem.s*qx1+mem.c*qy1;
+        const L=mem.L;
+        const feq=[
+          L*(2*px0+px1)/6,
+          L*(7*py0+3*py1)/20,
+          L**2*(3*py0+2*py1)/60,
+          L*(px0+2*px1)/6,
+          L*(3*py0+7*py1)/20,
+          -(L**2)*(2*py0+3*py1)/60
+        ];
+        for(let j=0;j<6;j++) mem.feq[j]+=feq[j];
+        mem.loads.push({px0,px1,py0,py1});
+        return {type,target,direction:d,p,p2};
+      }
+      if(!(target in index)) throw new Error(`荷重${i+1}の対象節点が見つかりません。`);
+      const base=3*index[target];
+      if(type==='P') {
+        if(!['X','Y'].includes(d)) throw new Error(`集中荷重${i+1}の方向が不正です。`);
+        F[base+(d==='X'?0:1)]+=p;
+      } else if(type==='M') F[base+2]+=p;
+      else throw new Error(`荷重${i+1}の形式が不正です。`);
+      return {type,target,direction:d,p,p2:0};
+    });
+    // 分布荷重の等価節点力（全体系に変換）
+    for(const m of members) {
+      const fg=mulMV(transpose(m.T),m.feq);
+      for(let j=0;j<6;j++) F[m.dofs[j]]+=fg[j];
+    }
+    const locked=[];
+    nodes.forEach((n,i)=>{
+      const arr= n.support==='fixed'?[0,1,2] : n.support==='pin'?[0,1] :
+        n.support==='rollerY'?[1] : n.support==='rollerX'?[0] : n.support==='free'?[]:null;
+      if(arr===null) throw new Error(`節点${n.id}の支持条件が不正です。`);
+      for(const d of arr) locked.push(3*i+d);
+    });
+    if(!locked.length) throw new Error('支点が設定されていません。');
+    const lock=new Set(locked),free=[];
+    for(let i=0;i<mlen;i++) if(!lock.has(i)) free.push(i);
+    const U=Array(mlen).fill(0);
+    const uf=solveScaled(K,F,free);
+    free.forEach((i,j)=>U[i]=uf[j]);
+    const Ku=mulMV(K,U),R=Ku.map((v,i)=>v-F[i]);
+    const supportReactions=nodes.map((n,i)=>({id:n.id,support:n.support,
+      rx:lock.has(3*i)?R[3*i]:0, ry:lock.has(3*i+1)?R[3*i+1]:0,
+      mz:lock.has(3*i+2)?R[3*i+2]:0
+    })).filter(r=>r.support!=='free');
+    const memberResults=members.map(m=>{
+      const localU=mulMV(m.T,m.dofs.map(i=>U[i]));
+      const f=mulMV(m.kl,localU).map((val,i)=>val-m.feq[i]);
+      const p0=m.loads.reduce((s,l)=>s+l.px0,0),p1=m.loads.reduce((s,l)=>s+l.px1,0);
+      const q0=m.loads.reduce((s,l)=>s+l.py0,0),q1=m.loads.reduce((s,l)=>s+l.py1,0);
+      function section(t) {
+        const x=m.L*t, L=m.L;
+        return {t,x,
+          N:-f[0]-p0*x-(p1-p0)*x*x/(2*L),
+          Q:f[1]+q0*x+(q1-q0)*x*x/(2*L),
+          M:-f[2]+f[1]*x+q0*x*x/2+(q1-q0)*x*x*x/(6*L)
+        };
+      }
+      const samples=Array.from({length:81},(_,i)=>section(i/80));
+      return {...m,flocal:f,samples,section};
+    });
+    // 応力と荷重・反力の全体つり合いを独立の総和で確認
+    let sumX=0,sumY=0,sumM=0;
+    for(const r of supportReactions) {
+      const n=nodes[index[r.id]];
+      sumX+=r.rx; sumY+=r.ry; sumM+=n.x*r.ry-n.y*r.rx+r.mz;
+    }
+    for(const l of loads) {
+      if(l.type==='D') {
+        const m=members[memberIndex[l.target]],a=nodes[index[m.start]],b=nodes[index[m.end]];
+        const total=(l.p+l.p2)*m.L/2;
+        const weightedX=m.L*(a.x*(2*l.p+l.p2)+b.x*(l.p+2*l.p2))/6;
+        const weightedY=m.L*(a.y*(2*l.p+l.p2)+b.y*(l.p+2*l.p2))/6;
+        if(l.direction==='X') {sumX+=total;sumM-=weightedY;} else {sumY+=total;sumM+=weightedX;}
+      } else if(l.type==='P') {
+        const n=nodes[index[l.target]];
+        if(l.direction==='X'){sumX+=l.p;sumM-=n.y*l.p;} else {sumY+=l.p;sumM+=n.x*l.p;}
+      } else sumM+=l.p;
+    }
+    const maxForce=Math.max(1,absMax(F),...supportReactions.map(r=>Math.max(Math.abs(r.rx),Math.abs(r.ry))));
+    const maxMoment=Math.max(1,...loads.filter(l=>l.type==='M').map(l=>Math.abs(l.p)),...supportReactions.map(r=>Math.abs(r.mz)));
+    const balance=Math.max(Math.abs(sumX)/maxForce,Math.abs(sumY)/maxForce,Math.abs(sumM)/(maxMoment+maxForce*Math.max(1,...nodes.map(n=>Math.hypot(n.x,n.y)))));
+    if(!U.every(Number.isFinite)||!memberResults.every(m=>m.samples.every(p=>Number.isFinite(p.N)&&Number.isFinite(p.Q)&&Number.isFinite(p.M)))) throw new Error('計算結果が有限値ではありません。入力値を確認してください。');
+    return {nodes,members:memberResults,loads,supportReactions,U,R,balance,residual:{x:sumX,y:sumY,m:sumM}};
+  }
+  root.FrameNQMSolver={analyze};
+  if(typeof module!=='undefined'&&module.exports) module.exports={analyze};
+})(typeof window!=='undefined'?window:globalThis);
+
+</script><script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const DEFAULT={E:'210000000',A:'0.01',I:'0.00008'};
+const PRESETS={
+  portal:{nodes:[
+    {id:'1',x:'0',y:'0',support:'fixed'},
+    {id:'2',x:'0',y:'3',support:'free'},
+    {id:'3',x:'6',y:'3',support:'free'},
+    {id:'4',x:'6',y:'0',support:'fixed'}
+  ],members:[{id:'1',start:'1',end:'2'},{id:'2',start:'2',end:'3'},{id:'3',start:'4',end:'3'}],
+  loads:[{type:'P',target:'2',direction:'X',p:'12',p2:'0'}, {type:'D',target:'2',direction:'Y',p:'-6',p2:'-6'}]},
+  simple:{nodes:[
+    {id:'1',x:'0',y:'0',support:'pin'},
+    {id:'2',x:'3',y:'0',support:'free'},
+    {id:'3',x:'6',y:'0',support:'rollerY'}
+  ],members:[{id:'1',start:'1',end:'2'},{id:'2',start:'2',end:'3'}],
+  loads:[{type:'P',target:'2',direction:'Y',p:'-20',p2:'0'}]},
+  cantilever:{nodes:[{id:'1',x:'0',y:'0',support:'fixed'}, {id:'2',x:'4',y:'0',support:'free'}],
+  members:[{id:'1',start:'1',end:'2'}],loads:[{type:'P',target:'2',direction:'Y',p:'-12',p2:'0'}]}
+};
+let chosen='portal';
+let state=null;
+let lastResult=null;
+let renderPayload=null;
+const clone=x=>JSON.parse(JSON.stringify(x));
+const esc=x=>String(x).replace(/[&<>"']/g,a=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[a]));
+const fmt=(n,dec=1)=>Math.abs(Number(n))<0.0000001?(0).toFixed(dec):Number(n).toFixed(dec);
+const signed=n=> Math.abs(n)<.0005?'0.0':`${n>0?'+':''}${n.toFixed(1)}`;
+const attr=(type,idx,field)=>`data-kind="${type}" data-idx="${idx}" data-field="${field}"`;
+const input=(val,type,idx,field,step='any')=>`<input aria-label="${type} ${idx+1} ${field}" type="number" step="${step}" value="${esc(val)}" ${attr(type,idx,field)}>`;
+const select=(values,val,type,idx,field)=>`<select aria-label="${type} ${idx+1} ${field}" ${attr(type,idx,field)}>${values.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(val)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
+const nodeOptions=()=>state.nodes.map(n=>[n.id,`節点 ${n.id}`]);
+const memberOptions=()=>state.members.map(m=>[m.id,`部材 ${m.id}`]);
+function fillCountPreset(name) {
+  chosen=name;
+  const p=PRESETS[name];
+  $('nodeCount').value=p.nodes.length;
+  $('memberCount').value=p.members.length;
+  $('loadCount').value=p.loads.length;
+  document.querySelectorAll('.preset').forEach(b=>b.classList.toggle('active',b.dataset.preset===name));
+  $('countError').hidden=true;
+}
+function initState() {
+  const num=(id,min,max)=>{const n=Number($(id).value);if(!Number.isInteger(n)||n<min||n>max)throw Error(`${id==='nodeCount'?'節点数':id==='memberCount'?'部材数':'荷重数'}は ${min}〜${max} の整数で入力してください。`);return n;};
+  const [nc,mc,lc]=[num('nodeCount',2,40),num('memberCount',1,80),num('loadCount',0,80)];
+  let p=PRESETS[chosen];
+  const exact=nc===p.nodes.length&&mc===p.members.length&&lc===p.loads.length;
+  if(exact) {
+    state=clone(p);
+    state.members.forEach(m=>Object.assign(m,DEFAULT));
+  } else {
+    state={
+      nodes:Array.from({length:nc},(_,i)=>({id:String(i+1),x:String(i*2),y:'0',support:i===0?'pin':i===nc-1?'rollerY':'free'})),
+      members:Array.from({length:mc},(_,i)=>({id:String(i+1),start:String(i%nc+1),end:String((i+1)%nc+1),...DEFAULT})),
+      loads:Array.from({length:lc},()=>({type:'P',target:String(nc),direction:'Y',p:'-10',p2:'0'}))
+    };
+  }
+}
+function renderInputs() {
+  $('nodesTable').querySelector('tbody').innerHTML=state.nodes.map((n,i)=>`<tr><td>${n.id}</td><td>${input(n.x,'nodes',i,'x')}</td><td>${input(n.y,'nodes',i,'y')}</td><td>${select([['free','自由'],['pin','ピン'],['rollerY','ローラー（Y拘束）'],['rollerX','ローラー（X拘束）'],['fixed','固定']],n.support,'nodes',i,'support')}</td></tr>`).join('');
+  $('membersTable').querySelector('tbody').innerHTML=state.members.map((m,i)=>`<tr><td>${m.id}</td><td>${select(nodeOptions(),m.start,'members',i,'start')}</td><td>${select(nodeOptions(),m.end,'members',i,'end')}</td></tr>`).join('');
+  $('propertiesTable').querySelector('tbody').innerHTML=state.members.map((m,i)=>`<tr><td>${m.id}</td><td>${input(m.E,'members',i,'E')}</td><td>${input(m.A,'members',i,'A')}</td><td>${input(m.I,'members',i,'I')}</td></tr>`).join('');
+  renderLoadInputs();
+  updatePreview();
+}
+function renderLoadInputs() {
+  $('loadsTable').querySelector('tbody').innerHTML=state.loads.length?state.loads.map((l,i)=>{
+    const distributed=l.type==='D', moment=l.type==='M';
+    return `<tr><td>${i+1}</td><td>${select([['P','P · 集中力'],['D','D · 分布'],['M','M · モーメント']],l.type,'loads',i,'type')}</td><td>${select(distributed?memberOptions():nodeOptions(),l.target,'loads',i,'target')}</td><td>${moment?'<span class="fine">反時計 +</span>':select([['X','X（水平）'],['Y','Y（鉛直）']],l.direction,'loads',i,'direction')}</td><td>${input(l.p,'loads',i,'p')}</td><td>${distributed?input(l.p2,'loads',i,'p2'):'<span class="fine">—</span>'}</td></tr>`;
+  }).join(''):'<tr><td colspan="6" style="padding:14px;color:#8495a5">荷重なし（無載荷）</td></tr>';
+}
+function editableChange(e){
+  const el=e.target;if(!el.dataset.kind||!state)return;
+  const {kind,idx,field}=el.dataset;
+  const item=state[kind][Number(idx)];
+  item[field]=el.value;
+  if(kind==='loads'&&field==='type'){
+    item.target=el.value==='D'?state.members[0]?.id:state.nodes[0]?.id;
+    item.direction='Y';item.p2=el.value==='D'?item.p:'0';
+    renderLoadInputs();
+  }
+  updatePreview();
+}
+function issueError(which,text){$(which).textContent=text;$(which).hidden=false;}
+function clearError(which){$(which).hidden=true;$(which).textContent='';}
+function geometry(model) {
+  const nodes=model.nodes.filter(n=>Number.isFinite(Number(n.x))&&Number.isFinite(Number(n.y))).map(n=>({...n,x:Number(n.x),y:Number(n.y)}));
+  const lookup=Object.fromEntries(nodes.map(n=>[n.id,n]));
+  const members=model.members.map(m=>({...m,a:lookup[m.start],b:lookup[m.end]})).filter(m=>m.a&&m.b&&Math.hypot(m.b.x-m.a.x,m.b.y-m.a.y)>1e-9);
+  const xx=nodes.map(n=>n.x),yy=nodes.map(n=>n.y),minX=Math.min(...xx,0),maxX=Math.max(...xx,0),minY=Math.min(...yy,0),maxY=Math.max(...yy,0);
+  const dx=maxX-minX,dy=maxY-minY;
+  const W=1100,H=Math.round(Math.max(300,Math.min(620,230+610*dy/Math.max(dx,1))));
+  const scale=Math.min(800/Math.max(dx,.6),(H-176)/Math.max(dy,.6));
+  const centerX=(minX+maxX)/2,centerY=(minY+maxY)/2;
+  const map=(x,y)=>[W/2+(x-centerX)*scale,H/2-(y-centerY)*scale];
+  return {nodes,members,lookup,W,H,scale,map};
+}
+function defs(){return `<defs><marker id="forceTip" markerWidth="7" markerHeight="7" refX="5.3" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3.5 L0,7Z" fill="#c47b37"/></marker><marker id="momentTip" markerWidth="7" markerHeight="7" refX="5.3" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7,3.5 L0,7Z" fill="#c47b37"/></marker></defs>`;}
+function baseSvg(ctx,inner,extra='') {return `<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(extra)}" viewBox="0 0 ${ctx.W} ${ctx.H}">${defs()}${inner}</svg>`;}
+const line=(x1,y1,x2,y2,stroke='#1a3450',width=3,dash='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${width}" ${dash?`stroke-dasharray="${dash}"`:''} stroke-linecap="round"/>`;
+const txt=(x,y,text,cl='svg-label',anchor='middle',attrs='')=>`<text x="${x}" y="${y}" class="${cl}" text-anchor="${anchor}" ${attrs}>${esc(text)}</text>`;
+function supportSvg(n,ctx) {
+  if(n.support==='free')return '';
+  const [x,y]=ctx.map(n.x,n.y);
+  if(n.support==='fixed'){
+    let u=[0,-1];
+    const mm=ctx.members.find(m=>m.start===n.id||m.end===n.id);
+    if(mm){const other=mm.start===n.id?mm.b:mm.a;const [ox,oy]=ctx.map(other.x,other.y);const L=Math.hypot(ox-x,oy-y);u=[(ox-x)/L,(oy-y)/L];}
+    const p=[-u[1],u[0]],h=19;
+    let s=line(x-p[0]*h,y-p[1]*h,x+p[0]*h,y+p[1]*h,'#182a42',4);
+    for(let k=-3;k<=3;k++){
+      const a=k*5;
+      s+=line(x+p[0]*a,y+p[1]*a,x+p[0]*(a-5)-u[0]*11,y+p[1]*(a-5)-u[1]*11,'#52677c',1.5);
+    }
+    return s;
+  }
+  const angle=n.support==='rollerX'?-90:0;
+  const cir=n.support==='pin'?'' : `<circle cx="-10" cy="26" r="4" fill="white" stroke="#18334d" stroke-width="1.6"/><circle cx="10" cy="26" r="4" fill="white" stroke="#18334d" stroke-width="1.6"/>${line(-22,33,22,33,'#18334d',1.7)}`;
+  return `<g transform="translate(${x} ${y}) rotate(${angle})"><path d="M0 0 L-18 18 L18 18 Z" fill="white" stroke="#18334d" stroke-width="2"/>${n.support==='pin'?line(-21,20,21,20,'#18334d',2):cir}</g>`;
+}
+function problemSvg(model) {
+  const ctx=geometry(model);
+  if(!ctx.nodes.length)return baseSvg(ctx,txt(ctx.W/2,ctx.H/2,'座標が未入力です','svg-muted'),'問題図');
+  let s='';
+  for(const m of ctx.members) {
+    const [x0,y0]=ctx.map(m.a.x,m.a.y),[x1,y1]=ctx.map(m.b.x,m.b.y);
+    s+=line(x0,y0,x1,y1,'#1d354c',4.2);
+    const L=Math.hypot(m.b.x-m.a.x,m.b.y-m.a.y);
+    const ux=(x1-x0)/Math.hypot(x1-x0,y1-y0),uy=(y1-y0)/Math.hypot(x1-x0,y1-y0);
+    s+=txt((x0+x1)/2-uy*23,(y0+y1)/2+ux*23,`e${m.id} · ${fmt(L,2)} m`,'svg-muted');
+  }
+  for(const n of ctx.nodes) {
+    s+=supportSvg(n,ctx);
+    const [x,y]=ctx.map(n.x,n.y);
+    s+=`<circle cx="${x}" cy="${y}" r="4.5" fill="#fff" stroke="#193752" stroke-width="2"/>`;
+    s+=txt(x+13,y-14,n.id,'svg-node','start');
+  }
+  const maxLoad=Math.max(1,...model.loads.map(l=>Math.abs(Number(l.p)||0)),...model.loads.map(l=>Math.abs(Number(l.p2)||0)));
+  for(const l of model.loads){
+    if(l.type==='D'){
+      const m=ctx.members.find(m=>m.id===l.target);if(!m)continue;
+      const [x0,y0]=ctx.map(m.a.x,m.a.y),[x1,y1]=ctx.map(m.b.x,m.b.y);
+      const a=Number(l.p),b=Number(l.p2);if(!Number.isFinite(a)||!Number.isFinite(b))continue;
+      const dir=l.direction==='X'?[1,0]:[0,-1];
+      let tails=[];
+      for(let k=0;k<=7;k++){
+        const t=k/7,q=a+(b-a)*t,px=x0+(x1-x0)*t,py=y0+(y1-y0)*t;
+        if(Math.abs(q)<1e-8)continue;
+        const length=20+44*Math.abs(q)/maxLoad,sign=Math.sign(q);
+        const tx=px-dir[0]*sign*length,ty=py-dir[1]*sign*length;
+        s+=line(tx,ty,px,py,'#c47b37',1.7).replace('/>', ' marker-end="url(#forceTip)"/>');
+        tails.push(`${tx},${ty}`);
+      }
+      if(tails.length>=2)s+=`<polyline points="${tails.join(' ')}" fill="none" stroke="#c47b37" stroke-width="1.7"/>`;
+      const qlabel=Math.abs(a-b)<1e-9?`${fmt(a)} kN/m`:`${fmt(a)} → ${fmt(b)} kN/m`;
+      const t=.52,px=x0+(x1-x0)*t,py=y0+(y1-y0)*t;
+      s+=txt(px+dir[0]*(-50),py+dir[1]*(-86)-8,qlabel,'svg-force-label');
+    } else if(l.type==='P'){
+      const n=ctx.lookup[l.target];if(!n)continue;
+      const p=Number(l.p);if(!Number.isFinite(p)||!p)continue;
+      const [x,y]=ctx.map(n.x,n.y),d=(l.direction==='X'?[1,0]:[0,-1]).map(z=>z*Math.sign(p));
+      const start=[x-d[0]*58,y-d[1]*58];
+      s+=line(start[0],start[1],x-d[0]*5,y-d[1]*5,'#c47b37',2.7).replace('/>', ' marker-end="url(#forceTip)"/>');
+      s+=txt(start[0]-d[0]*5+(l.direction==='X'?0:34),start[1]-d[1]*6-8,`${fmt(p)} kN`,'svg-force-label');
+    } else if(l.type==='M'){
+      const n=ctx.lookup[l.target];if(!n)continue;
+      const p=Number(l.p);if(!Number.isFinite(p)||!p)continue;
+      const [x,y]=ctx.map(n.x,n.y);
+      const radius=28, a0=-Math.PI*.7,a1=a0+(p>0?-1:1)*Math.PI*1.6;
+      const xx=x+radius*Math.cos(a0), yy=y+radius*Math.sin(a0);
+      const x2=x+radius*Math.cos(a1),y2=y+radius*Math.sin(a1);
+      s+=`<path d="M${xx} ${yy} A${radius} ${radius} 0 1 ${p>0?0:1} ${x2} ${y2}" fill="none" stroke="#c47b37" stroke-width="2.5" marker-end="url(#momentTip)"/>`;
+      s+=txt(x+38,y-36,`${fmt(p)} kN·m`,'svg-force-label','start');
+    }
+  }
+  return baseSvg(ctx,s,'問題図（節点・部材・支持条件・荷重）');
+}
+function diagramSvg(result,key) {
+  const ctx=geometry(result),max=Math.max(0,...result.members.flatMap(m=>m.samples.map(p=>Math.abs(p[key])))),normalizer=max>1e-9?max:1;
+  const color={N:'#128c86',Q:'#286bc5',M:'#d05b48'}[key];
+  let s='';
+  // すべての部材の原線（荷重・支点の記号を描かない）
+  for(const m of ctx.members){const [x0,y0]=ctx.map(m.a.x,m.a.y),[x1,y1]=ctx.map(m.b.x,m.b.y);s+=line(x0,y0,x1,y1,'#8999aa',3);}
+  for(const m of result.members){
+    const a=ctx.lookup[m.start], b=ctx.lookup[m.end];if(!a||!b)continue;
+    const [x0,y0]=ctx.map(a.x,a.y),[x1,y1]=ctx.map(b.x,b.y);
+    const L=Math.hypot(x1-x0,y1-y0),u=[(x1-x0)/L,(y1-y0)/L];
+    const normal=[u[1]*(key==='M'?-1:1),-u[0]*(key==='M'?-1:1)];
+    const offset=p=>70*(p[key]/normalizer);
+    const bas=t=>[x0+(x1-x0)*t,y0+(y1-y0)*t];
+    const outer=p=>{const [x,y]=bas(p.t),o=offset(p);return [x+normal[0]*o,y+normal[1]*o];};
+    const pts=m.samples.map(outer);
+    const polygon=[`${x0},${y0}`,...pts.map(v=>`${v[0]},${v[1]}`),`${x1},${y1}`].join(' ');
+    s+=`<polygon points="${polygon}" fill="${color}" fill-opacity=".095" stroke="none"/>`;
+    for(let i=0;i<m.samples.length;i+=5){
+      const [xa,ya]=bas(m.samples[i].t),[xb,yb]=pts[i];
+      if(Math.hypot(xb-xa,yb-ya)>.7)s+=line(xa,ya,xb,yb,color,1.25);
+    }
+    s+=`<polyline points="${pts.map(v=>v.join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if(Math.abs(m.samples[0][key])>1e-8)s+=line(x0,y0,pts[0][0],pts[0][1],color,2.4);
+    if(Math.abs(m.samples.at(-1)[key])>1e-8)s+=line(x1,y1,pts.at(-1)[0],pts.at(-1)[1],color,2.4);
+    function label(p,place){
+      let [x,y]=outer(p), val=p[key];
+      // 始端・終端は部材の外側へ。内部極値は図の外側へ。
+      if(place==='start'){x-=u[0]*25;y-=u[1]*25;}
+      else if(place==='end'){x+=u[0]*25;y+=u[1]*25;}
+      else{x+=normal[0]*Math.sign(val||1)*20;y+=normal[1]*Math.sign(val||1)*20;}
+      y+=val>=0?-7:16;
+      s+=txt(x,y,signed(val),'svg-value','middle',`style="fill:${color}"`);
+    }
+    if(max<=1e-9){
+      // すべてゼロなら各部材中央に一つだけ表示
+      const [mx,my]=bas(.5);s+=txt(mx+normal[0]*20,my+normal[1]*20,'0.0','svg-value','middle',`style="fill:${color}"`);
+    }else{
+      label(m.samples[0],'start');label(m.samples.at(-1),'end');
+      const extrema=[];
+      for(let j=1;j<m.samples.length-1;j++){
+        const av=m.samples[j-1][key],cv=m.samples[j][key],bv=m.samples[j+1][key];
+        if((cv-av)*(bv-cv)<=0&&Math.abs(cv)>max*.05&&j>7&&j<m.samples.length-8){
+          if(!extrema.some(z=>Math.abs(z.p.t-m.samples[j].t)<.08)) extrema.push({p:m.samples[j]});
+        }
+      }
+      extrema.sort((a,b)=>Math.abs(b.p[key])-Math.abs(a.p[key]));
+      extrema.slice(0,2).forEach(x=>label(x.p,'middle'));
+    }
+  }
+  const label=key==='N'?'軸力 N':key==='Q'?'せん断力 Q':'曲げモーメント M';
+  return baseSvg(ctx,s,`${label}図`);
+}
+function updatePreview() {
+  if(!state)return;
+  try{$('previewSvg').innerHTML=problemSvg(state);}catch(e){$('previewSvg').textContent='座標と部材の設定を確認してください。';}
+}
+function showResults(r) {
+  $('problemOutput').innerHTML=problemSvg(r);
+  $('nOutput').innerHTML=diagramSvg(r,'N');
+  $('qOutput').innerHTML=diagramSvg(r,'Q');
+  $('mOutput').innerHTML=diagramSvg(r,'M');
+  const ok=r.balance<1e-7;
+  $('balanceBanner').className='balance-banner'+(ok?'':' warn');
+  $('balanceBanner').textContent=ok?'計算完了 — 支点反力を含む全体の力・モーメントのつり合いを確認しました。':'計算完了 — つり合いの残差が大きいため、入力値や構造条件を確認してください。';
+  $('reactionsTable').innerHTML=`<table class="reaction-table"><thead><tr><th>節点</th><th>水平反力 Rx<br>kN</th><th>鉛直反力 Ry<br>kN</th><th>反力 Mz<br>kN·m</th></tr></thead><tbody>${r.supportReactions.map(a=>`<tr><td>${esc(a.id)}</td><td>${signed(a.rx)}</td><td>${signed(a.ry)}</td><td>${signed(a.mz)}</td></tr>`).join('')}</tbody></table>`;
+  $('results').hidden=false;
+  lastResult=r;
+  $('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function svgDocument(){
+  if(!lastResult)return null;
+  const svgs=['problemOutput','nOutput','qOutput','mOutput'].map(id=>$(id).querySelector('svg'));
+  const width=1100, gap=49, top=65;
+  const heights=svgs.map(s=>Number(s.viewBox.baseVal.height));
+  const total=top+heights.reduce((s,h)=>s+h+gap,0)+24;
+  let yy=top,sections='';
+  const titles=['01  問題図','02  N 図　軸力 [kN]','03  Q 図　せん断力 [kN]','04  M 図　曲げモーメント [kN·m]'];
+  for(let i=0;i<4;i++) {
+    const svg=svgs[i],h=heights[i];
+    sections+=`<text x="72" y="${yy-19}" font-size="22" fill="#203953" font-family="sans-serif" font-weight="bold">${titles[i]}</text>`;
+    sections+=`<svg xmlns="http://www.w3.org/2000/svg" x="0" y="${yy}" width="${width}" height="${h}" viewBox="0 0 ${width} ${h}">${svg.innerHTML}</svg>`;
+    yy+=h+gap;
+  }
+  return {width,height:total,xml:`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${total}" viewBox="0 0 ${width} ${total}"><rect width="100%" height="100%" fill="white"/><text x="72" y="34" font-size="26" fill="#1d354c" font-weight="bold" font-family="sans-serif">ラーメン N・Q・M 図 / FRAME LAB</text>${sections}</svg>`};
+}
+function download(name,blob){
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);
+}
+async function savePng(){
+  try {
+    const doc=svgDocument();if(!doc)return;
+    const src=URL.createObjectURL(new Blob([doc.xml],{type:'image/svg+xml;charset=utf-8'}));
+    const image=new Image();
+    await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=src;});
+    const canvas=document.createElement('canvas');canvas.width=doc.width*2;canvas.height=doc.height*2;
+    const c=canvas.getContext('2d');c.fillStyle='white';c.fillRect(0,0,canvas.width,canvas.height);c.drawImage(image,0,0,canvas.width,canvas.height);
+    URL.revokeObjectURL(src);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+    if(!blob)throw Error('画像の変換に失敗しました。');
+    download('ramen_NQM_diagrams.png',blob);
+  }catch(e){alert('PNG出力に失敗しました。SVG保存をお試しください。\n'+e.message);}
+}
+document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>fillCountPreset(b.dataset.preset)));
+$('confirmCounts').addEventListener('click',()=>{
+  try {clearError('countError');initState();renderInputs();clearError('calcError');$('step2').hidden=false;$('results').hidden=true;lastResult=null;$('step2').scrollIntoView({behavior:'smooth',block:'start'});}
+  catch(e){issueError('countError',e.message);}
+});
+$('step2').addEventListener('input',editableChange);
+$('step2').addEventListener('change',e=>{
+  if(e.target.matches('select'))editableChange(e);
+});
+$('resetExample').addEventListener('click',()=>{initState();renderInputs();clearError('calcError');$('results').hidden=true;lastResult=null;});
+$('calculate').addEventListener('click',()=>{
+  try{clearError('calcError');const r=FrameNQMSolver.analyze(state);showResults(r);}
+  catch(e){$('results').hidden=true;issueError('calcError',e.message);$('calcError').scrollIntoView({behavior:'smooth',block:'center'});}
+});
+$('saveSvg').addEventListener('click',()=>{const d=svgDocument();if(d)download('ramen_NQM_diagrams.svg',new Blob([d.xml],{type:'image/svg+xml;charset=utf-8'}));});
+$('savePng').addEventListener('click',savePng);
+$('printPage').addEventListener('click',()=>window.print());
+})();
+
+</script>
+</body>
+</html>
