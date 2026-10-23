@@ -249,6 +249,25 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 .setup-rules .setup-preview{height:44px}
 @media(max-width:760px){.setup-layout .panel{padding:7px;gap:4px}.setup-rules #limit-input{font-size:20px;padding:4px}.setup-rules .setup-preview{height:28px}}
 
+
+/* Mobile: make tall setup forms and game views accessible by natural page scrolling. */
+@media (max-width:760px), (max-height:600px) {
+  html, body {height:auto; min-height:100%; overflow-x:hidden; overflow-y:auto;}
+  .app-shell {height:auto; min-height:100dvh; overflow:visible;}
+  .screen {height:auto; min-height:0; flex:none;}
+  .setup-layout {flex:none; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto; overflow:visible;}
+  .setup-layout .panel {min-height:0; height:auto; overflow:visible;}
+  .setup-rules #start-game {min-height:48px; margin-top:12px; touch-action:manipulation;}
+  .setup-footnote {margin:9px 0 16px;}
+  .battle-columns {flex:none; min-height:0; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto; overflow:visible;}
+  .play-panel {min-height:310px;}
+  .beam-stage {min-height:190px; flex:1 0 190px;}
+  .battle-side {min-height:0; overflow:visible;}
+  .result-columns {flex:none; min-height:0; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto;}
+  .result-inspection svg {min-height:200px; flex:0 0 auto;}
+  .turn-popup {overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .turn-popup-card {max-height:calc(100dvh - 28px); overflow:auto;}
+}
 </style>
 <title>MOMENT BATTLE v0.7 | 梁のモーメント対戦</title>
 </head>
