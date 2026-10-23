@@ -1,3 +1,423 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fffaf2"><title>765 | STRUCTURE &amp; PLAY</title><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>
-*{box-sizing:border-box}body{margin:0;background:#fffaf2;color:#293550;font-family:system-ui,-apple-system,"Yu Gothic",Meiryo,sans-serif;line-height:1.8}.wrap{width:min(680px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid #eee7de;padding:20px 0;font-weight:900;letter-spacing:.07em}header a{color:inherit;text-decoration:none}header b{color:#fb744e}main{min-height:calc(100vh - 170px);display:grid;place-items:center;padding:60px 0}.panel{width:100%;background:white;border:1px solid #e4e7eb;border-radius:24px;overflow:hidden;box-shadow:0 15px 50px #2935500a}img{display:block;width:100%;height:250px;object-fit:contain;background:#e1e9ff}.content{padding:32px;text-align:center}.badge{display:inline-block;background:#f5f5f4;color:#747d8e;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:800}h1{font-size:clamp(31px,6vw,46px);line-height:1.3;letter-spacing:-.04em;margin:20px 0 0}.jp{font-size:15px;font-weight:800;margin:3px 0 15px}.desc{font-size:13px;color:#6b7280;margin:12px auto 18px;max-width:430px}.notice{border-top:1px solid #e6e6e6;padding-top:22px;color:#58657c;font-size:14px;margin-bottom:24px}.btn{display:inline-block;background:#2d3b57;color:white;font-weight:800;padding:12px 22px;border-radius:14px;text-decoration:none;font-size:14px}.btn:focus-visible{outline:3px solid #577bd6;outline-offset:3px}footer{text-align:center;color:#7b8596;font-size:11px;padding:20px}
-</style></head><body><header><div class="wrap"><a href="../../index.html">STRUCTURE <b>&amp;</b> PLAY</a></div></header><main class="wrap"><article class="panel"><img src="../../assets/765.svg" alt="数字の配置ゲームのイメージ"><div class="content"><span class="badge">公開準備中</span><h1>765</h1><p class="jp">数字の配置ゲーム</p><p class="desc">0〜7の数字を配置し、行・列・斜めの積で競うオリジナルゲーム。</p><p class="notice">このアプリは、現在ホームページへの組み込み準備中です。<br>公開後はこちらからご利用いただけます。</p><a href="../../index.html#apps" class="btn">← アプリ一覧に戻る</a></div></article></main><footer>© STRUCTURE &amp; PLAY</footer></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10141c">
+<title>765 — 数字の配置ゲーム</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1118;--surface:#151b25;--surface2:#1d2633;--line:#303a49;--ink:#f1f4f7;--muted:#9da9b9;--red:#e35466;--blue:#5694ed;--cell:clamp(29px,7.4vw,65px);--cell-gap:clamp(4px,.8vw,9px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.5}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid #f7f7f7;outline-offset:3px}
+.app{max-width:1160px;margin:0 auto;padding:28px clamp(12px,3vw,40px) 30px}
+.top{display:flex;gap:22px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:20px}
+.brand{display:flex;align-items:baseline;gap:16px;min-width:0}
+h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:0;line-height:1}
+.tagline{font-size:12px;color:var(--muted);letter-spacing:.07em;white-space:nowrap}
+.round-tag{border:1px solid var(--line);border-radius:999px;padding:6px 13px;color:#dce4ef;font-size:12px;letter-spacing:.07em;white-space:nowrap}
+.actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap;padding-top:16px}
+.ghost{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:9px;padding:8px 12px;font-size:12px}
+.ghost:hover{color:var(--ink);border-color:#667186}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 276px;gap:32px;margin-top:14px;align-items:start}
+.stage{min-width:0}
+.turn-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;padding:13px 0 12px}
+.turn-title strong{font-size:17px;font-weight:650}
+.turn-title small{font-size:12px;color:var(--muted)}
+.color-red{color:var(--red)}.color-blue{color:var(--blue)}
+.arena{display:flex;justify-content:center;align-items:center;min-height:calc(var(--cell)*6 + var(--cell-gap)*5 + 18px);padding:10px 0 18px;overflow-x:auto}
+.board{display:grid;grid-template-columns:repeat(8,var(--cell));grid-template-rows:repeat(6,var(--cell));gap:var(--cell-gap);width:max-content;flex:none;user-select:none}
+.cell{width:var(--cell);height:var(--cell);border-radius:8px;display:flex;align-items:center;justify-content:center;min-width:0}
+.input-cell{background:var(--surface2);border:1px solid #3d4654;color:var(--ink);font-size:clamp(17px,3vw,28px);font-weight:650;transition:border-color .14s,background .14s}
+.input-cell.empty{color:var(--muted)}
+.input-cell.empty.interactive:hover{border-color:#8d98ab;background:#293546}
+.input-cell.locked{cursor:default}
+.input-cell .piece-red{color:var(--red)}.input-cell .piece-blue{color:var(--blue)}
+.out-cell{flex-direction:column;gap:0;border:1px solid transparent;text-align:center}
+.out-cell.red{background:#5a242e;border-color:#903b49;color:#ffb6c0}
+.out-cell.blue{background:#203c65;border-color:#38639c;color:#b9d7ff}
+.out-cell .out-label{font-size:clamp(9px,1.1vw,11px);line-height:1.3;font-weight:500;opacity:.85}
+.out-cell .out-val{font-size:clamp(11px,1.85vw,19px);font-variant-numeric:tabular-nums;font-weight:740;letter-spacing:-.035em;line-height:1.2}
+.out-cell .out-val.long{font-size:clamp(10px,1.5vw,16px)}
+.legend{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:center;gap:9px 19px;margin:0 0 16px}
+.legend .dot{display:inline-block;border-radius:50%;width:7px;height:7px;margin-right:6px;vertical-align:1px}
+.legend .dot.red{background:var(--red)}.legend .dot.blue{background:var(--blue)}
+.howto{color:var(--muted);font-size:12px;line-height:1.8;border-top:1px solid var(--line);padding-top:15px;max-width:650px;margin:0 auto}
+.panel{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:16px;margin-bottom:12px}
+.panel h2{font-size:14px;margin:0 0 13px;font-weight:650;letter-spacing:.02em}
+.player-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.player-name{font-weight:650;font-size:14px}
+.player-role{color:var(--muted);font-size:11px;white-space:nowrap}
+.player-role.red{color:var(--red)}.player-role.blue{color:var(--blue)}
+.player-panel{transition:border-color .14s;position:relative}
+.player-panel.active.red{border-color:var(--red)}.player-panel.active.blue{border-color:var(--blue)}
+.player-panel.inactive{opacity:.75}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.chip{height:41px;min-width:0;background:#232e3c;border:1px solid #3b4758;border-radius:8px;color:var(--ink);font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
+.chip:not(:disabled):hover{border-color:#9ba9ba}
+.player-panel.red .chip.selected{background:#612631;border-color:var(--red);color:#fff}
+.player-panel.blue .chip.selected{background:#254979;border-color:var(--blue);color:#fff}
+.chip:disabled{opacity:.35;cursor:default}
+.chip.used{text-decoration:line-through;opacity:.19}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:#202936;padding:11px 10px;border-radius:8px}
+.stat .name{font-size:11px;color:var(--muted)}
+.stat .value{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.5}
+.stats-total{margin-top:10px;border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:center;justify-content:space-between}
+.stats-total .desc{font-size:12px;color:var(--muted)}
+.stats-total .total{font-size:18px;font-weight:740;letter-spacing:-.02em}
+.log{font-size:12px;color:var(--muted);margin-top:11px;line-height:1.75}
+.notice{font-size:12px;color:#cbd7e7;line-height:1.8;padding:3px 1px 9px;min-height:36px}
+.primary{background:#eaf0f8;border:none;color:#101925;padding:11px 17px;border-radius:9px;font-weight:700;width:100%;display:none}
+.primary:hover{background:white}
+.rule-note{font-size:11px;color:var(--muted);margin-top:5px;text-align:right}
+@media(max-width:950px){.layout{grid-template-columns:1fr;gap:2px}.aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.aside .panel{margin-bottom:0}.aside .span-all{grid-column:1/-1}.arena{padding-top:10px}.stage{margin-bottom:12px}}
+@media(max-width:540px){.app{padding:20px 11px 24px}.top{gap:12px;padding-bottom:14px}.tagline{font-size:10px;white-space:normal}.brand{gap:9px}.round-tag{font-size:11px;padding:5px 9px}.actions{padding-top:10px}.layout{margin-top:8px}.turn-title strong{font-size:14px}.turn-title small{font-size:11px}.aside{display:grid;grid-template-columns:1fr 1fr;gap:8px}.panel{padding:10px;border-radius:10px}.player-name{font-size:12px}.player-role{font-size:10px}.player-top{display:block;margin-bottom:8px}.chips{gap:4px}.chip{height:35px;font-size:15px}.aside .score-panel{grid-column:1/-1}.panel h2{margin-bottom:8px}.howto{font-size:11px}.legend{font-size:11px;gap:6px 10px}.stat .value{font-size:19px}}
+
+/* 765 v0.2: 10 direction arrows and computer opponent */
+.board{position:relative}
+.board-arrows{position:relative;z-index:1;width:100%;height:100%;overflow:visible;pointer-events:none;align-self:stretch;justify-self:stretch}
+.input-cell{position:relative;z-index:2;background:rgba(29,38,51,.76)}
+.input-cell span{position:relative;z-index:3;text-shadow:0 1px 5px #0f1522,0 0 12px #111a25}
+.input-cell.empty.interactive:hover{background:rgba(42,54,71,.86)}
+.game-settings{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-right:auto}
+.setting-label{color:var(--muted);font-size:12px;display:inline-flex;align-items:center;gap:7px}
+.setting-select{appearance:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:7px;font-size:12px;padding:8px;min-height:35px}
+.setting-select:focus-visible{outline:2px solid #eef2ff;outline-offset:2px}
+@media(max-width:540px){.actions{gap:6px}.game-settings{gap:7px}.setting-label{font-size:11px;gap:4px}.setting-select{font-size:11px;padding:6px 4px}}
+</style>
+</head>
+<body>
+<nav aria-label="サイト内ナビゲーション" style="max-width:1160px;margin:0 auto;padding:14px 16px 0"><a href="../../index.html#apps" style="color:#becce0;text-decoration:none;font-size:13px;display:inline-block;padding:6px 3px">← STRUCTURE &amp; PLAY に戻る</a></nav>
+<div class="app">
+  <header class="top">
+    <div class="brand"><h1>765</h1><span class="tagline">数字を置き、積を競う。</span></div>
+    <span class="round-tag" id="roundTag">ROUND 1 / 2</span>
+  </header>
+  <div class="actions">
+    <div class="game-settings">
+      <label class="setting-label" for="mode">対戦
+        <select class="setting-select" id="mode"><option value="cpu" selected>コンピューター</option><option value="local">2人対戦</option></select>
+      </label>
+      <label class="setting-label" id="difficultyWrap" for="difficulty">CPU
+        <select class="setting-select" id="difficulty"><option value="easy">やさしい</option><option value="normal">ふつう</option><option value="hard" selected>強い</option></select>
+      </label>
+    </div>
+    <button class="ghost" type="button" id="restartBtn">最初から</button>
+  </div>
+  <main class="layout">
+    <section class="stage" aria-label="ゲーム盤面">
+      <div class="turn-title" aria-live="polite"><strong id="turnText"></strong><small id="progressText"></small></div>
+      <div class="arena"><div class="board" id="board" role="group" aria-label="4×4の数字配置マスと10の積の表示マス"></div></div>
+      <div class="legend"><span><i class="dot red"></i>赤の計算方向</span><span><i class="dot blue"></i>青の計算方向</span><span>数字を置き切ると積を表示</span></div>
+      <p class="howto">右の4マスは各行の積、下の4マスは各列の積。左下は右上から左下への斜め4マス、右下は左上から右下への斜め4マスの積です。それぞれ自分の色の<strong>最大値1つ</strong>を得点とし、先手・後手を交代して2回戦の合計を競います。</p>
+    </section>
+    <aside class="aside" aria-label="数字と得点">
+      <section class="panel player-panel red" id="panelA"><div class="player-top"><div class="player-name">プレイヤー A</div><div class="player-role" id="roleA"></div></div><div class="chips" id="chipsA"></div></section>
+      <section class="panel player-panel blue" id="panelB"><div class="player-top"><div class="player-name">プレイヤー B</div><div class="player-role" id="roleB"></div></div><div class="chips" id="chipsB"></div></section>
+      <section class="panel score-panel span-all">
+        <h2>得点</h2>
+        <div class="stats"><div class="stat"><div class="name" id="scoreLabelA">プレイヤー A</div><div class="value" id="scoreA">—</div></div><div class="stat"><div class="name" id="scoreLabelB">プレイヤー B</div><div class="value" id="scoreB">—</div></div></div>
+        <div class="stats-total"><span class="desc">2回戦の合計</span><span class="total" id="totalText">— : —</span></div>
+        <div class="log" id="roundLog"></div>
+        <div class="notice" id="notice" aria-live="polite"></div>
+        <button class="primary" type="button" id="nextBtn"></button>
+      </section>
+    </aside>
+  </main>
+  <div class="rule-note">正式ルール：赤5マス・青5マス。左下の斜め計算マスは赤。</div>
+</div>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const cn={red:'赤',blue:'青'};
+const outputs=[
+ ...Array.from({length:4},(_,i)=>({id:'r'+i,kind:'row',i,x:8,y:i+1,color:i%2===0?'blue':'red',label:'横'+(i+1),cells:Array.from({length:4},(_,j)=>i*4+j)})),
+ ...Array.from({length:4},(_,i)=>({id:'c'+i,kind:'col',i,x:i+3,y:6,color:i%2===0?'blue':'red',label:'縦'+(i+1),cells:Array.from({length:4},(_,j)=>j*4+i)})),
+ {id:'dl',kind:'anti',x:1,y:6,color:'red',label:'↙',cells:[3,6,9,12]},
+ {id:'dr',kind:'main',x:8,y:6,color:'blue',label:'↘',cells:[0,5,10,15]}
+];
+const maxN=1764; // 4つの数字の理論上の最大値（各数字は2個まで）。
+let s, message='',cpuTimer=null, cpuJob=0;
+const other=c=>c==='red'?'blue':'red';
+const pColor=p=>s.round===1?(p==='A'?'red':'blue'):(p==='A'?'blue':'red');
+const pOf=c=>pColor('A')===c?'A':'B';
+const now=()=>pOf(s.turn);
+const cpumode=()=>s.mode==='cpu';
+const cpuTurn=()=>cpumode()&&s.phase==='playing'&&now()==='B';
+const ownerName=p=>p==='B'&&cpumode()?'コンピューター':`プレイヤー ${p}`;
+const sum=p=>s.scores.reduce((acc,row)=>acc+row[p],0);
+const pointValues=board=>{
+ if(board.some(x=>x===null))return null;
+ let out={};
+ outputs.forEach(line=>out[line.id]=line.cells.reduce((v,i)=>v*board[i],1));
+ return out;
+};
+const roundScore=board=>{
+ let vals=pointValues(board),result={red:0,blue:0};
+ for(const o of outputs)result[o.color]=Math.max(result[o.color],vals[o.id]);
+ return result;
+};
+function endCpuJob(){cpuJob++;if(cpuTimer!==null){clearTimeout(cpuTimer);cpuTimer=null;}}
+function reset(){
+ endCpuJob();
+ s={round:1,board:Array(16).fill(null),used:{red:0,blue:0},turn:'red',selected:null,phase:'playing',scores:[],mode:$('mode').value,difficulty:$('difficulty').value};
+ message='赤（プレイヤー A）の数字を選び、中央の空きマスに置いてください。';
+ render();scheduleCpu();
+}
+function validMove(color,n,index){return s.phase==='playing'&&s.turn===color&&s.board[index]===null&&!(s.used[color]&(1<<n));}
+function place(index,n,color){
+ if(!validMove(color,n,index))return;
+ s.board[index]=n; s.used[color]|=1<<n; s.selected=null;
+ const count=s.board.filter(v=>v!==null).length;
+ if(count===16){
+  const {red,blue}=roundScore(s.board);
+  const score={A:pColor('A')==='red'?red:blue,B:pColor('B')==='red'?red:blue,red,blue};
+  s.scores.push(score);
+  s.phase=s.round===1?'between':'finished';
+  if(s.phase==='between')message=`1回戦終了。${ownerName('A')}：${score.A}点、${ownerName('B')}：${score.B}点。2回戦では先後を交代します。`;
+  else{const a=sum('A'),b=sum('B');message=a===b?`対局終了。${a} 対 ${b}で引き分けです。`:`対局終了。${a>b?ownerName('A'):ownerName('B')}の勝ちです（${a} 対 ${b}）。`;}
+ }else{
+  s.turn=other(color);
+  message=cpuTurn()?'コンピューターが考えています…':`${cn[s.turn]}（${ownerName(now())}）の番です。数字を選んでください。`;
+ }
+ render();scheduleCpu();
+}
+function clickCell(i){
+ if(s.phase!=='playing'||cpuTurn()||s.board[i]!==null)return;
+ if(s.selected===null){message='右の数字を選んでから空いているマスを押してください。';render();return;}
+ place(i,s.selected,s.turn);
+}
+function startSecond(){
+ endCpuJob();s.round=2;s.board=Array(16).fill(null);s.used={red:0,blue:0};s.turn='red';s.selected=null;s.phase='playing';
+ message=cpumode()?'2回戦：コンピューターが赤・先手です。':'2回戦：プレイヤー Bが赤・先手です。';
+ render();scheduleCpu();
+}
+function createArrows(){
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.classList.add('board-arrows');svg.setAttribute('aria-hidden','true');
+ svg.style.gridColumn='3 / span 4';svg.style.gridRow='1 / span 4';
+ svg.innerHTML=`<defs><marker id="redTip" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0 0L6 3.5L0 7Z" fill="${getComputedStyle(document.documentElement).getPropertyValue('--red').trim()||'#e35466'}"/></marker><marker id="blueTip" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0 0L6 3.5L0 7Z" fill="${getComputedStyle(document.documentElement).getPropertyValue('--blue').trim()||'#5694ed'}"/></marker></defs><g id="arrowLines"></g>`;
+ return svg;
+}
+function layoutArrows(){
+ const svg=$('board').querySelector('.board-arrows');if(!svg)return;
+ const first=$('board').querySelector('[data-input="0"]');const last=$('board').querySelector('[data-input="15"]');if(!first||!last)return;
+ const rect0=first.getBoundingClientRect(),rect15=last.getBoundingClientRect();
+ const w=rect15.right-rect0.left, h=rect15.bottom-rect0.top;
+ const size=rect0.width,gap=(w-size*4)/3;
+ svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+ const mid=i=>i*(size+gap)+size/2, xEnd=w-size*.10, yEnd=h-size*.10;
+ const arrows=[];
+ for(let i=0;i<4;i++){
+  const y=mid(i)-size*.27;arrows.push({color:i%2===0?'blue':'red',d:`M ${size*.12} ${y} L ${xEnd} ${y}`,alpha:'.67'});
+ }
+ for(let i=0;i<4;i++){
+  const x=mid(i)-size*.27;arrows.push({color:i%2===0?'blue':'red',d:`M ${x} ${size*.10} L ${x} ${yEnd}`,alpha:'.67'});
+ }
+ arrows.push({color:'red',d:`M ${w-size*.16} ${size*.16} L ${size*.15} ${h-size*.14}`,alpha:'.48',dash:'5 5'});
+ arrows.push({color:'blue',d:`M ${size*.13} ${size*.13} L ${w-size*.14} ${h-size*.14}`,alpha:'.48',dash:'5 5'});
+ const group=svg.querySelector('#arrowLines');group.replaceChildren();
+ for(const a of arrows){
+  const el=document.createElementNS('http://www.w3.org/2000/svg','path');
+  el.setAttribute('d',a.d);el.setAttribute('stroke',a.color==='red'?'#e35466':'#5694ed');
+  el.setAttribute('stroke-width',Math.max(1.8,size*.037));
+  el.setAttribute('stroke-linecap','round');el.setAttribute('fill','none');el.setAttribute('opacity',a.alpha);
+  el.setAttribute('marker-end',`url(#${a.color}Tip)`);
+  if(a.dash)el.setAttribute('stroke-dasharray',a.dash);
+  group.append(el);
+ }
+}
+let arrowFrame=0;
+function arrangeArrows(){if(arrowFrame)cancelAnimationFrame(arrowFrame);arrowFrame=requestAnimationFrame(()=>{arrowFrame=0;layoutArrows();});}
+function renderBoard(){
+ const grid=$('board');grid.replaceChildren();grid.append(createArrows());
+ for(let i=0;i<16;i++){
+  const n=s.board[i],r=Math.floor(i/4),c=i%4;
+  const el=document.createElement('button');el.type='button';el.dataset.input=i;
+  el.style.gridColumn=String(c+3);el.style.gridRow=String(r+1);
+  el.className='cell input-cell '+(n!==null?'locked':'empty interactive');
+  el.disabled=n!==null||s.phase!=='playing'||cpuTurn();
+  const playedBy=s.boardPlayers?.[i];
+  el.setAttribute('aria-label',`${r+1}行${c+1}列、${n!==null?cn[playedBy||'red']+n:'空き'}`);
+  if(n!==null){const digit=document.createElement('span');digit.className='piece-'+(playedBy||'red');digit.textContent=String(n);el.append(digit);}
+  el.addEventListener('click',()=>clickCell(i));grid.append(el);
+ }
+ const vals=pointValues(s.board);
+ for(const o of outputs){
+  const el=document.createElement('div');el.style.gridColumn=String(o.x);el.style.gridRow=String(o.y);
+  el.className='cell out-cell '+o.color;
+  const label=document.createElement('span');label.className='out-label';label.textContent=o.label;
+  const val=document.createElement('span');val.className='out-val';val.textContent=vals?String(vals[o.id]):'—';
+  if(vals&&String(vals[o.id]).length>=4)val.classList.add('long');
+  el.setAttribute('aria-label',`${o.label}の積 ${vals?vals[o.id]:'未確定'}。${cn[o.color]}の得点対象`);
+  el.append(label,val);grid.append(el);
+ }
+ arrangeArrows();
+}
+function renderChips(p){
+ const color=pColor(p),panel=$('panel'+p);const active=s.phase==='playing'&&s.turn===color;
+ panel.className=`panel player-panel ${color} ${active?'active':'inactive'}`;
+ panel.querySelector('.player-name').textContent=ownerName(p);
+ const role=$('role'+p);role.className='player-role '+color;role.textContent=`${cn[color]}・${color==='red'?'先手':'後手'}`;
+ const wrap=$('chips'+p);wrap.replaceChildren();
+ for(let n=0;n<=7;n++){
+  const el=document.createElement('button');el.type='button';el.textContent=String(n);
+  const used=!!(s.used[color]&(1<<n)),enabled=active&&!used&&!(cpumode()&&p==='B');
+  el.className='chip'+(used?' used':'')+(s.selected===n&&enabled?' selected':'');
+  el.disabled=!enabled;el.setAttribute('aria-pressed',String(s.selected===n&&enabled));
+  el.setAttribute('aria-label',`${ownerName(p)}の数字${n}${used?'（使用済み）':''}`);
+  el.addEventListener('click',()=>{s.selected=n;message=`${cn[color]}の${n}を選択中。空いているマスを選んでください。`;render();});
+  wrap.append(el);
+ }
+}
+function renderScores(){
+ const a=sum('A'),b=sum('B');
+ $('scoreA').textContent=s.scores.length?String(a):'—';$('scoreB').textContent=s.scores.length?String(b):'—';
+ $('totalText').textContent=s.scores.length?`${a} : ${b}`:'— : —';
+ $('scoreLabelA').textContent='プレイヤー A';$('scoreLabelB').textContent=ownerName('B');
+ const log=$('roundLog');log.replaceChildren();
+ s.scores.forEach((r,i)=>{const line=document.createElement('div');line.textContent=`${i+1}回戦：A ${r.A} / ${cpumode()?'CPU':'B'} ${r.B}（赤 ${r.red} / 青 ${r.blue}）`;log.append(line);});
+ $('notice').textContent=message;
+ const next=$('nextBtn');next.style.display=s.phase==='playing'?'none':'block';next.textContent=s.phase==='between'?'先後を入れ替えて2回戦へ':'新しい対局を始める';
+ $('difficultyWrap').style.display=cpumode()?'inline-flex':'none';
+}
+function render(){
+ $('roundTag').textContent=`ROUND ${s.round} / 2`;
+ const filled=s.board.filter(v=>v!==null).length;
+ const text=$('turnText');text.replaceChildren();
+ if(s.phase==='playing'){
+  text.append(document.createTextNode(`${ownerName(now())} の番 · `));
+  const color=document.createElement('span');color.className='color-'+s.turn;color.textContent=cn[s.turn];text.append(color);
+ }else text.textContent=s.phase==='between'?'1回戦の結果':'最終結果';
+ $('progressText').textContent=`${filled} / 16 マス`;
+ renderBoard();renderChips('A');renderChips('B');renderScores();
+}
+// ----- コンピューター：手の評価 + 疑似対戦 + 終盤完全探索 -----
+const unused=(bits)=>{const a=[];for(let n=0;n<=7;n++)if(!(bits&(1<<n)))a.push(n);return a;};
+function listMoves(board,used,color){
+ const nums=unused(used[color]),free=[];for(let i=0;i<16;i++)if(board[i]===null)free.push(i);
+ const out=[];for(const n of nums)for(const i of free)out.push({n,i});return out;
+}
+function potential(board,color){
+ let first=0,second=0;
+ for(const line of outputs){
+  if(line.color!==color)continue;
+  let prod=1,k=0;for(const j of line.cells){const val=board[j];if(val===null)k++;else prod*=val;}
+  const val=prod*Math.pow(3.0,k); // 未確定マスには保守的な期待値を与える
+  if(val>first){second=first;first=val;}else if(val>second)second=val;
+ }
+ return first+second*.16; // 複数経路への分散を僅かに加点（実得点は最大1つのみ）
+}
+const heuristic=(board,me)=>potential(board,me)-potential(board,other(me));
+const terminal=(board,me)=>{const score=roundScore(board);return score[me]-score[other(me)];};
+function makeMove(board,used,color,mv){board[mv.i]=mv.n;used[color]|=1<<mv.n;}
+function undoMove(board,used,color,mv){board[mv.i]=null;used[color]&=~(1<<mv.n);}
+function randomMove(board,used,color){
+ const nums=unused(used[color]),idx=[];for(let i=0;i<16;i++)if(board[i]===null)idx.push(i);
+ return {n:nums[Math.floor(Math.random()*nums.length)],i:idx[Math.floor(Math.random()*idx.length)]};
+}
+function scoreMove(board,used,color,mv){
+ makeMove(board,used,color,mv);const val=heuristic(board,color);undoMove(board,used,color,mv);return val;
+}
+function greedyMove(board,used,color,randomness){
+ const nums=unused(used[color]),cells=[];for(let i=0;i<16;i++)if(board[i]===null)cells.push(i);
+ let best=null,high=-Infinity;
+ // ランダム抽出候補＋ゼロと大きな数字を優先的に含める
+ const proposals=[];
+ for(let k=0;k<16;k++)proposals.push({n:nums[Math.floor(Math.random()*nums.length)],i:cells[Math.floor(Math.random()*cells.length)]});
+ for(const n of [0,7,6,5])if(nums.includes(n))for(let k=0;k<5;k++)proposals.push({n,i:cells[Math.floor(Math.random()*cells.length)]});
+ for(const mv of proposals){const v=scoreMove(board,used,color,mv)+(Math.random()-.5)*randomness;if(v>high){high=v;best=mv;}}
+ return best||randomMove(board,used,color);
+}
+function rollout(board,used,next,me){
+ let movesLeft=board.filter(v=>v===null).length;
+ while(movesLeft--){
+  const mv=Math.random()<.21?randomMove(board,used,next):greedyMove(board,used,next,120);
+  makeMove(board,used,next,mv);next=other(next);
+ }
+ return terminal(board,me);
+}
+function exactSearch(board,used,next,me,alpha,beta,depth){
+ if(!depth)return terminal(board,me);
+ const moves=listMoves(board,used,next),maximize=next===me;
+ // 探索順を1手の盤面評価によって並び替え、枝刈りの効果を高める
+ if(depth>=3)moves.sort((a,b)=>scoreMove(board,used,next,b)-scoreMove(board,used,next,a));
+ let best=maximize?-Infinity:Infinity;
+ for(const mv of moves){
+  makeMove(board,used,next,mv);const val=exactSearch(board,used,other(next),me,alpha,beta,depth-1);undoMove(board,used,next,mv);
+  if(maximize){best=Math.max(best,val);alpha=Math.max(alpha,best);}else{best=Math.min(best,val);beta=Math.min(beta,best);}
+  if(alpha>=beta)break;
+ }
+ return best;
+}
+function chooseCpuMove(){
+ const board=s.board.slice(),used={...s.used},me=s.turn;
+ const options=listMoves(board,used,me),free=board.filter(x=>x===null).length;
+ if(s.difficulty==='easy')return options[Math.floor(Math.random()*options.length)];
+ const ranked=options.map(mv=>({...mv,h:scoreMove(board,used,me,mv)}));
+ ranked.sort((a,b)=>b.h-a.h);
+ if(s.difficulty==='normal'){
+  const top=ranked.slice(0,Math.min(5,ranked.length));return top[Math.floor(Math.random()*Math.min(3,top.length))];
+ }
+ if(free<=5){
+  let high=-Infinity,best=ranked[0];
+  for(const mv of ranked){
+   makeMove(board,used,me,mv);
+   const v=exactSearch(board,used,other(me),me,-Infinity,Infinity,free-1);
+   undoMove(board,used,me,mv);
+   if(v>high){high=v;best=mv;}
+  }
+  return best;
+ }
+ const top=ranked.slice(0,Math.min(16,ranked.length));
+ // 探索から抜け落ちる戦略を減らすため低順位候補も一部混ぜる
+ const pool=ranked.slice(top.length);for(let i=0;i<Math.min(6,pool.length);i++)top.push(pool[Math.floor(Math.random()*pool.length)]);
+ let best=top[0],bestV=-Infinity;
+ const simulations=free>=12?22:free>=9?28:40;
+ for(const mv of top){
+  let total=0;
+  for(let run=0;run<simulations;run++){
+   const b=board.slice(),u={...used};makeMove(b,u,me,mv);
+   total+=rollout(b,u,other(me),me);
+  }
+  const v=.75*(total/simulations)+.25*mv.h;
+  if(v>bestV){bestV=v;best=mv;}
+ }
+ return best;
+}
+function scheduleCpu(){
+ if(!cpuTurn())return;
+ const token=++cpuJob;
+ cpuTimer=setTimeout(()=>{
+  cpuTimer=null;
+  if(token!==cpuJob||!cpuTurn())return;
+  const mv=chooseCpuMove();
+  if(token!==cpuJob||!cpuTurn())return;
+  place(mv.i,mv.n,s.turn);
+ },200);
+}
+$('nextBtn').addEventListener('click',()=>s.phase==='between'?startSecond():reset());
+$('restartBtn').addEventListener('click',reset);
+$('mode').addEventListener('change',reset);
+$('difficulty').addEventListener('change',reset);
+addEventListener('resize',arrangeArrows,{passive:true});
+// 色を確実に引き継ぐため、配置時の所有者色を保持する。
+const originalPlace=place;
+place=function(index,n,color){
+ if(!validMove(color,n,index))return;
+ if(!s.boardPlayers)s.boardPlayers=Array(16).fill(null);
+ s.boardPlayers[index]=color;
+ originalPlace(index,n,color);
+};
+const originalReset=reset;
+reset=function(){originalReset();s.boardPlayers=Array(16).fill(null);render();};
+const originalStartSecond=startSecond;
+startSecond=function(){originalStartSecond();s.boardPlayers=Array(16).fill(null);render();};
+reset();
+})();
+</script>
+</body>
+</html>
