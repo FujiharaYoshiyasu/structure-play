@@ -276,23 +276,37 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   .turn-popup {overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .turn-popup-card {max-height:calc(100dvh - 28px); overflow:auto;}
 }
+
+.cpu-controls{display:grid;gap:6px;margin-top:9px;padding:8px 10px;border:2px dashed #8ed3b2;border-radius:14px;background:#f4fff4;color:#285c4e}
+.cpu-controls>strong{font-size:12px}.cpu-controls-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.cpu-controls-grid label{font-size:10px;font-weight:850;display:grid;gap:3px;min-width:0}
+.cpu-controls-grid select{width:100%;max-width:100%;min-width:0;border:1.5px solid #a2cdb9;border-radius:8px;padding:5px 3px;background:white;color:#214f44;font-size:11px;font-weight:800}
+.streak-chip,.battle-streak,.result-streak{display:inline-flex;align-items:center;gap:6px;border:2px solid #f1c45f;border-radius:30px;background:#fff1b8;color:#795321;font-size:11px;font-weight:950;padding:4px 11px;width:fit-content}
+.battle-streak{padding:3px 9px;white-space:nowrap}.result-streak{margin-top:5px;font-size:13px}.cpu-role{font-size:11px;font-weight:900;color:#126e6b}
+@media(max-width:670px){.cpu-controls-grid{gap:4px}.cpu-controls-grid label{font-size:10px}.cpu-controls-grid select{font-size:10px;padding:6px 1px}.cpu-controls{margin-top:6px;padding:6px 8px}.battle-streak{font-size:10px;padding:2px 6px}}
 </style>
-<title>MOMENT BATTLE｜モーメントと荷重を学べる構造力学ゲーム</title>
+<title>MOMENT BATTLE v0.8｜CPU対戦・梁モーメントゲーム</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
 </head>
 <body data-turn-theme="blue">
 <div class="app-shell">
-  <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">STRUCTURAL MECHANICS / BIRD EDITION / TIMED MATCH</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">BIRD BRIDGE · 2P</span></header>
+  <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">STRUCTURAL MECHANICS / BIRD EDITION / CPU CHALLENGE</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">BIRD BRIDGE · 2P</span></header>
 
   <main class="screens">
     <section id="setup-screen" class="screen setup-screen" aria-label="ゲーム設定画面">
-      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>ゲーム設定</h2><p>鳥たちのブランコを選んで、橋を守りながら対戦しよう！</p></div><span class="section-tag">LOCAL 2 PLAYER</span></div>
+      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>ゲーム設定</h2><p>鳥たちのブランコを選んで、橋を守りながら対戦しよう！</p></div><span class="section-tag">CPU CHALLENGE · 2P</span></div>
       <div class="setup-layout">
         <section class="panel setup-beam"><div class="panel-head"><div><span class="eyebrow">BEAM LAYOUT</span><h3>梁の配置を選ぶ</h3></div></div>
           <div id="stage-options" class="stage-options" role="group" aria-label="ステージ選択"></div>
           <div class="custom-head"><strong>区間寸法のカスタマイズ</strong><span>左支点 → フック1 → フック2 → フック3 → 右支点</span></div>
           <div class="interval-grid" id="interval-inputs"></div>
           <p class="setup-hint">4区間はすべて正の数（m）。合計が梁の長さになります。</p>
+<div class="cpu-controls" aria-label="対戦モードの設定"><strong>CPU対戦・連勝チャレンジ</strong>
+<div class="cpu-controls-grid">
+<label>対戦相手<select id="match-mode"><option value="cpu">CPUと対戦</option><option value="local">2人対戦</option></select></label>
+<label id="cpu-level-wrap">CPUの強さ<select id="cpu-level"></select></label>
+<label id="human-side-wrap">あなたのチーム<select id="human-side"><option value="0">青（先手）</option><option value="1">橙（後手）</option></select></label>
+</div><div id="setup-streak" class="streak-chip" aria-live="polite"></div></div>
         </section>
         <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>勝敗の条件</h3>
           <label class="limit-input-label" for="limit-input">限界曲げモーメント <strong>N·m</strong></label>
@@ -317,13 +331,13 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 
     <section id="battle-screen" class="screen battle-screen" aria-label="ゲーム対戦画面" hidden>
       <div class="battle-topline">
-        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● 青チーム</strong><small id="bonus0">5N · 残り1回</small></div>
+        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● 青チーム</strong><small id="bonus0">5N · 残り1回</small><small id="role0" class="cpu-role"></small></div>
         <div class="turn-center"><span id="turn-indicator">● BLUE TURN</span><strong id="turn-label">青チームの手番</strong><div class="turn-clock" id="turn-clock" aria-live="off"><span class="clock-icon" aria-hidden="true">◷</span><strong id="turn-timer">30</strong><span id="timer-unit">秒</span></div></div>
-        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● 橙チーム</strong><small id="bonus1">5N · 残り1回</small></div>
+        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● 橙チーム</strong><small id="bonus1">5N · 残り1回</small><small id="role1" class="cpu-role"></small></div>
       </div>
       <div class="battle-toolbar">
         <span class="stage-info" id="battle-stage-info">STAGE 01 · 1 / 2 / 3 / 4 m</span>
-        <div class="toolbar-actions"><button type="button" id="undo" disabled>↶ 1手戻る</button><button type="button" id="back-setup">⚙ 設定</button><button type="button" id="restart">↻ 最初から</button></div>
+        <div class="toolbar-actions"><span id="battle-streak" class="battle-streak" hidden></span><button type="button" id="undo" disabled>↶ 1手戻る</button><button type="button" id="back-setup">⚙ 設定</button><button type="button" id="restart">↻ 最初から</button></div>
       </div>
       <div class="battle-columns">
         <section class="panel play-panel">
@@ -360,7 +374,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     </section>
 
     <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
-      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
+      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
       <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
       <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
       <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
@@ -490,7 +504,70 @@ const {undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove}=MomentGameSt
 const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
 const names=['青チーム','橙チーム'];
 let mode='setup',stage=getStage('stage1'),stageChoice='stage1',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
-let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false;
+let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
+let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,committedSnapshot=null;
+const STREAK_KEY='moment-battle-v08-cpu-streak';
+const storage=(()=>{try{return window.localStorage;}catch(e){return null;}})();
+function freshStreaks(){return {levels:Array.from({length:10},()=>({current:0,best:0,wins:0,losses:0}))};}
+function cleanStreaks(raw){const s=freshStreaks();if(Array.isArray(raw?.levels)){raw.levels.slice(0,10).forEach((rec,i)=>{for(const k of ['current','best','wins','losses'])if(Number.isSafeInteger(rec?.[k])&&rec[k]>=0)s.levels[i][k]=rec[k];s.levels[i].best=Math.max(s.levels[i].best,s.levels[i].current);});}return s;}
+function loadStreaks(){try{return cleanStreaks(JSON.parse(storage?.getItem(STREAK_KEY)||'null'));}catch(e){return freshStreaks();}}
+let streakStats=loadStreaks();
+function saveStreaks(){try{storage?.setItem(STREAK_KEY,JSON.stringify(streakStats));}catch(e){}}
+function isCpu(){return matchMode==='cpu';}
+function cpuPlayer(){return 1-humanPlayer;}
+function cpuTurn(){return isCpu()&&history.length%2===cpuPlayer();}
+function currentRecord(){return streakStats.levels[cpuLevel-1];}
+function refreshStreak(){const active=$('match-mode').value==='cpu';
+ for(const id of ['cpu-level-wrap','human-side-wrap','setup-streak'])$(id).hidden=!active;
+ const lvl=Number($('cpu-level').value)||5,rec=streakStats.levels[lvl-1];
+ $('setup-streak').textContent='Lv'+lvl+' · 現在'+rec.current+'連勝 / 最高'+rec.best+'連勝';}
+function chooseCpuMove(){
+ const depth=[0,0,1,2,3,4,5,7,10,16][cpuLevel-1];
+ const randomness=[1,.75,.5,.32,.2,.12,.07,.04,.015,0][cpuLevel-1];
+ function actions(h){
+  const spent=specialUsed(h,h.length%2,stage),choices=[];
+  for(const p of (spent?[10]:[10,5]))for(const x of pos()){
+   const move={x,p,cpu:true},a=fromHistory([...h,move],stage,limit);
+   choices.push({move,failed:a.failed,max:a.maxMoment});
+  }
+  return choices;
+ }
+ const all=actions(history),safe=all.filter(a=>!a.failed);
+ if(!safe.length)return {...(all.find(a=>a.move.p===10)||all[0]).move};
+ if(Math.random()<randomness)return {...all[Math.floor(Math.random()*all.length)].move};
+ let visited=0;const budget=cpuLevel===10?28000:cpuLevel===9?12000:4500;
+ const memo=new Map();
+ function evaluate(h,d){
+  if(++visited>budget)return 0;
+  const key=pos().map(x=>h.filter(m=>m.x===x).reduce((s,m)=>s+m.p/5,0)).join(',')+'|'+(+specialUsed(h,0,stage))+(+specialUsed(h,1,stage))+'|'+(h.length%2)+'|'+d;
+  if(memo.has(key))return memo.get(key);
+  const ok=actions(h).filter(a=>!a.failed);
+  if(!ok.length)return -1000-d;
+  if(d<=0)return Math.min(8,ok.length)*5+(specialUsed(h,h.length%2,stage)?-5:5);
+  ok.sort((a,b)=>b.max-a.max||b.move.p-a.move.p);
+  let best=-Infinity;
+  for(const a of ok){
+   const score=-evaluate([...h,a.move],d-1);
+   if(score>best)best=score;
+   if(best>=1000||visited>budget)break;
+  }
+  if(visited<budget)memo.set(key,best);
+  return best;
+ }
+ const ranked=safe.map(a=>({a,score:-evaluate([...history,a.move],depth)+.1*a.max/Math.max(1,limit)-(a.move.p===5?.1:0)}))
+   .sort((a,b)=>b.score-a.score||b.a.move.p-a.a.move.p||a.a.move.x-b.a.move.x);
+ const spread=(11-cpuLevel)*2,possible=ranked.filter(a=>a.score>=ranked[0].score-spread);
+ const choice=cpuLevel>=8?ranked[0]:possible[Math.floor(Math.random()*possible.length)];
+ return {...choice.a.move};
+}
+function scheduleCpu(){
+ if(!cpuTurn()||mode!=='battle'||handoffActive)return;
+ const epoch=cpuEpoch,turn=history.length;
+ cpuTimer=setTimeout(()=>{
+  if(epoch!==cpuEpoch||mode!=='battle'||handoffActive||history.length!==turn||!cpuTurn())return;
+  try{applyMove(chooseCpuMove());}catch(e){console.error('CPU failed',e);applyMove(timeoutMove(stage));}
+ },Math.min(1250,Math.max(450,1300-cpuLevel*65)));
+}
 const history=[];let breakTimer=null,breakReady=false;
 const fmt=n=>Number.isInteger(n)?String(n):Number(n.toFixed(2)).toString();
 const pos=()=>stage.hooks,span=()=>stage.span;
@@ -501,11 +578,16 @@ const label=(parent,x,y,text,attrs={})=>{const e=svg('text',{x,y,'text-anchor':'
 function openScreen(next){
  mode=next;
  for(const id of ['setup','battle','break','result'])$(`${id}-screen`).hidden=id!==next;
- $('header-stage').textContent=next==='setup'?'BEAM STRATEGY · 2P':`${stage.name} · ${fmt(span())} m · LIMIT ${fmt(limit)} N·m`;
+ $('header-stage').textContent=next==='setup'?'BEAM STRATEGY · CPU / 2P':`${stage.name} · ${fmt(span())} m · LIMIT ${fmt(limit)} N·m`;
  document.body.dataset.turnTheme=next==='battle'?history.length%2?'orange':'blue':next==='break'?'orange':'blue';
  window.scrollTo(0,0);
 }
 function buildSetup(){
+ const lvl=$('cpu-level');
+ for(let i=1;i<=10;i++){const o=document.createElement('option');o.value=String(i);o.textContent='Lv '+i+(i===1?' · やさしい':i===10?' · 名人':'');lvl.append(o);}
+ lvl.value='5';
+ for(const id of ['match-mode','cpu-level','human-side'])$(id).addEventListener('change',refreshStreak);
+ refreshStreak();
  const slider=$('turn-seconds'),noLimit=$('no-time-limit');
  function refreshTimeSetting(){
    slider.disabled=noLimit.checked;
@@ -546,7 +628,9 @@ function readSetup(){
  if(!Number.isFinite(m)||m<1||m>10000)throw new Error('限界曲げモーメントは1〜10000 N·mで設定してください。');
  const seconds=normalizeTurnSeconds($('turn-seconds').value,$('no-time-limit').checked);
  const s=stageChoice==='custom'?createStage(lengths):getStage(stageChoice);
- return {stage:s,limit:m,turnSeconds:seconds};
+ const opponent=$('match-mode').value,lv=Number($('cpu-level').value),side=Number($('human-side').value);
+ if(!['cpu','local'].includes(opponent)||!Number.isInteger(lv)||lv<1||lv>10||![0,1].includes(side))throw new Error('CPU設定が正しくありません。');
+ return {stage:s,limit:m,turnSeconds:seconds,matchMode:opponent,cpuLevel:lv,humanPlayer:side};
 }
 function updateSetup(){
  document.querySelectorAll('[data-stage]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stage===stageChoice)));
@@ -562,7 +646,9 @@ function updateSetup(){
 function start(){
  let config;try{config=readSetup();}catch(err){updateSetup();return;}
  stopClock();clearHandoff();
- stage=config.stage;limit=config.limit;turnSeconds=config.turnSeconds;history.length=0;selectedWeight=WEIGHT;showMoments=false;
+ stage=config.stage;limit=config.limit;turnSeconds=config.turnSeconds;
+ matchMode=config.matchMode;cpuLevel=config.cpuLevel;humanPlayer=config.humanPlayer;
+ history.length=0;selectedWeight=WEIGHT;showMoments=false;practice=false;committed=false;committedSnapshot=null;
  prepareGame();openScreen('battle');render();showHandoff(true);
 }
 function prepareGame(){
@@ -574,6 +660,8 @@ function prepareGame(){
  });
  $('span-label').textContent=`L = ${fmt(span())} m`;
  $('battle-stage-info').textContent=`${stage.name} · ${segments(stage)} · LIMIT ${fmt(limit)} N·m · ${turnSeconds===null?'時間無制限':`${turnSeconds}秒/手`}`;
+ for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'あなた':'CPU Lv'+cpuLevel):'PLAYER 0'+(i+1);
+ $('battle-streak').hidden=!isCpu();
  $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
 }
 function loadsAt(x){return history.filter(m=>m.x===x);}
@@ -741,13 +829,16 @@ function render(){
  $('turn-indicator').textContent=turn?'● ORANGE TURN':'● BLUE TURN';
  $('turn-label').textContent=`${names[turn]}の手番`;
  $('undo').disabled=!history.length;
+ $('battle-streak').hidden=!isCpu();
+ $('battle-streak').textContent='CPU Lv'+cpuLevel+' · '+currentRecord().current+'連勝'+(practice?' · 練習中':'');
+ $('turn-help').textContent=cpuTurn()?'CPU Lv'+cpuLevel+' が考えています…':'鳥を選んでブランコをクリック！ 何羽でもとまれます。';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
    $(`bonus${i}`).textContent=specialUsed(history,i,stage)?'5N · 使用済み':'5N · 残り1回';
  }
  if(selectedWeight===SPECIAL_WEIGHT&&used)selectedWeight=WEIGHT;
  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
-   const b=$(`weight${force}`);b.disabled=force===SPECIAL_WEIGHT&&used;
+   const b=$(`weight${force}`);b.disabled=cpuTurn()||(force===SPECIAL_WEIGHT&&used);
    b.classList.toggle('active',selectedWeight===force);
    b.setAttribute('aria-pressed',String(selectedWeight===force));
  }
@@ -763,7 +854,7 @@ function render(){
  $('ra').textContent=`${fmt(data.RA)} N`;$('rb').textContent=`${fmt(data.RB)} N`;
  $('total').textContent=`${fmt(data.totalLoad)} N`;$('max-pos').textContent=data.maxMoment?hookName(data.maxPosition):'—';
  pos().forEach((x,i)=>{
-   const b=$('hook-buttons').children[i],next=showMoments?previewHistory(history,x,selectedWeight,stage,limit):null;
+   const b=$('hook-buttons').children[i];b.disabled=cpuTurn();const next=showMoments?previewHistory(history,x,selectedWeight,stage,limit):null;
    const applied=loadsAt(x).reduce((n,m)=>n+m.p,0);
    b.querySelector('.hook-sub').textContent=`現在 ${fmt(applied)} N · ${selectedWeight} Nを追加`;
    b.querySelector('.hook-result').textContent=next?`次の最大M ${fmt(next.maxMoment)}`:'予測Mは非表示';
@@ -781,7 +872,7 @@ function render(){
  drawBeam(data);if(showMoments)drawPlot($('plot-svg'),data);
 }
 function place(index){
- if(mode!=='battle'||handoffActive)return;
+ if(mode!=='battle'||handoffActive||cpuTurn())return;
  const x=pos()[index],player=history.length%2;
  if(x===undefined)return;
  if(selectedWeight===SPECIAL_WEIGHT&&specialUsed(history,player,stage))return;
@@ -797,6 +888,7 @@ function applyMove(move){
  else{render();showHandoff(false,Boolean(move.auto));}
 }
 function stopClock(){
+ if(cpuTimer!==null){clearTimeout(cpuTimer);cpuTimer=null;}cpuEpoch++;
  if(clockInterval!==null){clearInterval(clockInterval);clockInterval=null;}
  deadline=0;
 }
@@ -818,10 +910,12 @@ function tickClock(){
 function beginClock(){
  stopClock();
  if(mode!=='battle'||handoffActive)return;
- if(turnSeconds===null){updateClock(0);return;}
+ if(turnSeconds===null){updateClock(0);}else{
  deadline=Date.now()+turnSeconds*1000;
  updateClock(turnSeconds*1000);
  clockInterval=setInterval(tickClock,100);
+ }
+ if(cpuTurn())scheduleCpu();
 }
 function clearHandoff(){
  if(handoffTimeout!==null){clearTimeout(handoffTimeout);handoffTimeout=null;}
@@ -842,7 +936,7 @@ function showHandoff(initial=false,automatic=false){
  $('popup-bird').textContent=player===0?'🐦':'🐤';
  $('popup-kicker').textContent=initial?'READY?':'NEXT TURN!';
  $('popup-title').textContent=`${names[player]}の番！`;
- $('popup-subtitle').textContent=automatic?'時間切れ！ 10Nの鳥が自動でとまりました。':initial?'さあ、鳥をとまらせよう！':'次の鳥をとまらせよう！';
+ $('popup-subtitle').textContent=cpuTurn()?'CPU Lv'+cpuLevel+' が次の鳥を考えます！':automatic?'時間切れ！ 10Nの鳥が自動でとまりました。':initial?'さあ、鳥をとまらせよう！':'次の鳥をとまらせよう！';
  $('popup-continue').textContent=initial?'対戦スタート！ →':'この手番を開始！ →';
  updateClock(turnSeconds===null?0:turnSeconds*1000);
  // Short playful overlay: it can also be dismissed immediately by clicking.
@@ -852,10 +946,16 @@ function showHandoff(initial=false,automatic=false){
 function undo(){
  if(!history.length)return;
  stopClock();clearHandoff();
- history.splice(0,history.length,...undoHistory(history));selectedWeight=WEIGHT;
+ if(isCpu()){
+  if(committedSnapshot){streakStats=cleanStreaks(committedSnapshot);saveStreaks();committedSnapshot=null;committed=false;}
+  practice=true;
+ }
+ let next=undoHistory(history);
+ if(isCpu()&&next.length>0&&next.length%2===cpuPlayer())next=undoHistory(next);
+ history.splice(0,history.length,...next);selectedWeight=WEIGHT;
  cancelBreak();openScreen('battle');render();showHandoff(false);
 }
-function restart(){stopClock();clearHandoff();cancelBreak();history.length=0;selectedWeight=WEIGHT;showMoments=false;openScreen('battle');render();showHandoff(true);}
+function restart(){stopClock();clearHandoff();cancelBreak();history.length=0;selectedWeight=WEIGHT;showMoments=false;practice=false;committed=false;committedSnapshot=null;openScreen('battle');render();showHandoff(true);}
 function cancelBreak(){if(breakTimer!==null)clearTimeout(breakTimer);breakTimer=null;breakReady=false;}
 function fractureArtwork(data){
  const el=$('fracture-svg');el.replaceChildren();
@@ -906,13 +1006,30 @@ function showBreak(data,loser){
    $('break-continue').focus({preventScroll:true});
  },1950);
 }
-function toResult(){if(mode!=='break'||!breakReady)return;cancelBreak();openScreen('result');buildResults();}
+function toResult(){
+ if(mode!=='break'||!breakReady)return;
+ cancelBreak();
+ if(isCpu()&&!practice&&!committed){
+  const winner=1-(history.length-1)%2;
+  committedSnapshot=cleanStreaks(streakStats);
+  const rec=currentRecord();
+  if(winner===humanPlayer){rec.current++;rec.wins++;rec.best=Math.max(rec.best,rec.current);}
+  else{rec.current=0;rec.losses++;}
+  saveStreaks();committed=true;
+ }
+ openScreen('result');buildResults();
+}
 function resultSteps(){return resultTimeline(history,stage,limit);}
 function buildResults(){
  const steps=resultSteps(),last=steps.at(-1);
  if(!last)return;
  $('result-winner').textContent=`— ${names[1-last.player]} の勝利！`;
  $('result-description').textContent=`${names[last.player]}が${hookName(last.move.x)}に${last.move.p} Nを載せ、最大 ${fmt(last.analysis.maxMoment)} N·mで梁が破壊されました。`;
+ const streakBox=$('result-streak');streakBox.hidden=!isCpu();
+ if(isCpu()){
+  const record=currentRecord(),won=1-last.player===humanPlayer;
+  streakBox.textContent=practice?'練習対戦（Undo使用）· 記録対象外 · Lv'+cpuLevel+' 現在'+record.current+'連勝 / 最高'+record.best+'連勝':(won?'CPUに勝利！':'CPUに敗北！')+' · Lv'+cpuLevel+' 現在'+record.current+'連勝 / 最高'+record.best+'連勝';
+ }
  const box=$('result-timeline');box.replaceChildren();
  steps.forEach((step,i)=>{
    const b=document.createElement('button');b.type='button';b.className='result-turn-button';
