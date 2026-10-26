@@ -438,7 +438,7 @@ function renderBoard(){
   }
   el.addEventListener('click',()=>clickCell(i));grid.append(el);
  }
- const vals=pointValues(s.board);
+ const vals=s.phase==='targeting'?null:pointValues(s.board);
  for(const o of outputs){
   const el=document.createElement('div');el.style.gridColumn=String(o.x);el.style.gridRow=String(o.y);
   el.className='cell out-cell '+o.color;
