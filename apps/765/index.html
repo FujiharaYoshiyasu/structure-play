@@ -61,6 +61,13 @@ h1{margin:10px 0 8px;font-size:clamp(28px,4.8vw,43px);font-weight:750;letter-spa
 .choice .jp{font-size:13px;color:var(--sub);margin:0 0 4px;flex:0}.choice .en{font-size:12px;color:#8a7c6d;margin:0;flex:1}
 @media(max-width:600px){.speech{font-size:11px;padding:6px 10px}}
 
+
+/* Crisp character-free number previews */
+.tile-preview .tile{font-weight:900;font-size:clamp(21px,2.8vw,29px);text-shadow:none;border-width:2px;border-radius:7px}
+.tile-preview .tile.red{color:#a83242;border-color:#c38487;background:#fff2f0}
+.tile-preview .tile.blue{color:#245d9f;border-color:#87a9cf;background:#eff6ff}
+.tile-preview .tile.has-power::after{content:'✦';font-size:12px;color:#876026;right:2px;top:0}
+
 </style>
 </head>
 <body>
