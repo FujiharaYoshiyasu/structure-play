@@ -1,5 +1,14 @@
 # 765Radical — 開発実験版
 
+## Classic / Radical モード選択（準備中）
+
+- **入口画面（開発用）**: [mode-select.html](./mode-select.html) — 2モード選択を先行実装
+- **Classic** は既存の公開サイトへ移動。**Radical** はこのフォルダの \`index.html\` に移動
+- この画面とRadicalはまだGitHub Pagesへ配信しない。公開中の \`main\` は未変更
+- 将来の正式公開時の安全な配置案は [MODE_SELECTOR_RELEASE_PLAN.md](./MODE_SELECTOR_RELEASE_PLAN.md) を参照
+- 両HTMLを同じフォルダにダウンロードしてブラウザで開けば、ローカルで入口→Radicalの動きを試せます
+
+
 > **開発ブランチ:** 公開リポジトリ `FujiharaYoshiyasu/structure-play` の `765-radical-dev`。ソース公開のみとし、ホームページには掲載・配信しません。
 > 
 > **重要:** 公開中の [765classic](https://fujiharayoshiyasu.github.io/structure-play/apps/765/) は変更しません。`main` ブランチへマージしないでください。ホームページと分離する運用規則はルートの `AGENTS.md` と `README.md` を参照してください。
