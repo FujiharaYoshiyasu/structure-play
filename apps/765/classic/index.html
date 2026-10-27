@@ -172,6 +172,58 @@ h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:
 .mode-back{display:inline-block;border:1px solid #c9b394;border-radius:99px;padding:7px 11px;font-size:12px;color:#604e3e;background:#fff9ed;text-decoration:none;font-weight:700}
 .mode-back:hover{border-color:#9f8465;background:#fffdf7}.mode-back:focus-visible{outline:3px solid #557fb4;outline-offset:3px}
 @media(max-width:540px){.mode-actions{gap:5px}.mode-back{font-size:10px;padding:5px 8px}}
+
+/* Number-only tiles shared by Classic and Radical */
+.input-cell .piece.number-tile,.chip .piece.number-tile{
+ --num-color:#a83242;position:relative;display:flex;align-items:center;justify-content:center;
+ width:90%;height:87%;min-height:0;margin:auto;transform:none;overflow:visible;
+ border:2px solid var(--num-color);border-radius:9px;
+ background:linear-gradient(155deg,#fffdf8,#f2e6d4);
+ box-shadow:0 2px 4px rgba(104,80,55,.14),inset 0 1px 0 rgba(255,255,255,.85);
+}
+.input-cell .piece.number-tile.blue,.chip .piece.number-tile.blue{--num-color:#245d9f}
+.input-cell .piece.number-tile.red,.chip .piece.number-tile.red{--num-color:#a83242}
+.input-cell .number-tile .tile-number,.chip .number-tile .tile-number{
+ display:block;position:relative;z-index:2;width:auto;height:auto;padding:0;
+ font-size:clamp(24px,2.6vw,38px);font-weight:900;line-height:1;letter-spacing:-.06em;
+ color:var(--num-color);background:none;border:0;border-radius:0;
+ font-variant-numeric:tabular-nums;text-shadow:none;transform:none;
+}
+.chip .piece.number-tile{width:100%;height:100%;border:0;background:transparent;box-shadow:none}
+.chip .number-tile .tile-number{font-size:clamp(20px,2vw,30px)}
+.chip{height:53px!important;display:flex;justify-content:center;align-items:center;padding:4px!important;
+ border-radius:11px!important;min-width:0;background:#fffaf2}
+.player-panel.red .chip{background:#fff3f1;border-color:#d5a9a6}
+.player-panel.blue .chip{background:#edf5ff;border-color:#b1c5df}
+.player-panel.red .chip.selected{background:#f3d7d4;border:2px solid #aa3743}
+.player-panel.blue .chip.selected{background:#d3e4fa;border:2px solid #245d9f}
+.input-cell.occupied-red{background:#f7e5e2;border-color:#dda9a6}
+.input-cell.occupied-blue{background:#e5effc;border-color:#a9bfde}
+.input-cell .number-tile .ability-flag,.chip .number-tile .ability-flag{
+ position:absolute;top:-7px;right:-8px;left:auto;bottom:auto;z-index:5;
+ font-size:10px;font-weight:850;line-height:1.1;padding:2px 3px;border-radius:4px;white-space:nowrap;
+ background:#fff0c9;color:#80520e;border:1px solid #d5b175;text-shadow:none;
+}
+.input-cell .number-tile .ability-flag.negative,.chip .number-tile .ability-flag.negative{background:#eee2fa;color:#673a99;border-color:#b99bd2}
+.input-cell .number-tile .ability-flag.switch,.chip .number-tile .ability-flag.switch{background:#f8e9c7;color:#864c16;border-color:#d6b377}
+.input-cell .number-tile .ability-flag.double,.chip .number-tile .ability-flag.double{background:#e7e8ff;color:#49419a;border-color:#aaa6dd}
+.input-cell .number-tile .piece-base{position:absolute;z-index:3;top:-7px;left:-6px;bottom:auto;
+ font-size:10px;line-height:1.1;padding:2px 3px;border-radius:4px;background:#fff9ed;border:1px solid #d5c2a1;color:#80684f;text-shadow:none}
+.input-cell .number-tile .piece-bonus{position:absolute;z-index:3;bottom:-7px;right:-6px;top:auto;
+ font-size:10px;line-height:1.1;padding:2px 3px;border-radius:4px;background:#e7f6e5;border:1px solid #b6d8b4;color:#32753a;text-shadow:none}
+.input-cell .number-tile .piece-bonus.negative{background:#f2e6f8;border-color:#d4b9e0;color:#76519c}
+.input-cell.latest-move .number-tile{animation:numberPop .4s ease-out}
+@keyframes numberPop{from{transform:scale(.86);opacity:.6}65%{transform:scale(1.05);opacity:1}to{transform:scale(1);opacity:1}}
+@media(max-width:540px){
+ .chip{height:44px!important;padding:2px!important}
+ .chip .number-tile .tile-number{font-size:22px}
+ .input-cell .number-tile .tile-number{font-size:clamp(23px,6.7vw,29px)}
+ .input-cell .piece.number-tile{width:95%;height:94%;border-width:1.5px;border-radius:7px}
+ .input-cell .number-tile .ability-flag,.chip .number-tile .ability-flag{font-size:8px;right:-5px;top:-5px;padding:1px 2px}
+ .input-cell .number-tile .piece-base,.input-cell .number-tile .piece-bonus{font-size:8px;padding:1px 2px}
+}
+@media(prefers-reduced-motion:reduce){.input-cell.latest-move .number-tile{animation:none}}
+
 </style>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/765/">
 </head>
@@ -350,43 +402,20 @@ function layoutArrows(){
 }
 let arrowFrame=0;
 function arrangeArrows(){if(arrowFrame)cancelAnimationFrame(arrowFrame);arrowFrame=requestAnimationFrame(()=>{arrowFrame=0;layoutArrows();});}
-function buildChick(color,current,base,effect,{small=false}={}){
+function buildNumberTile(color,current,base,effect,{small=false}={}){
  const wrap=document.createElement('span');
- wrap.className=`piece chick-piece ${color} ${small?'small':''}`;
- const team=pOf(color),teamColor=color==='red'?'#b94d50':'#507fb8';
- const palette=color==='red'?{
-  body:'#ee8788',belly:'#ffccc6',head:'#ffb0a7',wing:'#db6c75',tail:'#f0958c',stroke:'#ad565d',tuft:'#bb6069'
- }:{
-  body:'#70b7ee',belly:'#c5e8ff',head:'#9fd9ff',wing:'#5296d5',tail:'#78bcef',stroke:'#437eac',tuft:'#497eb3'
- };
- // The original number determines the body shape, even when effects change its current value.
- const rank=Math.max(0,Math.min(7,Number(base??current??0)));
- const bodyRx=19+rank*2.65,bodyRy=27+rank*1.4,headRadius=18+rank*.42;
- const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
- svg.setAttribute('viewBox','0 0 100 112');svg.setAttribute('class','chick-svg');svg.setAttribute('aria-hidden','true');
- svg.innerHTML=`
- <ellipse cx="51" cy="105" rx="${bodyRx+5}" ry="5" fill="rgba(96,68,29,.16)"/>
- <path d="M 32 98 L 29 106 M 42 98 L 43 107 M 57 98 L 55 106 M 67 98 L 72 106" stroke="#d98b35" stroke-width="4" stroke-linecap="round" fill="none"/>
- <path d="M ${50+bodyRx-6} 69 q 13 -13 12 9 q -7 8 -13 3" fill="${palette.tail}" stroke="${palette.stroke}" stroke-width="2"/>
- <ellipse cx="50" cy="73" rx="${bodyRx}" ry="${bodyRy}" fill="${palette.body}" stroke="${palette.stroke}" stroke-width="2.3"/>
- <ellipse cx="52" cy="71" rx="${Math.max(12,bodyRx*.64)}" ry="${Math.max(18,bodyRy*.66)}" fill="${palette.belly}" opacity=".90"/>
- <ellipse cx="${50-bodyRx*.77}" cy="73" rx="8" ry="12" fill="${palette.wing}" stroke="${palette.stroke}" stroke-width="1.8" transform="rotate(-20 ${50-bodyRx*.77} 73)"/>
- <circle cx="50" cy="35" r="${headRadius}" fill="${palette.head}" stroke="${palette.stroke}" stroke-width="2.3"/>
- <path d="M 48 ${35-headRadius+4} Q 44 ${35-headRadius-10} 39 ${35-headRadius+1} M 52 ${35-headRadius+3} Q 58 ${35-headRadius-9} 62 ${35-headRadius+1}" stroke="${palette.tuft}" stroke-width="4" stroke-linecap="round" fill="none"/>
- <ellipse cx="42" cy="34" rx="2.9" ry="4.2" fill="#423325"/><ellipse cx="60" cy="34" rx="2.9" ry="4.2" fill="#423325"/>
- <circle cx="36" cy="43" r="5.5" fill="#f8ac89" opacity=".67"/><circle cx="66" cy="43" r="5.5" fill="#f8ac89" opacity=".67"/>
- <path d="M 46 41 Q 50 52 54 41 Z" fill="#e99736" stroke="#c17624" stroke-width="1"/>
- <path d="M 35 55 Q 50 62 65 55" fill="none" stroke="${teamColor}" stroke-width="6" stroke-linecap="round"/>
- <path d="M 35 57 L 28 68 L 36 67" fill="${teamColor}"/>
- `;
- wrap.append(svg);
- const number=document.createElement('span');number.className='chick-big-number';number.textContent=String(current);wrap.append(number);
- const owner=document.createElement('span');owner.className='chick-owner';owner.textContent=team;owner.title=`プレイヤー${team}`;wrap.append(owner);
+ wrap.className='piece number-tile '+color+(small?' small':'');
+ const num=document.createElement('span');num.className='tile-number';num.textContent=String(current);wrap.append(num);
  if(current!==base){
-  const baseTag=document.createElement('span');baseTag.className='piece-base';baseTag.textContent=String(base);baseTag.title=`元の数字 ${base}`;wrap.append(baseTag);
-  const buff=document.createElement('span');buff.className='piece-bonus';buff.textContent=(current>base?'+':'')+(current-base);buff.classList.toggle('negative',current<base);wrap.append(buff);
+  const baseTag=document.createElement('span');baseTag.className='piece-base';baseTag.textContent=String(base);baseTag.title='元の数字 '+base;wrap.append(baseTag);
+  const diff=document.createElement('span');diff.className='piece-bonus';diff.textContent=(current>base?'+':'')+(current-base);diff.classList.toggle('negative',current<base);wrap.append(diff);
  }
- 
+ if(effect){
+  const flag=document.createElement('span');flag.className='ability-flag';flag.textContent=abilityBadge(effect);
+  flag.classList.toggle('negative',effectDelta(effect)<0);
+  flag.classList.toggle('switch',effect==='SW');flag.classList.toggle('double',effect==='DS');
+  flag.title=abilityName(effect);wrap.append(flag);
+ }
  return wrap;
 }
 
@@ -400,7 +429,7 @@ function renderBoard(){
   el.disabled=n!==null||s.phase!=='playing'||cpuTurn();
   const playedBy=s.boardPlayers?.[i];
   el.setAttribute('aria-label',`${r+1}行${c+1}列、${n!==null?cn[playedBy||'red']+n:'空き'}`);
-  if(n!==null){el.append(buildChick(playedBy||'red',n,n,null));}
+  if(n!==null){el.append(buildNumberTile(playedBy||'red',n,n,null));}
   el.addEventListener('click',()=>clickCell(i));grid.append(el);
  }
  const vals=pointValues(s.board);
@@ -424,7 +453,7 @@ function renderChips(p){
  const role=$('role'+p);role.className='player-role '+color;role.textContent=`${cn[color]}・${color==='red'?'先手':'後手'}`;
  const wrap=$('chips'+p);wrap.replaceChildren();
  for(let n=0;n<=7;n++){
-  const el=document.createElement('button');el.type='button';el.dataset.num=String(n);el.append(buildChick(color,n,n,null,{small:true}));
+  const el=document.createElement('button');el.type='button';el.dataset.num=String(n);el.append(buildNumberTile(color,n,n,null,{small:true}));
   const used=!!(s.used[color]&(1<<n)),enabled=active&&!used&&!isCpuPlayer(p);
   el.className='chip'+(used?' used':'')+(s.selected===n&&enabled?' selected':'');
   el.disabled=!enabled;el.setAttribute('aria-pressed',String(s.selected===n&&enabled));
