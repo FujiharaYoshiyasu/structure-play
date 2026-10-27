@@ -183,6 +183,107 @@ h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:
 .ability-flag.switch{background:#f7edd0;color:#8a541c;border-color:#dcb777}
 .ability-flag.double{background:#e4e5fb;color:#5547a0;border-color:#a9a6df}
 @media(max-width:600px){.team-backdrop{padding:4px}.team-sheet{max-height:calc(100dvh - 8px);padding:11px;border-radius:10px}.team-tabs{gap:6px}.team-tab{font-size:12px;padding:8px 9px}.team-cost{margin-left:0;width:100%;font-size:13px}.team-matrix{min-width:730px}}
+
+/* Chick visual concept section */
+.chick-intro{margin:12px 0 14px;padding:12px 14px;border:1px solid #d7c3a8;border-radius:14px;background:rgba(255,251,243,.76);box-shadow:0 6px 14px rgba(105,77,47,.06)}
+.chick-intro h3{margin:0 0 6px;font-size:17px;letter-spacing:-.03em}
+.chick-intro p{margin:4px 0;font-size:12px;color:#6b5b4c;line-height:1.7}
+.chick-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chick-badges span{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:700;background:#f8ead3;border:1px solid #d8c09f;color:#6b533a}
+.chick-concept{margin-top:10px;display:grid;grid-template-columns:1.2fr .8fr;gap:12px;align-items:start}
+.chick-concept img{width:100%;height:auto;border-radius:12px;border:1px solid #d7c4a8;display:block;box-shadow:0 10px 24px rgba(89,66,37,.10)}
+.chick-notes{padding:11px 12px;border-radius:12px;background:#fffaf1;border:1px solid #e3d0b4}
+.chick-notes ul{margin:6px 0 0 18px;padding:0;color:#6a594b;font-size:12px;line-height:1.75}
+.chick-note-title{font-size:13px;font-weight:800;color:#4f4032}
+.ability-demo{margin-top:10px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ability-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#fff4e2;border:1px solid #d9c09a;font-size:11px;font-weight:700;color:#674f38}
+.sparkle{display:inline-block;animation:twinkle 1.2s ease-in-out infinite}
+.wobble{display:inline-block;animation:wobble 1s ease-in-out infinite}
+.swapspin{display:inline-block;animation:swapspin 1.8s ease-in-out infinite}
+@keyframes twinkle{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(255,209,51,0))}50%{transform:scale(1.18);filter:drop-shadow(0 0 6px rgba(255,209,51,.65))}}
+@keyframes wobble{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+@keyframes swapspin{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-2px) rotate(-12deg)}50%{transform:translateX(2px) rotate(12deg)}75%{transform:translateX(-2px) rotate(-8deg)}}
+@media(max-width:860px){.chick-concept{grid-template-columns:1fr}}
+
+
+/* Chick pieces and lightweight animations */
+.piece.chick-piece,.chip .chick-piece{display:block;width:100%;height:100%;background:transparent;border:0;box-shadow:none;transform:none}
+.input-cell .piece.chick-piece{width:92%;height:92%;margin:auto}
+.chick-piece{position:relative;overflow:visible;--scale:.9;--body:#ffe279;--belly:#fff4c9;--line:#b88732;--accent:#be5a57}
+.chick-piece.blue{--accent:#5b81bc}.chick-piece.red{--accent:#be5a57}
+.chick-wrap{position:absolute;inset:0}
+.chick-body{position:absolute;left:50%;bottom:8px;width:34px;height:27px;transform:translateX(-50%) scale(var(--scale));transform-origin:center bottom;background:linear-gradient(180deg,#ffec89 0%,#ffd557 70%,#efbe39 100%);border:1.5px solid #bf8f2e;border-radius:55% 55% 48% 48%/60% 60% 40% 40%;box-shadow:0 2px 0 rgba(113,82,24,.18), inset 0 3px 6px rgba(255,255,255,.35)}
+.chick-head{position:absolute;left:50%;top:-10px;width:19px;height:18px;transform:translateX(-48%);background:linear-gradient(180deg,#ffed90 0%,#ffd966 100%);border:1.5px solid #bf8f2e;border-radius:50%;box-shadow:inset 0 2px 4px rgba(255,255,255,.35)}
+.chick-eye{position:absolute;top:6px;width:2.8px;height:4px;background:#543d22;border-radius:50%}
+.chick-eye.left{left:5px}.chick-eye.right{right:5px}
+.chick-beak{position:absolute;left:50%;top:10px;width:8px;height:6px;transform:translateX(-50%);background:#ee9a36;clip-path:polygon(50% 100%,0 0,100% 0)}
+.chick-wing{position:absolute;left:2px;top:9px;width:10px;height:8px;border-radius:50% 40% 50% 50%;background:rgba(244,192,56,.88);transform:rotate(-18deg)}
+.chick-tail{position:absolute;right:-2px;top:10px;width:7px;height:7px;border-radius:35% 65% 50% 50%;background:#f0c13f;transform:rotate(22deg)}
+.chick-leg{position:absolute;bottom:-5px;width:2px;height:7px;background:#d58b35}.chick-leg.left{left:12px}.chick-leg.right{right:12px}
+.chick-belly-number{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);min-width:18px;height:18px;padding:0 3px;border-radius:999px;background:rgba(255,249,229,.92);border:1px solid rgba(188,144,55,.52);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--accent);letter-spacing:-.02em;box-shadow:0 1px 2px rgba(102,77,42,.12)}
+.chick-owner{position:absolute;left:-3px;top:-5px;min-width:15px;height:15px;padding:0 4px;border-radius:999px;background:var(--accent);color:white;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.chick-glow{position:absolute;inset:auto 8px 4px 8px;height:8px;border-radius:50%;background:radial-gradient(circle,#00000029 0%,#00000000 70%)}
+.chick-piece.small .chick-body{bottom:6px}.chip{height:50px}.chip .chick-piece.small .chick-owner{top:-2px;left:-1px}.chip .chick-piece.small .chick-belly-number{font-size:11px;min-width:17px;height:17px}
+.chip .chick-piece.small .chick-body{width:30px;height:23px}
+.input-cell.latest-move{box-shadow:0 0 0 4px rgba(255,214,102,.22), inset 0 0 0 2px rgba(247,198,64,.6)}
+.input-cell.latest-move .chick-body{animation:landBob .65s ease}
+@keyframes landBob{0%{transform:translateX(-50%) scale(calc(var(--scale) * .8)) translateY(-18px)}60%{transform:translateX(-50%) scale(calc(var(--scale) * 1.06)) translateY(2px)}100%{transform:translateX(-50%) scale(var(--scale)) translateY(0)}}
+.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}.fx-walker{position:fixed;width:58px;height:58px;left:0;top:0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.12))}.fx-walker .chick-body{animation:walkBounce .34s ease-in-out infinite}.fx-walker .chick-leg{animation:legKick .34s ease-in-out infinite alternate}.fx-walker .chick-leg.right{animation-delay:.17s}.fx-walker .chick-wing{animation:wingWobble .45s ease-in-out infinite alternate}
+@keyframes walkBounce{0%,100%{transform:translateX(-50%) scale(var(--scale)) translateY(0)}50%{transform:translateX(-50%) scale(var(--scale)) translateY(-4px)}}
+@keyframes legKick{from{transform:rotate(-8deg)}to{transform:rotate(11deg)}}@keyframes wingWobble{from{transform:rotate(-18deg)}to{transform:rotate(5deg)}}
+.effect-encourage,.effect-discourage,.effect-switch,.effect-double{position:relative}.effect-encourage::after,.effect-discourage::after,.effect-switch::after,.effect-double::after{content:'';position:absolute;inset:4px;border-radius:12px;pointer-events:none;animation:effectPulse .85s ease}
+.effect-encourage::after{box-shadow:0 0 0 5px rgba(72,175,103,.18);border:2px solid rgba(72,175,103,.62)}
+.effect-discourage::after{box-shadow:0 0 0 5px rgba(150,100,202,.18);border:2px solid rgba(150,100,202,.62)}
+.effect-switch::after{box-shadow:0 0 0 5px rgba(233,168,62,.18);border:2px dashed rgba(233,168,62,.75)}
+.effect-double::after{box-shadow:0 0 0 5px rgba(91,129,188,.18);border:2px solid rgba(91,129,188,.72)}
+@keyframes effectPulse{0%{transform:scale(.82);opacity:0}30%{opacity:1}100%{transform:scale(1.08);opacity:0}}
+.float-fx{position:fixed;left:0;top:0;padding:6px 10px;border-radius:999px;font-size:14px;font-weight:900;color:#fff;transform:translate(-50%,-50%);box-shadow:0 8px 20px rgba(0,0,0,.15);animation:floatFx .95s ease forwards}.float-fx.enc{background:#48a567}.float-fx.dis{background:#8f65ca}.float-fx.sw{background:#d3912d}.float-fx.ds{background:#5b81bc}
+@keyframes floatFx{0%{opacity:0;transform:translate(-50%,-38%) scale(.75)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-140%) scale(1.06)}}
+.out-cell.effect-double{animation:doubleShine .95s ease}.out-cell.effect-double .out-val{color:#305ea0;text-shadow:0 0 10px rgba(95,145,229,.28)}@keyframes doubleShine{0%{transform:scale(.92)}30%{transform:scale(1.06)}100%{transform:scale(1)}}
+
+
+/* Chick visibility correction: svg avoids the legacy .input-cell span positioning conflict. */
+.piece.chick-piece,.input-cell .piece.chick-piece,.chip .chick-piece{position:relative;display:block;width:100%;height:100%;min-width:0;min-height:0;margin:0;background:none;border:0;border-radius:0;box-shadow:none;transform:none;overflow:visible;isolation:isolate}
+.input-cell .piece.chick-piece{width:100%;height:100%}
+.chick-piece .chick-svg{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(1px 2px 1px rgba(105,75,34,.13))}
+.input-cell .chick-piece .chick-big-number,.chip .chick-piece .chick-big-number{position:absolute!important;z-index:7;left:50%;bottom:-3px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;min-width:34px;height:30px;padding:0 4px;background:#fff9ef;border:2px solid var(--accent);border-radius:8px;color:var(--accent);font-size:clamp(20px,2.0vw,27px);line-height:1;font-weight:950;font-variant-numeric:tabular-nums;text-shadow:none;box-shadow:0 2px 2px #5f4d3026;letter-spacing:-.05em}
+.chick-piece.red{--accent:#b94d50}.chick-piece.blue{--accent:#507fb8}
+.input-cell .chick-piece .chick-owner,.chip .chick-piece .chick-owner{position:absolute!important;z-index:8;top:-4px;left:-3px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:white;border-radius:6px;font-size:11px;font-weight:900;border:1px solid #ffffffb0;box-shadow:0 1px 3px #5f4d3033}
+.chip .chick-piece .chick-big-number{min-width:24px;height:23px;bottom:-3px;border-width:1.6px;border-radius:6px;font-size:17px}
+.chip .chick-piece .chick-owner{width:15px;height:15px;font-size:9px;left:-3px;top:-2px}
+.chip{height:65px!important;display:flex;align-items:center;justify-content:center;padding:3px 4px!important;border-radius:13px!important}
+.chip .chick-piece{height:100%;width:100%;max-width:58px}
+.input-cell .chick-piece .ability-flag,.chip .chick-piece .ability-flag{position:absolute!important;z-index:10;top:-5px;right:-6px;left:auto;bottom:auto;white-space:nowrap;text-shadow:none}
+.input-cell .chick-piece .piece-base,.chip .chick-piece .piece-base{position:absolute!important;z-index:9;top:auto;bottom:26px;left:0;font-size:9px;background:#fff7eddb;border:1px solid #bea77e;border-radius:5px;padding:0 2px;text-shadow:none}
+.input-cell .chick-piece .piece-bonus,.chip .chick-piece .piece-bonus{position:absolute!important;z-index:9;top:auto;bottom:26px;right:-4px;font-size:9px;background:#e0f5df;color:#246b45;border:1px solid #a8d4ac;border-radius:5px;padding:0 2px;text-shadow:none}
+.input-cell .chick-piece .piece-bonus.negative{background:#f2dffc;color:#7953a4;border-color:#ceb6e5}
+.input-cell{padding:2px;overflow:visible}
+.input-cell .chick-svg{min-width:0}
+.input-cell.latest-move .chick-svg{animation:chickArrive .52s ease-out}
+@keyframes chickArrive{0%{transform:translateY(-10px) scale(.85);opacity:.5}70%{transform:translateY(2px) scale(1.05);opacity:1}100%{transform:none}}
+.fx-layer .chick-piece.fx-walker{position:fixed;display:block;width:64px;height:64px;z-index:9999}
+.fx-layer .fx-walker .chick-svg{animation:chickWalk .28s ease-in-out infinite alternate}
+@keyframes chickWalk{from{transform:translateY(2px) rotate(-3deg)}to{transform:translateY(-3px) rotate(3deg)}}
+.fx-layer .fx-walker .chick-big-number{position:absolute;z-index:3;left:50%;bottom:0;transform:translateX(-50%);background:#fff9ed;border:2px solid var(--accent);border-radius:8px;font-size:24px;font-weight:900;color:var(--accent);padding:1px 6px}
+.fx-layer .fx-walker .chick-owner{position:absolute;z-index:4;left:-4px;top:0;border-radius:6px;background:var(--accent);color:white;font-weight:900;padding:2px 5px}
+.chick-showcase{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;align-items:end;border-radius:12px;background:#fff7e9;border:1px solid #e0c7a5;padding:9px 5px}
+.chick-showcase .showcase-slot{position:relative;height:94px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px}
+.showcase-slot .chick-piece{height:72px;max-width:65px;width:100%}
+.showcase-slot .chick-big-number{position:absolute!important;z-index:3;bottom:0;left:50%;transform:translateX(-50%);background:#fffaf1;border:2px solid var(--accent);color:var(--accent);border-radius:7px;font-size:19px;font-weight:900;padding:0px 5px}
+.showcase-slot .chick-owner{position:absolute!important;z-index:4;left:-1px;top:0;background:var(--accent);color:white;border-radius:5px;padding:0 3px;font-size:9px;font-weight:900}
+.showcase-slot .chick-svg{width:100%;height:100%;position:absolute;inset:0}
+.showcase-slot .showcase-num{font-size:11px;color:#775a39;font-weight:900}
+@media(max-width:540px){.chip{height:51px!important;padding:2px!important}.chip .chick-piece .chick-big-number{font-size:14px;min-width:20px;height:19px}.chip .chick-piece .chick-owner{font-size:8px;height:12px;width:12px}.input-cell .chick-piece .chick-big-number{min-width:26px;height:26px;font-size:19px;bottom:-3px}.input-cell .chick-piece .chick-owner{width:15px;height:15px;font-size:10px}.input-cell .chick-piece .ability-flag{font-size:7px!important}.chick-showcase{grid-template-columns:repeat(4,1fr)}.chick-showcase .showcase-slot{height:80px}.showcase-slot .chick-piece{height:59px}}
+@media(prefers-reduced-motion:reduce){.input-cell.latest-move .chick-svg,.fx-layer .fx-walker .chick-svg{animation:none}}
+
+
+/* Size the game characters for legibility on wide screens and phones. */
+:root{--cell:clamp(35px,6.8vw,76px)}
+@media(min-width:951px) and (max-width:1100px){:root{--cell:clamp(54px,6vw,67px);--cell-gap:6px}}
+@media(max-width:950px){:root{--cell:clamp(35px,8.2vw,65px);--cell-gap:5px}}
+@media(max-width:540px){:root{--cell:clamp(33px,9.4vw,44px);--cell-gap:3px}.board{padding:8px}.chip .chick-piece .chick-big-number{font-size:15px}}
+@media(max-width:355px){:root{--cell:31px;--cell-gap:3px}.board{padding:6px}}
+
 </style>
 </head>
 <body>
@@ -202,6 +303,32 @@ h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:
       <span><b>SWITCH</b>：今回のコマを自分の既存コマと位置交換</span>
       <span><b>DUBBLESTRIKE</b>：置いた後、得点を上位2つの合計に変更</span>
     </div>
+    <section class="chick-intro" aria-label="ひよこキャラクターデザイン">
+      <h3>ひよこキャラクターの方向性 / Chick Character Direction</h3>
+      <p>0〜7の数字は、<b>やせ型からふっくら型へ</b>少しずつ体型が変わる、同じひよこファミリーとして表現します。コマを置くときは、ひよこが数字タイルを持って歩いてきて配置するイメージです。</p>
+      <p>Player A / B は赤青のアクセントで識別し、<b>誰がどのコマを置いたか</b>が直感的にわかるUIを目指します。特殊能力は、きらめき・ふらつき・入れ替え・合体感のあるアニメーション演出を加える想定です。</p>
+      <div class="chick-badges">
+        <span>0 = slim chick</span><span>7 = fluffy chick</span><span>Red / Blue team accents</span><span>Ability animations planned</span>
+      </div>
+      <div class="chick-concept">
+        <div class="chick-showcase" id="chickShowcase" aria-label="数字0から7までのひよこたち"></div>
+        <div class="chick-notes">
+          <div class="chick-note-title">ページへの反映内容（第1段階）</div>
+          <ul>
+            <li>選択画面にキャラクターデザイン案を掲載</li>
+            <li>0〜7をひよこのサイズ違いとして統一</li>
+            <li>Player A / B を色アクセントで見分けやすく整理</li>
+            <li>効果演出のイメージを明示</li>
+          </ul>
+          <div class="ability-demo">
+            <span class="ability-chip"><span class="sparkle">✨</span> Encallege</span>
+            <span class="ability-chip"><span class="wobble">➖</span> Discourage</span>
+            <span class="ability-chip"><span class="swapspin">🔄</span> Switch</span>
+            <span class="ability-chip"><span class="sparkle">⭐</span> DUBBLESTRIKE</span>
+          </div>
+        </div>
+      </div>
+    </section>
     <div class="team-roster-summary" id="teamRosterSummary" aria-live="polite"></div>
     <div class="team-footer"><div class="team-message" id="teamMessage" role="status">各チーム合計コスト3以下で編成して、対戦を開始してください。</div><button type="button" class="team-done" id="teamDone">編成完了 → 対戦へ</button></div>
   </section>
@@ -409,7 +536,7 @@ function reset(){
  radicalSelected=null;radicalHintCell=null;radicalReviewText='';radicalExactCache.clear();
  endCpuJob();
  const abilities=roundAbilities(1);
- s={history:[[],[]],round:1,board:Array(16).fill(null),boardBase:Array(16).fill(null),boardPlayers:Array(16).fill(null),abilities,used:{red:0,blue:0},turn:'red',selected:null,pending:null,phase:'playing',scores:[],mode:$('mode').value,difficulty:Number($('difficulty').value)};
+ s={history:[[],[]],round:1,board:Array(16).fill(null),boardBase:Array(16).fill(null),boardPlayers:Array(16).fill(null),abilities,used:{red:0,blue:0},turn:'red',selected:null,pending:null,phase:'playing',scores:[],mode:$('mode').value,difficulty:Number($('difficulty').value),lastPlaced:null};
  sAbilitySerial++;
  message=cvcmode()?'コンピューター同士の対戦を開始します。赤が先手です。':'赤（プレイヤー A）の数字を選び、中央の空きマスに置いてください。';
  render();scheduleCpu();
@@ -417,6 +544,7 @@ function reset(){
 function validMove(color,n,index){return s.phase==='playing'&&s.turn===color&&s.board[index]===null&&!(s.used[color]&(1<<n));}
 function finalizePlacedMove(m){
  (s.history[s.round-1]).push(recordMove(m));
+ s.lastPlaced=(abilityOf(m.color,m.n)==='SW'&&m.t!==null)?m.t:m.i;
  radicalHintCell=null;radicalReviewText='';s.selected=null;s.pending=null;
  const count=s.board.filter(v=>v!==null).length;
  if(count===16){
@@ -430,7 +558,7 @@ function finalizePlacedMove(m){
   const msg=effect&&m.t!==null?`${abilityName(effect)}：${Math.floor(m.t/4)+1}行${m.t%4+1}列を${effect==='SW'?'入替':delta>0?'＋'+delta:'−'+Math.abs(delta)}。 `:effect?`${abilityName(effect)}：${effect==='DS'?'得点計算に上位2つを適用。':'対象がなく不発。'} `:'';
   message=msg+(cpuTurn()?'コンピューターが考えています…':`${cn[s.turn]}（${ownerName(now())}）の番です。`);
  }
- render();scheduleCpu();
+ render();queueAnimations(m);scheduleCpu();
 }
 function place(index,n,color,target){
  if(!validMove(color,n,index))return;
@@ -470,7 +598,7 @@ function clickCell(i){
 }
 function startSecond(){
  radicalSelected=null;radicalHintCell=null;radicalReviewText='';
- endCpuJob();s.round=2;s.board=Array(16).fill(null);s.boardBase=Array(16).fill(null);s.boardPlayers=Array(16).fill(null);s.used={red:0,blue:0};s.abilities=roundAbilities(2);s.turn='red';s.selected=null;s.pending=null;s.phase='playing';
+ endCpuJob();s.round=2;s.board=Array(16).fill(null);s.boardBase=Array(16).fill(null);s.boardPlayers=Array(16).fill(null);s.used={red:0,blue:0};s.abilities=roundAbilities(2);s.turn='red';s.selected=null;s.pending=null;s.phase='playing';s.lastPlaced=null;
  message=cvcmode()?'2回戦：コンピューター同士の対戦です。':(cpumode()?'2回戦：コンピューターが赤・先手です。':'2回戦：プレイヤー Bが赤・先手です。');
  render();scheduleCpu();
 }
@@ -537,6 +665,54 @@ function layoutArrows(){
 }
 let arrowFrame=0;
 function arrangeArrows(){if(arrowFrame)cancelAnimationFrame(arrowFrame);arrowFrame=requestAnimationFrame(()=>{arrowFrame=0;layoutArrows();});}
+function buildChick(color,current,base,effect,{small=false}={}){
+ const wrap=document.createElement('span');
+ wrap.className=`piece chick-piece ${color} ${small?'small':''}`;
+ const team=pOf(color),teamColor=color==='red'?'#b94d50':'#507fb8';
+ // The original number determines the body shape, even when effects change its current value.
+ const rank=Math.max(0,Math.min(7,Number(base??current??0)));
+ const bodyRx=19+rank*2.65,bodyRy=27+rank*1.4,headRadius=18+rank*.42;
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('viewBox','0 0 100 112');svg.setAttribute('class','chick-svg');svg.setAttribute('aria-hidden','true');
+ svg.innerHTML=`
+ <ellipse cx="51" cy="105" rx="${bodyRx+5}" ry="5" fill="rgba(96,68,29,.16)"/>
+ <path d="M 32 98 L 29 106 M 42 98 L 43 107 M 57 98 L 55 106 M 67 98 L 72 106" stroke="#d98b35" stroke-width="4" stroke-linecap="round" fill="none"/>
+ <path d="M ${50+bodyRx-6} 69 q 13 -13 12 9 q -7 8 -13 3" fill="#f8cf62" stroke="#c58c33" stroke-width="2"/>
+ <ellipse cx="50" cy="73" rx="${bodyRx}" ry="${bodyRy}" fill="#ffda68" stroke="#c18d37" stroke-width="2.3"/>
+ <ellipse cx="52" cy="71" rx="${Math.max(12,bodyRx*.64)}" ry="${Math.max(18,bodyRy*.66)}" fill="#ffe89a" opacity=".90"/>
+ <ellipse cx="${50-bodyRx*.77}" cy="73" rx="8" ry="12" fill="#f7c84d" stroke="#c89737" stroke-width="1.8" transform="rotate(-20 ${50-bodyRx*.77} 73)"/>
+ <circle cx="50" cy="35" r="${headRadius}" fill="#ffe486" stroke="#c18d37" stroke-width="2.3"/>
+ <path d="M 48 ${35-headRadius+4} Q 44 ${35-headRadius-10} 39 ${35-headRadius+1} M 52 ${35-headRadius+3} Q 58 ${35-headRadius-9} 62 ${35-headRadius+1}" stroke="#e4ae3b" stroke-width="4" stroke-linecap="round" fill="none"/>
+ <ellipse cx="42" cy="34" rx="2.9" ry="4.2" fill="#423325"/><ellipse cx="60" cy="34" rx="2.9" ry="4.2" fill="#423325"/>
+ <circle cx="36" cy="43" r="5.5" fill="#f8ac89" opacity=".67"/><circle cx="66" cy="43" r="5.5" fill="#f8ac89" opacity=".67"/>
+ <path d="M 46 41 Q 50 52 54 41 Z" fill="#e99736" stroke="#c17624" stroke-width="1"/>
+ <path d="M 35 55 Q 50 62 65 55" fill="none" stroke="${teamColor}" stroke-width="6" stroke-linecap="round"/>
+ <path d="M 35 57 L 28 68 L 36 67" fill="${teamColor}"/>
+ `;
+ wrap.append(svg);
+ const number=document.createElement('span');number.className='chick-big-number';number.textContent=String(current);wrap.append(number);
+ const owner=document.createElement('span');owner.className='chick-owner';owner.textContent=team;owner.title=`プレイヤー${team}`;wrap.append(owner);
+ if(current!==base){
+  const baseTag=document.createElement('span');baseTag.className='piece-base';baseTag.textContent=String(base);baseTag.title=`元の数字 ${base}`;wrap.append(baseTag);
+  const buff=document.createElement('span');buff.className='piece-bonus';buff.textContent=(current>base?'+':'')+(current-base);buff.classList.toggle('negative',current<base);wrap.append(buff);
+ }
+ if(effect){const flag=document.createElement('span');flag.className='ability-flag';flag.textContent=abilityBadge(effect);flag.classList.toggle('negative',effectDelta(effect)<0);flag.classList.toggle('switch',effect==='SW');flag.classList.toggle('double',effect==='DS');flag.title=abilityName(effect);wrap.append(flag);}
+ return wrap;
+}
+function renderChickShowcase(){const root=$('chickShowcase');if(!root)return;root.replaceChildren();for(let n=0;n<8;n++){const slot=document.createElement('div');slot.className='showcase-slot';slot.append(buildChick('red',n,n,null));const tag=document.createElement('span');tag.className='showcase-num';tag.textContent=String(n);slot.append(tag);root.append(slot);}}
+function ensureFxLayer(){let layer=document.querySelector('.fx-layer');if(!layer){layer=document.createElement('div');layer.className='fx-layer';document.body.append(layer);}return layer;}
+function centerOf(el){const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};}
+function flashNode(node,cls,duration=820){if(!node)return;node.classList.remove(cls);void node.offsetWidth;node.classList.add(cls);setTimeout(()=>node.classList.remove(cls),duration);}
+function floatFxAt(el,text,cls){if(!el)return;const layer=ensureFxLayer(),pt=centerOf(el),tag=document.createElement('div');tag.className=`float-fx ${cls}`;tag.textContent=text;tag.style.left=pt.x+'px';tag.style.top=pt.y+'px';layer.append(tag);setTimeout(()=>tag.remove(),980);}
+function chipButtonFor(color,n){const panel=$(pOf(color)==='A'?'chipsA':'chipsB');return [...panel.querySelectorAll('button.chip')].find(btn=>btn.dataset.num===String(n))||panel;}
+function playPlacementAnimation(m){const from=chipButtonFor(m.color,m.n),to=$('board').querySelector(`[data-input="${(abilityOf(m.color,m.n)==='SW'&&m.t!==null)?m.t:m.i}"]`);if(!to)return;const layer=ensureFxLayer();const walker=buildChick(m.color,m.n,m.n,abilityOf(m.color,m.n),{});walker.classList.add('fx-walker');layer.append(walker);const a=centerOf(from),b=centerOf(to);walker.style.left=(a.x-29)+'px';walker.style.top=(a.y-29)+'px';walker.animate([{transform:'translate(0px,0px) scale(.96)'},{transform:`translate(${(b.x-a.x)*.34}px,${(b.y-a.y)*.36-10}px) scale(1)`},{transform:`translate(${(b.x-a.x)*.68}px,${(b.y-a.y)*.72}px) scale(1)`},{transform:`translate(${b.x-a.x}px,${b.y-a.y}px) scale(.96)`}],{duration:560,easing:'cubic-bezier(.22,.8,.22,1)'}).finished.finally(()=>walker.remove());flashNode(to,'latest-move',900);}
+function playAbilityAnimation(m){const code=abilityOf(m.color,m.n);if(!code)return;const board=$('board');const placed=board.querySelector(`[data-input="${(code==='SW'&&m.t!==null)?m.t:m.i}"]`);
+ if(code.startsWith('E')&&m.t!==null){const target=board.querySelector(`[data-input="${m.t}"]`);flashNode(target,'effect-encourage');floatFxAt(target,'+'+effectDelta(code),'enc');}
+ else if(code.startsWith('D')&&m.t!==null){const target=board.querySelector(`[data-input="${m.t}"]`);flashNode(target,'effect-discourage');floatFxAt(target,String(effectDelta(code)),'dis');}
+ else if(code==='SW'&&m.t!==null){const a=board.querySelector(`[data-input="${m.i}"]`),b=board.querySelector(`[data-input="${m.t}"]`);flashNode(a,'effect-switch');flashNode(b,'effect-switch');floatFxAt(placed||b,'SWAP','sw');}
+ else if(code==='DS'){for(const out of outputs.filter(o=>o.color===m.color)){const node=board.querySelector(`[data-output="${out.id}"]`);flashNode(node,'effect-double',980);}floatFxAt(placed||board,'TOP2','ds');}
+}
+function queueAnimations(m){if(window.matchMedia?.('(prefers-reduced-motion:reduce)')?.matches)return;requestAnimationFrame(()=>{playPlacementAnimation(m);setTimeout(()=>playAbilityAnimation(m),480);});}
 function renderBoard(){
  const grid=$('board');grid.replaceChildren();
  for(let i=0;i<16;i++){
@@ -544,17 +720,13 @@ function renderBoard(){
   const el=document.createElement('button');el.type='button';el.dataset.input=i;
   el.style.gridColumn=String(c+3);el.style.gridRow=String(r+1);
   const eligible=s.phase==='targeting'&&s.pending?.targets.includes(i);
-  el.className='cell input-cell '+(n!==null?('locked occupied-'+(s.boardPlayers[i]||'red')):'empty interactive')+(eligible?' target-eligible':'')+(s.pending?.i===i?' target-pending':'');
+  el.className='cell input-cell '+(n!==null?('locked occupied-'+(s.boardPlayers[i]||'red')):'empty interactive')+(eligible?' target-eligible':'')+(s.pending?.i===i?' target-pending':'')+(s.lastPlaced===i?' latest-move':'');
   el.disabled=s.phase==='targeting'?!eligible:(n!==null||s.phase!=='playing'||cpuTurn());
   const playedBy=s.boardPlayers[i],base=s.boardBase[i];
   const bonus=abilityOf(playedBy,base);
   el.setAttribute('aria-label',`${r+1}行${c+1}列、${n!==null?`${cn[playedBy]}の元${base}、現在${n}${bonus?`、${abilityName(bonus)}`:''}`:'空き'}`);
   if(n!==null){
-   const digit=document.createElement('span');digit.className='piece piece-'+playedBy;
-   const num=document.createElement('span');num.className='piece-number';num.textContent=String(n);digit.append(num);
-   if(n!==base){const baseTag=document.createElement('span');baseTag.className='piece-base';baseTag.textContent=String(base);baseTag.title=`元の数字 ${base}`;digit.append(baseTag);}
-   if(bonus){const flag=document.createElement('span');flag.className='ability-flag';flag.textContent=abilityBadge(bonus);flag.classList.toggle('negative',effectDelta(bonus)<0);flag.classList.toggle('switch',bonus==='SW');flag.classList.toggle('double',bonus==='DS');flag.title=abilityName(bonus);digit.append(flag);}
-   if(n!==base){const buff=document.createElement('span');buff.className='piece-bonus';buff.textContent=(n>base?'+':'')+(n-base);buff.classList.toggle('negative',n<base);digit.append(buff);}
+   const digit=buildChick(playedBy,n,base,bonus,{small:false});
    el.append(digit);
   }
   el.addEventListener('click',()=>clickCell(i));grid.append(el);
@@ -580,10 +752,10 @@ function renderChips(p){
  const role=$('role'+p);role.className='player-role '+color;role.textContent=`${cn[color]}・${color==='red'?'先手':'後手'}`;
  const wrap=$('chips'+p);wrap.replaceChildren();
  for(let n=0;n<=7;n++){
-  const el=document.createElement('button');el.type='button';
-  const number=document.createElement('span');number.className='chip-number';number.textContent=String(n);el.append(number);
+  const el=document.createElement('button');el.type='button';el.dataset.num=String(n);
   const effect=abilityOf(color,n);
-  if(effect){const tag=document.createElement('span');tag.className='ability-flag';tag.textContent=abilityBadge(effect);tag.classList.toggle('negative',effectDelta(effect)<0);tag.classList.toggle('switch',effect==='SW');tag.classList.toggle('double',effect==='DS');el.append(tag);}
+  const chick=buildChick(color,n,n,effect,{small:true});
+  el.append(chick);
   const used=!!(s.used[color]&(1<<n)),enabled=active&&!used&&!isCpuPlayer(p);
   el.className='chip'+(used?' used':'')+(s.selected===n&&enabled?' selected':'');
   el.disabled=!enabled;el.setAttribute('aria-pressed',String(s.selected===n&&enabled));
@@ -833,8 +1005,7 @@ function radicalAnalyze(boardIn,ownersIn,usedIn,turn,maxExact=3){
   stats.nodes++;
   if(board.every(v=>v!==null)){const score=roundScore(board,used);return score.red-score.blue;}
   const k=radicalKey(board,owners,used,turn),old=table.get(k);
-  if(old){stats.hits++;if(old.flag==='exact')return old.v;
-   if(old.flag==='lower')alpha=Math.max(alpha,old.v);else beta=Math.min(beta,old.v);
+  if(old){stats.hits++;if(old.flag==='exact')return old.v;   if(old.flag==='lower')alpha=Math.max(alpha,old.v);else beta=Math.min(beta,old.v);
    if(alpha>=beta)return old.v;
   }
   const a0=alpha,b0=beta,red=turn==='red';
@@ -968,6 +1139,7 @@ $('teamDone').addEventListener('click',finishTeamBuilder);
 $('teamTabA').addEventListener('click',()=>{editingTeam='A';showRoster();});
 $('teamTabB').addEventListener('click',()=>{editingTeam='B';showRoster();});
 reset();
+renderChickShowcase();
 openTeamBuilder();
 })();
 </script>
