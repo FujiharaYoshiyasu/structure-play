@@ -38,4 +38,4 @@
 - GitHubの公開版 `structure-play/apps/765/` (765classic) は変更していない。
 
 ## 保管
-Private repository `FujiharaYoshiyasu/Analysis`, branch `765-radical-dev`, game `765Radical/index.html`。
+Public repository `FujiharaYoshiyasu/structure-play`, branch `765-radical-dev`, game `765Radical/index.html`。ホームページへは掲載・配信しない。運用規則はルートの `AGENTS.md` を参照。

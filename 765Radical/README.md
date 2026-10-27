@@ -1,8 +1,8 @@
-# 765Radical — 非公開実験版
+# 765Radical — 開発実験版
 
-> **開発ブランチ:** `765-radical-dev`（Private リポジトリ `FujiharaYoshiyasu/Analysis`）。
+> **開発ブランチ:** 公開リポジトリ `FujiharaYoshiyasu/structure-play` の `765-radical-dev`。ソース公開のみとし、ホームページには掲載・配信しません。
 > 
-> **重要:** 公開中の [765classic](https://fujiharayoshiyasu.github.io/structure-play/apps/765/) は変更しません。`main` ブランチへマージしないでください。専用Privateリポジトリを作った際は、このゲームのファイルを移管してください。
+> **重要:** 公開中の [765classic](https://fujiharayoshiyasu.github.io/structure-play/apps/765/) は変更しません。`main` ブランチへマージしないでください。ホームページと分離する運用規則はルートの `AGENTS.md` と `README.md` を参照してください。
 
 ## 開く
 
