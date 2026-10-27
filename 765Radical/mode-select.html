@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#efe5d5">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="ゲーム765のClassic/Radicalモード選択画面（開発ブランチ限定プレビュー）">
+<title>765 — モードを選ぶ（開発用プレビュー）</title>
+<style>
+:root{color-scheme:light;--ink:#38352e;--sub:#71685c;--border:#c8bba8;--red:#b65d5b;--blue:#597ba6}
+*{box-sizing:border-box}
+html{min-height:100%}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  background:
+    linear-gradient(110deg,rgba(248,243,234,.87),rgba(239,227,207,.89)),
+    repeating-linear-gradient(1deg,#d8b895 0 2px,#edd7bc 3px 15px,#d2a986 16px 17px,#f3e3cc 18px 33px);
+  background-attachment:fixed;line-height:1.65
+}
+main{max-width:960px;min-height:100vh;margin:auto;padding:clamp(28px,5vw,56px) clamp(16px,4vw,40px) 40px;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid rgba(103,83,56,.24);padding-bottom:14px}
+.brand{font-size:clamp(30px,5vw,42px);font-weight:800;letter-spacing:-.08em;line-height:1}
+.mark{font-size:10px;font-weight:700;letter-spacing:.13em;color:#847464}
+.hero{text-align:center;padding:clamp(35px,6vw,64px) 0 28px}
+.eyebrow{font-size:11px;letter-spacing:.22em;color:var(--sub);font-weight:700}
+h1{margin:10px 0 8px;font-size:clamp(28px,4.8vw,43px);font-weight:750;letter-spacing:-.06em}
+.lead{margin:0 auto;max-width:600px;font-size:14px;color:var(--sub)}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%}
+.choice{min-width:0;text-decoration:none;color:inherit;background:rgba(255,251,243,.78);
+  border:1px solid #c7b8a2;border-radius:20px;padding:clamp(17px,3vw,26px);
+  box-shadow:0 15px 35px rgba(105,77,47,.08);display:flex;flex-direction:column;gap:14px;
+  transition:transform .16s,border-color .16s,box-shadow .16s}
+.choice:hover{transform:translateY(-3px);border-color:#a99474;box-shadow:0 20px 40px rgba(105,77,47,.12)}
+.choice:focus-visible{outline:3px solid #416bb2;outline-offset:4px}
+.choice-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.category{font-size:11px;color:var(--sub);letter-spacing:.07em;font-weight:700}
+.tag{border:1px solid #ccbba3;border-radius:99px;padding:3px 10px;font-size:11px;background:#f6ebda;color:#695d51}
+.tile-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:230px;margin:12px auto;aspect-ratio:1}
+.tile{background:#f7ead3;border:1px solid #dac3a0;border-radius:7px;display:grid;place-items:center;font-size:clamp(15px,2.5vw,24px);font-weight:750;box-shadow:2px 2px 0 #cfb69b;color:#806953}
+.tile.red{color:var(--red);background:#f6e3e0}.tile.blue{color:var(--blue);background:#e1eafa}
+.tile.has-power{position:relative}.tile.has-power::after{content:'✦';position:absolute;right:3px;top:0px;font-size:11px;color:#8b7250}
+.choice h2{font-size:25px;letter-spacing:-.04em;margin:0}
+.choice p{font-size:13px;color:var(--sub);margin:0;flex:1}
+.enter{margin-top:7px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #d7c8b4;padding-top:13px;font-size:13px;font-weight:700}
+.arrow{font-size:22px;line-height:1}
+.foot{margin-top:auto;padding-top:34px;text-align:center}
+.foot p{font-size:11px;color:var(--sub);margin:6px 0}
+.warning{font-size:11px;display:inline-block;border:1px solid #d0b89b;padding:5px 12px;border-radius:99px;background:rgba(255,252,245,.65)}
+@media(max-width:600px){.options{grid-template-columns:1fr;gap:14px}.hero{padding:25px 0 20px}.tile-preview{max-width:165px;margin:2px auto}.choice{gap:9px}.choice h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.choice{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand" aria-label="765">765</div>
+    <span class="mark">SELECT YOUR MODE</span>
+  </header>
+  <section class="hero" aria-labelledby="title">
+    <div class="eyebrow">ORIGINAL NUMBER STRATEGY GAME</div>
+    <h1 id="title">どちらの765で遊ぶ？</h1>
+    <p class="lead">4×4の盤面に、0〜7の数字を配置する。いつもの765と、新しいルールを試す765。好きなモードを選んでください。</p>
+  </section>
+  <nav class="options" aria-label="765のゲームモード">
+    <a class="choice" href="https://fujiharayoshiyasu.github.io/structure-play/apps/765/" aria-label="765 Classic、現在公開中の通常版で遊ぶ">
+      <div class="choice-top"><span class="category">01 · ORIGINAL</span><span class="tag">公開中</span></div>
+      <div class="tile-preview" aria-hidden="true">
+        <div class="tile red">7</div><div class="tile blue">6</div><div class="tile red">5</div><div class="tile blue">4</div>
+        <div class="tile blue">3</div><div class="tile red">2</div><div class="tile blue">1</div><div class="tile red">0</div>
+        <div class="tile red">0</div><div class="tile blue">1</div><div class="tile red">2</div><div class="tile blue">3</div>
+        <div class="tile blue">4</div><div class="tile red">5</div><div class="tile blue">6</div><div class="tile red">7</div>
+      </div>
+      <h2>765 Classic</h2>
+      <p>数字と配置で勝負する基本ルール。10段階CPU、2人対戦、CPU観戦に対応した固定版。</p>
+      <div class="enter"><span>Classicをプレイ</span><span class="arrow" aria-hidden="true">→</span></div>
+    </a>
+    <a class="choice" href="./index.html" aria-label="765 Radical、開発中の特殊能力版を試す">
+      <div class="choice-top"><span class="category">02 · EXPERIMENTAL</span><span class="tag">開発中</span></div>
+      <div class="tile-preview" aria-hidden="true">
+        <div class="tile blue">0</div><div class="tile red has-power">4</div><div class="tile red">5</div><div class="tile blue">6</div>
+        <div class="tile red">1</div><div class="tile blue has-power">6</div><div class="tile blue">7</div><div class="tile red">2</div>
+        <div class="tile blue">3</div><div class="tile red">0</div><div class="tile red has-power">6</div><div class="tile blue">1</div>
+        <div class="tile red">7</div><div class="tile blue">5</div><div class="tile blue">4</div><div class="tile red">3</div>
+      </div>
+      <h2>765 Radical</h2>
+      <p>Encallege／Discourageなどの特殊能力や、ヒント・復習機能を研究する実験版。</p>
+      <div class="enter"><span>Radicalを試す</span><span class="arrow" aria-hidden="true">→</span></div>
+    </a>
+  </nav>
+  <footer class="foot">
+    <span class="warning">開発ブランチ用プレビュー — ホームページ未公開</span>
+    <p>正式公開までは入口画面を公開サイトへ設置しません。RadicalのコードはPublicリポジトリ内にあります。</p>
+  </footer>
+</main>
+</body>
+</html>
