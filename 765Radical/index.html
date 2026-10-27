@@ -284,6 +284,11 @@ h1{font-size:clamp(34px,4vw,52px);letter-spacing:-.085em;font-weight:720;margin:
 @media(max-width:540px){:root{--cell:clamp(33px,9.4vw,44px);--cell-gap:3px}.board{padding:8px}.chip .chick-piece .chick-big-number{font-size:15px}}
 @media(max-width:355px){:root{--cell:31px;--cell-gap:3px}.board{padding:6px}}
 
+
+/* Team colors cover the whole chick, including its body and head. */
+.chick-piece.red .chick-svg{filter:drop-shadow(1px 2px 1px rgba(147,54,59,.18))}
+.chick-piece.blue .chick-svg{filter:drop-shadow(1px 2px 1px rgba(50,96,149,.18))}
+.chip.used .chick-piece{filter:grayscale(.2)}
 </style>
 </head>
 <body>
@@ -669,6 +674,11 @@ function buildChick(color,current,base,effect,{small=false}={}){
  const wrap=document.createElement('span');
  wrap.className=`piece chick-piece ${color} ${small?'small':''}`;
  const team=pOf(color),teamColor=color==='red'?'#b94d50':'#507fb8';
+ const palette=color==='red'?{
+  body:'#ee8788',belly:'#ffccc6',head:'#ffb0a7',wing:'#db6c75',tail:'#f0958c',stroke:'#ad565d',tuft:'#bb6069'
+ }:{
+  body:'#70b7ee',belly:'#c5e8ff',head:'#9fd9ff',wing:'#5296d5',tail:'#78bcef',stroke:'#437eac',tuft:'#497eb3'
+ };
  // The original number determines the body shape, even when effects change its current value.
  const rank=Math.max(0,Math.min(7,Number(base??current??0)));
  const bodyRx=19+rank*2.65,bodyRy=27+rank*1.4,headRadius=18+rank*.42;
@@ -677,12 +687,12 @@ function buildChick(color,current,base,effect,{small=false}={}){
  svg.innerHTML=`
  <ellipse cx="51" cy="105" rx="${bodyRx+5}" ry="5" fill="rgba(96,68,29,.16)"/>
  <path d="M 32 98 L 29 106 M 42 98 L 43 107 M 57 98 L 55 106 M 67 98 L 72 106" stroke="#d98b35" stroke-width="4" stroke-linecap="round" fill="none"/>
- <path d="M ${50+bodyRx-6} 69 q 13 -13 12 9 q -7 8 -13 3" fill="#f8cf62" stroke="#c58c33" stroke-width="2"/>
- <ellipse cx="50" cy="73" rx="${bodyRx}" ry="${bodyRy}" fill="#ffda68" stroke="#c18d37" stroke-width="2.3"/>
- <ellipse cx="52" cy="71" rx="${Math.max(12,bodyRx*.64)}" ry="${Math.max(18,bodyRy*.66)}" fill="#ffe89a" opacity=".90"/>
- <ellipse cx="${50-bodyRx*.77}" cy="73" rx="8" ry="12" fill="#f7c84d" stroke="#c89737" stroke-width="1.8" transform="rotate(-20 ${50-bodyRx*.77} 73)"/>
- <circle cx="50" cy="35" r="${headRadius}" fill="#ffe486" stroke="#c18d37" stroke-width="2.3"/>
- <path d="M 48 ${35-headRadius+4} Q 44 ${35-headRadius-10} 39 ${35-headRadius+1} M 52 ${35-headRadius+3} Q 58 ${35-headRadius-9} 62 ${35-headRadius+1}" stroke="#e4ae3b" stroke-width="4" stroke-linecap="round" fill="none"/>
+ <path d="M ${50+bodyRx-6} 69 q 13 -13 12 9 q -7 8 -13 3" fill="${palette.tail}" stroke="${palette.stroke}" stroke-width="2"/>
+ <ellipse cx="50" cy="73" rx="${bodyRx}" ry="${bodyRy}" fill="${palette.body}" stroke="${palette.stroke}" stroke-width="2.3"/>
+ <ellipse cx="52" cy="71" rx="${Math.max(12,bodyRx*.64)}" ry="${Math.max(18,bodyRy*.66)}" fill="${palette.belly}" opacity=".90"/>
+ <ellipse cx="${50-bodyRx*.77}" cy="73" rx="8" ry="12" fill="${palette.wing}" stroke="${palette.stroke}" stroke-width="1.8" transform="rotate(-20 ${50-bodyRx*.77} 73)"/>
+ <circle cx="50" cy="35" r="${headRadius}" fill="${palette.head}" stroke="${palette.stroke}" stroke-width="2.3"/>
+ <path d="M 48 ${35-headRadius+4} Q 44 ${35-headRadius-10} 39 ${35-headRadius+1} M 52 ${35-headRadius+3} Q 58 ${35-headRadius-9} 62 ${35-headRadius+1}" stroke="${palette.tuft}" stroke-width="4" stroke-linecap="round" fill="none"/>
  <ellipse cx="42" cy="34" rx="2.9" ry="4.2" fill="#423325"/><ellipse cx="60" cy="34" rx="2.9" ry="4.2" fill="#423325"/>
  <circle cx="36" cy="43" r="5.5" fill="#f8ac89" opacity=".67"/><circle cx="66" cy="43" r="5.5" fill="#f8ac89" opacity=".67"/>
  <path d="M 46 41 Q 50 52 54 41 Z" fill="#e99736" stroke="#c17624" stroke-width="1"/>
