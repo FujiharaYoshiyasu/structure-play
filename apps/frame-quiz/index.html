@@ -77,7 +77,7 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note" id="factNote">部材：A→B→C。応力図の方向と荷重位置を確認してください。</div></div></div>
     <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。</p>
   </section>
-  <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">節点の数値・最大値・曲線区間を確認（全3問）</span></div>
+  <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">応力図内の記号・数値・単位を確認（全3問）</span></div>
   <div id="questionGrid" class="question-grid" aria-live="off"></div>
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
@@ -553,6 +553,70 @@ function changePlayer(){
  document.getElementById('nickname').focus();
  renderRankings();
 }
+// Convert the server-issued SVG into an in-diagram annotated exercise card.
+// The server has already drawn the four distinct candidates and retained their
+// correct answer in D1. Never calculate answers here or send scores from client.
+function annotateChoiceSvg(source,type,cfg){
+ const holder=document.createElement('div');holder.innerHTML=source;
+ const svg=holder.querySelector('svg');if(!svg)return source;
+ // Compatible with future Workers that natively return annotated diagrams.
+ if(svg.hasAttribute('data-inline-values'))return source;
+ const NS='http://www.w3.org/2000/svg';
+ const oldTexts=[...svg.querySelectorAll('text')].map(e=>String(e.textContent||'').trim());
+ const rowPattern=/^(AB|BC)：([ABC])\s+([+＋−-]?\d+(?:\.\d+)?)\s+(kNm|kN)\s+→\s+([ABC])\s+([+＋−-]?\d+(?:\.\d+)?)\s+(kNm|kN)$/;
+ const rows={};
+ for(const line of oldTexts){const m=rowPattern.exec(line);if(m)rows[m[1]]={from:m[3],to:m[6]};}
+ if(!rows.AB||!rows.BC)return source;
+ const extra=oldTexts.filter(t=>/^最大 \|M\| =/.test(t)||/^2次曲線：/.test(t));
+ for(const t of [...svg.querySelectorAll('text')])if(Number(t.getAttribute('y'))>=289)t.remove();
+ for(const rect of [...svg.querySelectorAll('rect')])if(Number(rect.getAttribute('y'))===289)rect.remove();
+ svg.setAttribute('viewBox','0 0 560 286');svg.setAttribute('data-inline-values','v1');
+ svg.setAttribute('aria-label',`${type}図。ハッチング部近くに部材端の値と単位を表示`);
+ const d=cfg.orientation==='left'?1:-1,origin=d===1?160:400,base=253,px=36;
+ const A=[origin,base],B=cfg.pattern==='A'?[origin,base-cfg.h*px]:[origin+d*cfg.L*px,base];
+ const C=[origin+d*cfg.L*px,base-cfg.h*px],seg=[[A,B],[B,C]];
+ const group=document.createElementNS(NS,'g');group.setAttribute('class','inline-force-annotations');
+ function node(tag,attributes,content){const el=document.createElementNS(NS,tag);for(const [key,val]of Object.entries(attributes))el.setAttribute(key,String(val));if(content!==undefined)el.textContent=content;return el;}
+ function chip(x,y,caption,color){
+  // White translucent lettering stays legible even over dense orthogonal hatching.
+  const width=Math.max(62,Math.min(105,caption.length*7.4+14));
+  x=Math.max(width/2+9,Math.min(551-width/2,x));y=Math.max(14,Math.min(269,y));
+  group.appendChild(node('rect',{x:(x-width/2).toFixed(1),y:(y-12).toFixed(1),width:width.toFixed(1),height:20,rx:5,fill:'#ffffff','fill-opacity':'.94',stroke:color,'stroke-opacity':'.48','stroke-width':'.7'}));
+  group.appendChild(node('text',{x:x.toFixed(1),y:(y+2).toFixed(1),'text-anchor':'middle','font-size':12.5,'font-weight':800,fill:color,stroke:'#ffffff','stroke-width':'.6','paint-order':'stroke'},caption));
+ }
+ const color={N:'#087f7d',Q:'#286bb1',M:'#c15b40'}[type];
+ for(let m=0;m<2;m++){
+  const line=m===0?rows.AB:rows.BC,[p,q]=seg[m],dx=q[0]-p[0],dy=q[1]-p[1],length=Math.hypot(dx,dy),ux=dx/length,uy=dy/length;
+  const nx=dy/length*(type==='M'?-1:1),ny=-dx/length*(type==='M'?-1:1);
+  for(const [i,raw] of [line.from,line.to].entries()){
+   const value=Number(String(raw).replace('−','-').replace('＋','+'));
+   const sign=type==='M'?'':value>1e-8?'⊕ ':value< -1e-8?'⊖ ':'';
+   const num=String(raw).replace(/^[+＋−-]/,'');
+   const caption=`${sign}${num} ${type==='M'?'kNm':'kN'}`;
+   const point=i===0?p:q,tangent=i===0?15:-15;
+   // Keep numerical values anchored to MEMBER ENDS, not to intermediate sections.
+   // Shift toward the plotted (signed) half plane, without hiding the base frame.
+   const side=type==='M'?1:(value>1e-8?1:value< -1e-8?-1:1);
+   const normalDistance=Math.abs(value)<1e-8?24:Math.max(20,Math.min(34,Math.abs(value)*1.2+16));
+   const x=point[0]+ux*tangent+nx*side*normalDistance;
+   const y=point[1]+uy*tangent+ny*side*normalDistance;
+   chip(x,y,caption,color);
+  }
+ }
+ if(type==='M'){
+  // Maximum and curvature interval remain annotations INSIDE the plotted SVG.
+  const max=extra.find(t=>/^最大 \|M\| =/.test(t));
+  if(max){const mat=max.match(/=\s*([^（]+)(?:（(.+)）)?$/);if(mat)chip(438,17,`最大|M| ${mat[1].trim()}`,color);}
+  const quadratic=extra.find(t=>/^2次曲線：/.test(t));
+  if(quadratic&&quadratic!=='2次曲線：なし'){
+   const short=quadratic.replace(/^2次曲線：/,'');
+   chip(290,38,`2次：${short.slice(0,25)}`,'#8a612c');
+  }
+ }
+ svg.appendChild(group);
+ return svg.outerHTML;
+}
+
 async function newQuestion(){
  if(!sessionStarted||roundLoading||gradeLoading)return;
  roundLoading=true;
@@ -581,7 +645,7 @@ async function newQuestion(){
   }).join('');
   document.getElementById('factNote').textContent=`部材：${r.elements[0].horizontal?'梁':'柱'} A→B、${r.elements[1].horizontal?'梁':'柱'} B→C。実寸比例（水平・鉛直とも62px/m）。`;
   document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
-   return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${choices[type].map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${o.svg}</button>`).join('')}</div><div class="member-legend"><span><i class="hatch-swatch ${r.elements[0].horizontal?'horizontal-member':'vertical-member'}"></i>AB部材</span><span><i class="hatch-swatch ${r.elements[1].horizontal?'horizontal-member':'vertical-member'}"></i>BC部材</span></div><div class="hint-row">部材端（A・B・C）の数値は${type==='M'?'kNm（符号なし）':'kN（符号付き）'}。Mの最大値は下の注記に表示 ／候補間は同一倍率</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
+   return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${choices[type].map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${annotateChoiceSvg(o.svg,type,cfg)}</button>`).join('')}</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
   }).join('');
   const resultBox=document.getElementById('score');resultBox.hidden=true;resultBox.innerHTML='';
   const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
