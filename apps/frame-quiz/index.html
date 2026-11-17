@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14273e">
+<meta name="description" content="ラーメン構造の支持条件と荷重を見て、軸力N・せん断力Q・曲げモーメントMの正しい応力図をそれぞれ4択から選ぶ無料の構造力学クイズ。">
+<title>FRAME QUIZ｜ラーメン応力図の4択クイズ｜STRUCTURE & PLAY</title>
+<link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/frame-quiz/">
+<style>
+:root{--navy:#14273e;--text:#20344a;--muted:#698094;--line:#dbe4ec;--blue:#3975b5;--cyan:#098b8b;--orange:#d45f43;--paper:#f5f8fb;--success:#17815b;--wrong:#c65f51}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--text);font-family:Inter,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif;font-size:14px;line-height:1.65}button,select{font:inherit}button{cursor:pointer}button:focus-visible,summary:focus-visible{outline:3px solid #70ace4;outline-offset:2px}button:disabled{cursor:default}[hidden]{display:none!important}svg{font-family:inherit}.shell{width:min(1160px,calc(100% - 36px));margin-inline:auto}
+.top{background:#101e30;color:#d4e3f4;padding:11px 0;font-size:12px}.top a{color:inherit;text-decoration:none;font-weight:700}.top a:hover{text-decoration:underline}
+.mast{background:linear-gradient(125deg,#14283f 15%,#234260);color:#fff;padding:32px 0 33px}.mast-inner{display:flex;justify-content:space-between;align-items:center;gap:24px}.eyebrow{color:#96c2e9;letter-spacing:.22em;font-size:11px;font-weight:800}.mast h1{font-size:clamp(29px,4.8vw,45px);line-height:1.24;margin:7px 0 10px;letter-spacing:.005em}.mast h1 span{color:#f5b179}.mast p{margin:0;color:#d1deeb;font-size:13px}.mast-label{border:1px solid #6c8aa6;border-radius:15px;padding:15px 22px;white-space:nowrap;text-align:center;font-size:12px;font-weight:800;letter-spacing:.16em;color:#d0e6f7}.mast-label strong{display:block;font-size:33px;color:#fff;letter-spacing:.04em;line-height:1.3}
+main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 9px 30px #203b5510;padding:24px 27px;margin-bottom:20px}.board-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.step{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e7f1fa;color:#286596;font-size:15px;font-weight:900;flex:0 0 auto}.board-title h2{font-size:20px;line-height:1.3;margin:0}.board-title small{color:var(--muted);font-size:12px}.problem-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-left:auto}.pill-button{border:1px solid #c9d6e2;background:#fff;border-radius:9px;color:#234c70;font-weight:750;padding:9px 12px;font-size:12px}.pill-button:hover{background:#edf5fc}.pill-button.primary{background:#266ca6;color:#fff;border-color:#266ca6}.pill-button.primary:hover{background:#195686}.problem-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.72fr);gap:19px;align-items:stretch}.figure-box{background:#fbfdff;border:1px solid #e3eaf0;border-radius:13px;min-width:0;display:grid;place-items:center;padding:8px}.figure-box svg{display:block;width:100%;max-width:670px;height:auto}.problem-facts{background:#f6f9fc;border:1px solid #e5ecf3;border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:14px}.tag{border-radius:100px;padding:5px 10px;font-weight:800;letter-spacing:.04em;font-size:10px;color:#38628d;background:#e5eff8;display:inline-block;width:max-content}.fact-label{display:block;font-size:10px;font-weight:850;letter-spacing:.12em;color:#8a9db0}.fact-value{font-size:17px;font-weight:850;line-height:1.45;margin:3px 0 0}.fact-note{font-size:11px;color:#6c8296;line-height:1.9;border-top:1px solid #dee7ee;padding-top:12px;margin-top:auto}.instructions{font-size:12px;color:#60778b;margin:11px 0 0}.quiz-head{display:flex;align-items:center;gap:11px;margin:27px 0 15px}.quiz-head h2{font-size:22px;margin:0}.quiz-head .muted{font-size:12px;color:var(--muted)}.question-grid{display:grid;gap:18px}.question{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px 21px;box-shadow:0 6px 22px #25456509}.question-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.letter{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-weight:900;color:#fff}.question[data-type="N"] .letter{background:var(--cyan)}.question[data-type="Q"] .letter{background:var(--blue)}.question[data-type="M"] .letter{background:var(--orange)}.question-head h3{margin:0;font-size:18px}.question-head small{color:var(--muted);font-size:11px}.answer-state{margin-left:auto;color:#7c90a2;font-weight:800;font-size:12px}.choice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.choice{min-width:0;padding:10px 7px 7px;background:#fbfdff;border:2px solid #e0e9f1;border-radius:11px;color:var(--text);position:relative;text-align:left;transition:background .14s,border-color .14s,transform .14s}.choice:hover:not(:disabled){border-color:#87b2d5;background:#f0f6fd;transform:translateY(-2px)}.choice.is-selected{border-color:#2a76b3;background:#eff7fd;box-shadow:0 0 0 1px #2a76b333}.choice.is-correct{border-color:#209168!important;background:#edf9f3}.choice.is-wrong{border-color:#c7584b;background:#fff3f0}.choice-title{font-size:12px;font-weight:900;padding-left:9px}.choice svg{display:block;width:100%;height:auto}.choice-marker{font-weight:900;font-size:11px;position:absolute;right:12px;top:9px}.question[data-type="N"]{--diagram:var(--cyan)}.question[data-type="Q"]{--diagram:var(--blue)}.question[data-type="M"]{--diagram:var(--orange)}.hint-row{border-top:1px solid #eef2f6;margin-top:10px;padding-top:10px;color:#71879a;font-size:11px}.hint-row span{font-weight:750;color:#375875}.answer-feedback{padding:11px 13px;background:#f2f8fd;border-left:3px solid #69a4d1;margin:12px 0 0;border-radius:5px;font-size:12px}.answer-feedback.good{background:#eef8f3;border-color:#209168}.answer-feedback.bad{background:#fff4f1;border-color:#cc6c55}
+.actions{display:flex;gap:11px;justify-content:center;align-items:center;flex-wrap:wrap;margin:27px 0 16px}.main-button{border:0;border-radius:12px;background:#235f9b;color:#fff;font-weight:850;padding:15px 30px;font-size:15px;min-width:205px}.main-button:hover{background:#174c7f}.main-button:disabled{background:#9db0c0;opacity:.7}.secondary-button{border:1px solid #c3d3e1;color:#27547b;border-radius:12px;background:#fff;padding:14px 21px;font-weight:800}.secondary-button:hover{background:#eaf4fa}.score{background:#fff;border:1px solid #c4e1d2;border-radius:13px;padding:17px 21px;margin:19px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:16px}.score strong{font-size:24px;color:#207851}.score p{margin:0;color:#566e80;font-size:12px}.usage{background:#fff;border:1px solid var(--line);border-radius:13px;margin-top:26px;padding:17px 21px}.usage summary{font-weight:800;cursor:pointer;color:#334f6a}.usage p{font-size:12px;color:#607587}.usage ul{font-size:12px;color:#607587;line-height:2;margin-bottom:0}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#8293a2;font-size:11px;border-top:1px solid #dae4ed;padding:23px 0 8px}.footer a{color:#4d779b}
+@media(max-width:920px){.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-layout{grid-template-columns:minmax(0,1fr) minmax(210px,.62fr)}.problem-controls{margin-left:0}.board-title{align-items:flex-start}}@media(max-width:650px){.mast{padding:26px 0}.mast-label{display:none}.mast p{font-size:12px}.shell{width:calc(100% - 22px)}main{padding:11px 0 35px}.board{padding:15px 13px}.board-title h2{font-size:17px}.problem-layout{grid-template-columns:1fr;gap:9px}.problem-facts{flex-direction:row;flex-wrap:wrap;gap:12px;padding:12px}.problem-facts>div{flex:1;min-width:130px}.fact-value{font-size:14px}.fact-note{margin-top:0;min-width:100%;padding-top:7px}.question{padding:14px 10px}.question-head h3{font-size:15px}.question-head small{display:none}.question-head{gap:8px}.choice-grid{gap:7px}.choice{padding:8px 2px 3px}.choice-title{padding-left:7px}.choice-marker{right:6px;top:7px}.quiz-head{flex-wrap:wrap;margin:21px 0 12px}.quiz-head h2{font-size:18px}.quiz-head .muted{width:100%}.actions{gap:8px}.main-button,.secondary-button{width:100%}.figure-box{padding:0}.hint-row{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="top"><div class="shell"><a href="../../index.html#apps">← STRUCTURE &amp; PLAY に戻る</a></div></nav>
+<header class="mast"><div class="shell mast-inner"><div><div class="eyebrow">FRAME LAB / STRUCTURAL QUIZ</div><h1>ラーメン <span>応力図クイズ</span></h1><p>骨組と荷重を見て考える。N・Q・M図、それぞれの正解を4択から選ぼう。</p></div><div class="mast-label">QUIZ<br><strong>N · Q · M</strong>4 CHOICES EACH</div></div></header>
+<main class="shell">
+  <section class="board" aria-labelledby="problemTitle">
+    <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">骨組と荷重条件</h2><small>この図に生じる断面力を考えよう</small></div><div class="problem-controls"><select id="difficulty" class="pill-button" aria-label="難易度"><option value="basic">初級</option><option value="standard" selected>中級</option><option value="advanced">上級</option></select><button id="nextTop" type="button" class="pill-button">別の問題を出す ↻</button></div></div>
+    <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note">部材：左柱 A→B、梁 B→C、右柱 D→C。<br>線形弾性の平面ラーメンを剛性法で解析しています。</div></div></div>
+    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。図は模式図です。</p>
+  </section>
+  <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">各問の A〜D から1つずつ選択（全3問）</span></div>
+  <div id="questionGrid" class="question-grid" aria-live="off"></div>
+  <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
+  <div id="score" class="score" aria-live="polite" hidden></div>
+  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは各部材の向きを「左柱 A→B」「梁 B→C」「右柱 D→C」として統一しています。各応力図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>の値を描いています。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：部材の局所 y 方向を正とし、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>支持条件の記号や符号の表し方は教材によって異なることがあります。部材の向きと符号の約束を確認してから回答してください。</p></details>
+  <div class="footer"><span>FRAME QUIZ · STRUCTURE &amp; PLAY / 学習用</span><span>断面力の計算は2次元線形弾性骨組解析に基づきます。実務の構造設計には用いないでください。</span><a href="../nqm/index.html">NQM図作成ツールへ →</a></div>
+</main>
+<script>
+'use strict';
+// 2D Euler-Bernoulli frame; global axes: x right, y up; member order AB, BC, DC.
+const MEMBERS = [[0,1],[1,2],[3,2]];
+const LOADS = {
+  middle:{name:'梁中央の集中荷重',kind:'point',pos:.5},
+  left:{name:'梁の左寄りに集中荷重',kind:'point',pos:.35},
+  right:{name:'梁の右寄りに集中荷重',kind:'point',pos:.65},
+  uniform:{name:'梁全長の等分布荷重',kind:'uniform'},
+  lateral:{name:'柱頭の水平荷重',kind:'lateral'},
+  combined:{name:'梁の集中荷重＋柱頭水平荷重',kind:'combined',pos:.5},
+  uniformLateral:{name:'梁の等分布荷重＋柱頭水平荷重',kind:'uniformLateral'}
+};
+const CASES = {
+  basic:[['middle','fixed','fixed'],['uniform','fixed','fixed'],['middle','pin','pin']],
+  standard:[['middle','fixed','fixed'],['left','fixed','fixed'],['right','fixed','fixed'],['uniform','fixed','fixed'],['lateral','fixed','fixed'],['middle','pin','pin'],['left','pin','fixed'],['uniform','fixed','pin']],
+  advanced:[['combined','fixed','fixed'],['uniformLateral','pin','fixed'],['combined','pin','pin'],['lateral','pin','pin'],['right','fixed','pin'],['uniformLateral','fixed','fixed'],['left','pin','pin']]
+};
+let state=null, round=0, lastKey=null;
+const fmt=n=>Number.isInteger(n)?String(n):n.toFixed(1);
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function matMul(A,B){return A.map(row=>B[0].map((_,j)=>row.reduce((s,a,k)=>s+a*B[k][j],0)))}
+function matVec(A,v){return A.map(row=>row.reduce((s,a,i)=>s+a*v[i],0))}
+function transpose(A){return A[0].map((_,i)=>A.map(row=>row[i]))}
+function solveLinear(M,b){
+  const n=b.length,a=M.map((row,i)=>[...row,b[i]]);let scale=Math.max(1,...M.flat().map(Math.abs));
+  for(let i=0;i<n;i++){
+    let p=i;for(let r=i+1;r<n;r++)if(Math.abs(a[r][i])>Math.abs(a[p][i]))p=r;
+    if(Math.abs(a[p][i])<scale*1e-11)throw Error('支持条件によって骨組が不安定です。');
+    [a[i],a[p]]=[a[p],a[i]];
+    const piv=a[i][i];for(let j=i;j<=n;j++)a[i][j]/=piv;
+    for(let r=i+1;r<n;r++){const t=a[r][i];for(let j=i;j<=n;j++)a[r][j]-=t*a[i][j]}
+  }
+  const x=Array(n).fill(0);for(let i=n-1;i>=0;i--){x[i]=a[i][n];for(let j=i+1;j<n;j++)x[i]-=a[i][j]*x[j]}return x;
+}
+function analyze(cfg){
+  const {w,h,kind,leftSupport,rightSupport,P,q,H}=cfg;
+  const nodes=[[0,0],[0,h],[w,h],[w,0]];const size=nodes.length*3;
+  const K=Array.from({length:size},()=>Array(size).fill(0));const F=Array(size).fill(0), elements=[];
+  if(['lateral','combined','uniformLateral'].includes(kind))F[6]+=H; // node C: Fx
+  for(let m=0;m<MEMBERS.length;m++){
+    const [i,j]=MEMBERS[m];const [x0,y0]=nodes[i],[x1,y1]=nodes[j];const L=Math.hypot(x1-x0,y1-y0),cx=(x1-x0)/L,cy=(y1-y0)/L;
+    const E=2.1e8,A=.01,I=8e-5;const a=E*A/L,b=12*E*I/L**3,c=6*E*I/L**2,d=4*E*I/L,e=2*E*I/L;
+    const k=[[a,0,0,-a,0,0],[0,b,c,0,-b,c],[0,c,d,0,-c,e],[-a,0,0,a,0,0],[0,-b,-c,0,b,-c],[0,c,e,0,-c,d]];
+    const T=[[cx,cy,0,0,0,0],[-cy,cx,0,0,0,0],[0,0,1,0,0,0],[0,0,0,cx,cy,0],[0,0,0,-cy,cx,0],[0,0,0,0,0,1]];
+    const f=Array(6).fill(0);let point=null,qy=0;
+    if(m===1){
+      if(['point','combined'].includes(kind)){
+        const xi=LOADS[kind]?.pos ?? cfg.pos ?? .5;const p=-P;
+        f[1]+=p*(1-3*xi**2+2*xi**3);f[2]+=p*L*(xi-2*xi**2+xi**3);
+        f[4]+=p*(3*xi**2-2*xi**3);f[5]+=p*L*(-(xi**2)+xi**3);
+        point={x:xi*L,Py:p};
+      }
+      if(['uniform','uniformLateral'].includes(kind)){
+        qy=-q;f[1]+=qy*L/2;f[2]+=qy*L*L/12;f[4]+=qy*L/2;f[5]-=qy*L*L/12;
+      }
+    }
+    const map=[3*i,3*i+1,3*i+2,3*j,3*j+1,3*j+2];const kg=matMul(transpose(T),matMul(k,T));const fg=matVec(transpose(T),f);
+    for(let a=0;a<6;a++){F[map[a]]+=fg[a];for(let b=0;b<6;b++)K[map[a]][map[b]]+=kg[a][b]}
+    elements.push({i,j,L,map,k,T,f,point,qy});
+  }
+  const restraints=[...(leftSupport==='fixed'?[0,1,2]:[0,1]),...(rightSupport==='fixed'?[9,10,11]:[9,10])];
+  const free=Array.from({length:size},(_,i)=>i).filter(i=>!restraints.includes(i));
+  const D=Array(size).fill(0),sol=solveLinear(free.map(i=>free.map(j=>K[i][j])),free.map(i=>F[i]));
+  free.forEach((i,j)=>D[i]=sol[j]);
+  const reactions=matVec(K,D).map((x,i)=>x-F[i]);
+  for(const el of elements){
+    const u=matVec(el.T,el.map.map(i=>D[i]));const Ku=matVec(el.k,u);el.r=Ku.map((v,i)=>v-el.f[i]);
+  }
+  const series={N:[],Q:[],M:[]};
+  for(const el of elements){
+    const n=51;const data={N:[],Q:[],M:[]};
+    for(let i=0;i<n;i++){
+      const x=el.L*i/(n-1),extraP=el.point&&x>el.point.x?el.point.Py:0;
+      const extraM=el.point&&x>el.point.x?el.point.Py*(x-el.point.x):0;
+      data.N.push(-el.r[0]);data.Q.push(el.r[1]+el.qy*x+extraP);
+      data.M.push(-el.r[2]+el.r[1]*x+el.qy*x*x/2+extraM);
+    }
+    for(const t of ['N','Q','M'])series[t].push(data[t]);
+  }
+  return {nodes,elements,D,reactions,F,series};
+}
+function cloneSeries(a){return a.map(x=>x.slice())}
+const maxAbs=s=>Math.max(1e-9,...s.flat().map(Math.abs));
+function distinctDiff(a,b){const max=Math.max(maxAbs(a),maxAbs(b));let sq=0,n=0;for(let m=0;m<a.length;m++)for(let j=0;j<a[m].length;j++){sq+=((a[m][j]-b[m][j])/max)**2;n++}return Math.sqrt(sq/n)}
+function wrongOptions(src,type){
+  const mods=[
+    ['符号をすべて逆',v=>-v],
+    ['梁だけ符号を逆',(v,m)=>m===1?-v:v],
+    ['柱だけ符号を逆',(v,m)=>m!==1?-v:v],
+    ['左柱だけ逆',(v,m)=>m===0?-v:v],
+    ['右柱だけ逆',(v,m)=>m===2?-v:v],
+    ['梁の応力ゼロ',(v,m)=>m===1?0:v],
+    ['柱の応力ゼロ',(v,m)=>m!==1?0:v],
+    ['左柱の応力ゼロ',(v,m)=>m===0?0:v],
+    ['右柱の応力ゼロ',(v,m)=>m===2?0:v],
+    ['すべての応力ゼロ',()=>0],
+    ['全体2倍',v=>2*v],
+    ['梁の値だけ2倍',(v,m)=>m===1?2*v:v],
+    ['梁の値だけ半分',(v,m)=>m===1?.5*v:v],
+    ['梁の符号を反転し2倍',(v,m)=>m===1?-2*v:v],
+    ['柱の符号を反転し2倍',(v,m)=>m!==1?-2*v:v]
+  ];
+  // For Q and M, mirroring the beam along its axis gives a distinct classic wrong shape.
+  if(type!=='N')mods.push(['梁左右の形を逆転',(v,m,j)=>m===1?src[m][src[m].length-1-j]:v]);
+  let possible=mods.map(([id,fn])=>({id,series:src.map((a,m)=>a.map((v,j)=>fn(v,m,j)))}));
+  // Prefer plausible sign errors and other meaningful changes, never allow duplicate diagrams.
+  const chosen=[{id:'正解',series:cloneSeries(src)}];
+  const threshold=type==='N'?.17:.15;
+  for(const item of possible){if(chosen.every(x=>distinctDiff(x.series,item.series)>threshold)){chosen.push(item);if(chosen.length===4)break}}
+  if(chosen.length!==4)throw Error('選択肢を生成できませんでした。');
+  return shuffle(chosen);
+}
+function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function randomConfig(){
+  const level=document.getElementById('difficulty').value;const opts=CASES[level];let pack;
+  for(let t=0;t<30;t++){const choice=opts[Math.floor(Math.random()*opts.length)];const key=choice.join('|');if(key!==lastKey||opts.length===1){pack=choice;lastKey=key;break}}
+  if(!pack)pack=opts[0];const [which,leftSupport,rightSupport]=pack;
+  const w=[5,6,7][Math.floor(Math.random()*3)],h=[3,4][Math.floor(Math.random()*2)];
+  const cfg={w,h,leftSupport,rightSupport,kind:LOADS[which].kind,pos:LOADS[which].pos||.5,P:[12,18,24][Math.floor(Math.random()*3)],q:[3,4,5][Math.floor(Math.random()*3)],H:[8,12,16][Math.floor(Math.random()*3)]};
+  if(which==='left'||which==='right')cfg.pos=LOADS[which].pos;
+  return cfg;
+}
+function svgBase(nodes,W=360,H=190){const x1=94,x2=270,yTop=34,yBase=156;const pts=[[x1,yBase],[x1,yTop],[x2,yTop],[x2,yBase]];return pts}
+function drawShape(cfg){
+  const x1=130,x2=441,yTop=73,yBase=262;const left=cfg.leftSupport,right=cfg.rightSupport;
+  const support=(x,type)=>type==='fixed'?`<path d="M${x-29},${yBase+5}h58" stroke="#41576b" stroke-width="5"/><g stroke="#95a5b6" stroke-width="2">${Array.from({length:9},(_,i)=>`<path d="M${x-27+i*7},${yBase+12}l-8,11"/>`).join('')}</g>`:`<path d="M${x},${yBase}l-20,28h40z" fill="#d5e5f1" stroke="#506c85" stroke-width="2.8"/><path d="M${x-25},${yBase+31}h50" stroke="#506c85" stroke-width="2.3"/>`;
+  const arrow=(xa,ya,xb,yb,color,label,anchor='middle')=>`<path d="M${xa},${ya}L${xb},${yb}" stroke="${color}" stroke-width="3.2" fill="none"/><path d="M${xb},${yb}l${xa===xb?-7:-11},${ya===yb?-7:-9} ${xa===xb?14:0},${ya===yb?0:18}z" fill="${color}"/>${label?`<text x="${(xa+xb)/2}" y="${Math.min(ya,yb)-11}" text-anchor="${anchor}" fill="${color}" font-size="14" font-weight="800">${escapeHTML(label)}</text>`:''}`;
+  let loads='';
+  if(['point','combined'].includes(cfg.kind)){
+    const x=x1+(x2-x1)*cfg.pos;
+    loads+=`<path d="M${x},${yTop-70}v70" stroke="#d55f41" stroke-width="3.5"/><path d="M${x-10},${yTop-14}l10,14 10,-14" stroke="#d55f41" stroke-width="3.5" fill="none"/><text x="${x+13}" y="${yTop-43}" fill="#c84f35" font-size="16" font-weight="800">P=${cfg.P} kN</text>`;
+  }
+  if(['uniform','uniformLateral'].includes(cfg.kind)){
+    loads+=`<path d="M${x1},${yTop-52}H${x2}" stroke="#d55f41" stroke-width="3"/>`;
+    for(let i=0;i<8;i++){const x=x1+(x2-x1)*i/7;loads+=`<path d="M${x},${yTop-49}V${yTop-3}m-6,-10 6,10 6,-10" stroke="#d55f41" stroke-width="2.5" fill="none"/>`}
+    loads+=`<text x="${(x1+x2)/2}" y="${yTop-63}" text-anchor="middle" fill="#c84f35" font-size="16" font-weight="800">w=${cfg.q} kN/m</text>`;
+  }
+  if(['lateral','combined','uniformLateral'].includes(cfg.kind)){
+    const y=yTop+18;loads+=`<path d="M${x2-2},${y}h69m-13,-8 13,8 -13,8" stroke="#d55f41" fill="none" stroke-width="3"/><text x="${x2+36}" y="${y-13}" text-anchor="middle" fill="#c84f35" font-size="16" font-weight="800">H=${cfg.H} kN</text>`;
+  }
+  return `<svg viewBox="0 0 600 333" role="img" aria-label="門形ラーメン。左柱A-B、梁B-C、右柱D-C。支持条件と荷重は図示"><rect x="1" y="1" width="598" height="331" rx="14" fill="#fbfdff"/><path d="M${x1},${yBase}V${yTop}H${x2}V${yBase}" fill="none" stroke="#263f55" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>${support(x1,left)}${support(x2,right)}${loads}<g fill="#1c3c56" font-weight="900" font-size="18"><text x="${x1-18}" y="${yBase-8}">A</text><text x="${x1-17}" y="${yTop-10}">B</text><text x="${x2+12}" y="${yTop-10}">C</text><text x="${x2+12}" y="${yBase-7}">D</text></g><g fill="none" stroke="#91a6b8" stroke-width="1.3"><path d="M${x1},${yBase+46}H${x2}"/><path d="M${x1},${yBase+40}v12M${x2},${yBase+40}v12"/><path d="M${x1-60},${yBase}V${yTop}"/><path d="M${x1-66},${yBase}h12M${x1-66},${yTop}h12"/></g><g font-size="14" font-weight="700" fill="#6e8293"><text x="${(x1+x2)/2}" y="${yBase+64}" text-anchor="middle">${cfg.w} m</text><text x="${x1-71}" y="${(yTop+yBase)/2}" text-anchor="middle" transform="rotate(-90 ${x1-71} ${(yTop+yBase)/2})">${cfg.h} m</text></g></svg>`;
+}
+function renderDiagram(series,type,sharedMax){
+  const nodes=svgBase();const segs=[[0,1],[1,2],[3,2]];const maxVal=Math.max(sharedMax,1e-10);const gain=30/maxVal;
+  const colored=[];
+  for(let m=0;m<3;m++){
+    const [i,j]=segs[m],a=nodes[i],b=nodes[j],dx=b[0]-a[0],dy=b[1]-a[1],length=Math.hypot(dx,dy),nx=dy/length,ny=-dx/length;
+    const ar=series[m],base=ar.map((v,k)=>[a[0]+dx*k/(ar.length-1),a[1]+dy*k/(ar.length-1)]);
+    const bound=ar.map((v,k)=>[base[k][0]+nx*v*gain,base[k][1]+ny*v*gain]);
+    const path=([first,...rest])=>`M${first[0].toFixed(2)},${first[1].toFixed(2)} `+rest.map(p=>`L${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' ');
+    colored.push(`<path d="${path([...base,...bound.slice().reverse()])} Z" fill="var(--diagram)" fill-opacity=".15" stroke="none"/><path d="${path(bound)}" fill="none" stroke="var(--diagram)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`);
+  }
+  return `<svg viewBox="0 0 360 190" role="img" aria-label="${type}図の候補"><path d="M94 156V34H270V156" fill="none" stroke="#a5b5c2" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 3"/>${colored.join('')}<g fill="#668093" font-weight="750" font-size="11"><text x="78" y="169">A</text><text x="76" y="28">B</text><text x="277" y="28">C</text><text x="278" y="169">D</text></g></svg>`;
+}
+function buildChoice(type,opts,idx,sharedMax){
+  const letters='ABCD';return opts.map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-label="${type}図 選択肢 ${letters[j]}" aria-pressed="false"><span class="choice-title">${letters[j]}</span><span class="choice-marker"></span>${renderDiagram(o.series,type,sharedMax)}</button>`).join('');
+}
+function explain(type,cfg){
+  if(type==='N')return 'N図は部材の軸方向の力を示します。軸方向の分布荷重がないため、この問題の各部材では一定値となります。引張が正、圧縮が負です。';
+  if(type==='Q'){
+    if(['point','combined'].includes(cfg.kind))return 'Q図は集中荷重の位置で段差が生じます。柱・梁の向きと、水平荷重によるせん断力にも注目してください。';
+    if(['uniform','uniformLateral'].includes(cfg.kind))return '梁に等分布荷重が作用するため、梁のQ図は直線的に変化します。柱では部材途中に荷重がないため一定値です。';
+    return '部材途中に横荷重がないので、各部材のせん断力は一定です。骨組全体の力のつり合いを考えます。';
+  }
+  if(['uniform','uniformLateral'].includes(cfg.kind))return '梁の等分布荷重により、梁のM図は2次曲線（放物線）になります。柱のM図は直線的に変化します。';
+  if(['point','combined'].includes(cfg.kind))return '梁のM図は集中荷重位置で折れ曲がる区分的な直線です。M図の傾きはQ図と対応します。';
+  return '部材途中に分布荷重や集中横荷重がないので、各部材のM図は直線状です。節点の剛接合による端部曲げモーメントに注目します。';
+}
+function newQuestion(){
+  let cfg,result,options;let error=null;
+  for(let attempt=0;attempt<30;attempt++){
+    try{cfg=randomConfig();result=analyze(cfg);options={};for(const t of ['N','Q','M'])options[t]=wrongOptions(result.series[t],t);error=null;break}catch(e){error=e}
+  }
+  if(error){document.getElementById('questionGrid').textContent='問題を生成できませんでした。ページを再読み込みしてください。';throw error}
+  round++;state={cfg,result,options,selected:{N:null,Q:null,M:null},graded:false};
+  document.getElementById('questionNumber').textContent='QUESTION '+String(round).padStart(2,'0');
+  document.getElementById('problemFigure').innerHTML=drawShape(cfg);
+  document.getElementById('supportDescription').textContent=`A：${cfg.leftSupport==='fixed'?'固定':'ピン'}／D：${cfg.rightSupport==='fixed'?'固定':'ピン'}`;
+  let desc=[];
+  if(['point','combined'].includes(cfg.kind))desc.push(`P = ${cfg.P} kN（梁の${Math.round(cfg.pos*100)}%位置）`);
+  if(['uniform','uniformLateral'].includes(cfg.kind))desc.push(`w = ${cfg.q} kN/m（梁全長）`);
+  if(['lateral','combined','uniformLateral'].includes(cfg.kind))desc.push(`H = ${cfg.H} kN（節点C・右向き）`);
+  document.getElementById('loadDescription').textContent=desc.join(' ＋ ');
+  document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
+    const opts=options[type],max=Math.max(...opts.map(x=>maxAbs(x.series)));
+    const name={N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type];
+    return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${name}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${buildChoice(type,opts,0,max)}</div><div class="hint-row"><span>図の正側：</span>各部材の進行方向に向かって左側／候補の描画倍率は共通</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
+  }).join('');
+  document.getElementById('score').hidden=true;document.getElementById('score').innerHTML='';const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function choose(type,idx){if(!state||state.graded)return;state.selected[type]=idx;
+  document.querySelectorAll(`.choice[data-type="${type}"]`).forEach(el=>{const yes=Number(el.dataset.choice)===idx;el.classList.toggle('is-selected',yes);el.setAttribute('aria-pressed',String(yes))});
+  document.getElementById(`state-${type}`).textContent='選択済み';const complete=['N','Q','M'].every(t=>state.selected[t]!==null);const button=document.getElementById('grade');button.disabled=!complete;button.textContent=complete?'答え合わせする':'3つ選んで答え合わせ';
+}
+function grade(){if(!state||state.graded||!['N','Q','M'].every(t=>state.selected[t]!==null))return;state.graded=true;let total=0;
+  for(const type of ['N','Q','M']){
+    const opts=state.options[type],correct=opts.findIndex(o=>o.id==='正解'),picked=state.selected[type],ok=correct===picked;if(ok)total++;
+    const field=document.querySelector(`.question[data-type="${type}"]`);
+    field.querySelectorAll('.choice').forEach(el=>{const idx=Number(el.dataset.choice);el.disabled=true;if(idx===correct){el.classList.add('is-correct');el.querySelector('.choice-marker').textContent='✓ 正解'}else if(idx===picked){el.classList.add('is-wrong');el.querySelector('.choice-marker').textContent='×'} });
+    document.getElementById(`state-${type}`).textContent=ok?'正解！':'不正解';
+    const explainText=explain(type,state.cfg);const p=document.getElementById(`feedback-${type}`);p.className='answer-feedback '+(ok?'good':'bad');p.textContent=`${ok?'正解です。':'正解は '+ 'ABCD'[correct]+' です。'} ${explainText}`;p.hidden=false;
+  }
+  const score=document.getElementById('score');score.hidden=false;score.innerHTML=`<strong>${total} / 3 正解</strong><p>${total===3?'全問正解！ 各応力図の符号や形を正しく読み取れています。':'正解図と解説を確認して、次の問題にも挑戦してみましょう。'}</p>`;
+  const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='採点済み';score.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.getElementById('questionGrid').addEventListener('click',e=>{const btn=e.target.closest('.choice');if(btn)choose(btn.dataset.type,Number(btn.dataset.choice))});
+document.getElementById('grade').addEventListener('click',grade);
+for(const id of ['nextTop','nextBottom'])document.getElementById(id).addEventListener('click',newQuestion);
+document.getElementById('difficulty').addEventListener('change',()=>{lastKey=null;newQuestion()});
+window.__FRAME_QUIZ_CORE__={analyze,wrongOptions,CASES};
+newQuestion();
+</script>
+</body>
+</html>
