@@ -25,12 +25,38 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 .filter-grid select option:disabled{color:#9aabb7}.control-note{margin:11px 0 0;color:#59778e;font-size:11px}
 @media(max-width:1100px){.filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:750px){.filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.control-board{padding:13px}.filter-grid select{font-size:13px}}
 @media(max-width:380px){.filter-grid{grid-template-columns:1fr}.controls-heading strong{font-size:16px}}
+
+/* Member-identifiable NQM diagrams and player ranking */
+.member-legend{display:flex;flex-wrap:wrap;gap:12px;color:#536f85;font-size:11px;font-weight:750;margin:6px 0 3px}
+.hatch-swatch{display:inline-block;width:24px;height:13px;border:1px solid #90a7b6;border-radius:2px;margin-right:5px;vertical-align:middle;background:repeating-linear-gradient(125deg,transparent 0 5px,#478d99 6px 7px,transparent 8px 13px)}
+.hatch-swatch.bc{background:repeating-linear-gradient(55deg,transparent 0 5px,#478d99 6px 7px,transparent 8px 13px)}
+.player-gate{border:1px solid #bfd6e8;background:linear-gradient(130deg,#e9f4fb,#fff);border-radius:16px;padding:20px 24px;margin-bottom:18px}
+.player-gate h2{margin:0 0 4px;font-size:21px}.player-gate p{margin:2px 0 12px;color:#647c90;font-size:12px}
+.player-form{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.player-form input{font:inherit;font-size:16px;border:1px solid #a3c2d8;border-radius:9px;padding:12px 13px;min-width:190px;max-width:100%;flex:1;color:#163b58;background:white}
+.player-form button{border:0;border-radius:9px;background:#23659d;color:white;padding:12px 25px;font-weight:850;cursor:pointer}
+.player-error{color:#a43f35!important;font-weight:750}.profile-bar{background:#e8f2f9;border:1px solid #bdd2e2;border-radius:12px;margin-bottom:15px;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:#285274}
+.profile-bar strong{font-size:16px}.profile-bar button{background:white;border:1px solid #a9c5d8;border-radius:8px;padding:7px 11px;color:#315c7c;cursor:pointer}
+.streak-values{font-variant-numeric:tabular-nums;font-weight:850;color:#175e8e}
+.leaderboard-panel{background:white;border:1px solid #cbdce8;border-radius:15px;padding:21px;margin:20px 0 25px}
+.leaderboard-panel h2{margin:0;font-size:22px}.leaderboard-panel p{font-size:12px;color:#647d91;margin:5px 0 11px}
+.rank-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.rank-tabs button{border:1px solid #b8cbd9;border-radius:8px;padding:9px 13px;background:white;color:#315d7c;font-weight:750;cursor:pointer}.rank-tabs button.active{background:#214e76;color:white;border-color:#214e76}
+.rank-table{width:100%;border-collapse:collapse;font-size:13px}.rank-table th,.rank-table td{padding:9px 11px;border-bottom:1px solid #e4ebf1;text-align:left}.rank-table th{background:#f1f6fa;color:#55758a;font-size:11px}.rank-table td:last-child,.rank-table th:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:750}
+.rank-empty{padding:19px 11px;color:#7c8e9e;font-size:13px}.rank-me{background:#eaf6fb}.leaderboard-warning{font-size:11px!important;color:#6c8193!important;margin:10px 0 0!important}
+@media(max-width:650px){.player-gate{padding:15px}.player-form button{width:100%}.leaderboard-panel{padding:13px}.profile-bar{padding:9px}}
 </style>
 </head>
 <body>
 <nav class="top"><div class="shell"><a href="../../index.html#apps">← STRUCTURE &amp; PLAY に戻る</a></div></nav>
 <header class="mast"><div class="shell mast-inner"><div><div class="eyebrow">FRAME LAB / STRUCTURAL QUIZ</div><h1>静定片持ちラーメン <span>応力図クイズ</span></h1><p>長さは5 m以下、荷重位置は整数。荷重条件を選んで、N・Q・M図を4択から解こう。</p></div><div class="mast-label">QUIZ<br><strong>N · Q · M</strong>4 CHOICES EACH</div></div></header>
 <main class="shell">
+  <section class="player-gate" id="nicknameGate" aria-labelledby="playerTitle">
+    <h2 id="playerTitle">ニックネームでチャレンジ</h2>
+    <p>最初にニックネームを入力して開始してください。N・Q・Mの3つを全問正解すると「1問連続正解」として記録します。</p>
+    <form class="player-form" id="playerForm"><label for="nickname" style="font-weight:800">ニックネーム</label><input id="nickname" name="nickname" type="text" autocomplete="nickname" maxlength="16" required placeholder="例：構造マスター"><button type="submit">プレイ開始 →</button></form>
+    <p id="playerError" class="player-error" role="alert" hidden></p>
+  </section>
+  <div id="gameContent" hidden>
+  <div class="profile-bar"><span>プレイヤー：<strong id="currentNickname">—</strong></span><span class="streak-values">連続全問正解 <strong id="currentStreak">0</strong> 問 ／ 自己最高 <strong id="personalBest">0</strong> 問</span><button type="button" id="changeNickname">ニックネーム変更</button></div>
   <section class="control-board" aria-label="問題選択ゲージ">
     <div class="controls-heading"><strong>問題選択</strong><span>構造形式・骨組パターン・荷重形式・荷重数・支持位置を選択</span></div>
     <div class="filter-grid">
@@ -40,7 +66,7 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
       <label>荷重数<select id="loadCount"><option value="random">ランダム（1〜3個）</option><option value="1" selected>1個</option><option value="2">2個</option><option value="3">3個</option></select></label>
       <label>固定端位置<select id="supportSide"><option value="random">左右ランダム</option><option value="left">左側</option><option value="right">右側</option></select></label>
     </div>
-    <p class="control-note">長さ・荷重位置は整数、各部材の長さは最大5 m。骨組A/Bと左右反転から出題します。単純ばり系・3ピン系は今後追加します。※ランダム構造は現在、片持ちラーメンのみです。</p>
+    <p class="control-note">長さ・荷重位置は整数、各部材の長さは最大5 m。骨組A/Bと左右反転から出題します。AB・BCのいずれかが全域でN＝Q＝M＝0となる問題は出題しません。単純ばり系・3ピン系は今後追加します。※ランダム構造は現在、片持ちラーメンのみです。</p>
   </section>
   <section class="board" aria-labelledby="problemTitle">
     <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">片持ちラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button></div></div>
@@ -52,6 +78,18 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
   <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「A→B→C」として統一しています。パターンAは柱AB・梁BC、パターンBは梁AB・手すり状の柱BCです。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には部材端の値・極値点での大きさと最大絶対値を表示し、2次曲線の区間を明示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。骨組図の水平・鉛直の長さは同じ縮尺で描きます。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
+  </div><!-- gameContent -->
+  <section id="leaderboard" class="leaderboard-panel" aria-labelledby="leaderboardTitle">
+    <h2 id="leaderboardTitle">連続全問正解ランキング　TOP 10</h2>
+    <p>1問につきN・Q・Mすべて正解で+1。不正解・未解答で次の問題へ進むと連続記録は0に戻ります。</p>
+    <div class="rank-tabs" role="group" aria-label="構造形式別ランキング">
+      <button type="button" class="active" data-rank-category="cantilever" aria-pressed="true">片持ちラーメン</button>
+      <button type="button" data-rank-category="simple" aria-pressed="false">単純ラーメン（準備中）</button>
+      <button type="button" data-rank-category="threepin" aria-pressed="false">3ピンラーメン（準備中）</button>
+    </div>
+    <div id="rankingContent" aria-live="polite"></div>
+    <p class="leaderboard-warning">現在は、この端末・このブラウザ内に保存したニックネームのランキングです。他の端末と共有する全国・クラス共通ランキングには、別途サーバーの設定が必要です。</p>
+  </section>
   <div class="footer"><span>FRAME QUIZ · STRUCTURE &amp; PLAY / 学習用</span><span>静定構造の釣合い式に基づく学習用の問題です。実務の構造設計には用いないでください。</span><a href="../nqm/index.html">NQM図作成ツールへ →</a></div>
 </main>
 <script>
@@ -185,6 +223,23 @@ function optionForce(opt,type,r,m,x,side='left'){
 function breakpoints(cfg,m=1){
  const g=worldGeometry(cfg),len=g.members[m].L;
  return uniq([0,len,...cfg.loads.filter(ld=>ld.member===m).flatMap(ld=>ld.type==='udl'?[ld.start,ld.end]:[ld.x])]);
+}
+// 教材として意味のある問題だけを出題する。
+// AB・BCの各部材について、開区間内の少なくとも1点でN/Q/Mのいずれかが非0。
+// 荷重の作用点そのものにのみ生じる不連続値は「部材中の応力」と誤認しない。
+function hasNonzeroInternalForce(r,m){
+ const cuts=breakpoints(r.cfg,m);
+ for(const [a,b] of adjacent(cuts)){
+  if(b-a<EPS)continue;
+  for(const ratio of [.18,.50,.82]){
+   const x=a+(b-a)*ratio;
+   if(['N','Q','M'].some(type=>Math.abs(r.force(type,m,x))>1e-7))return true;
+  }
+ }
+ return false;
+}
+function isUsefulFrameProblem(r){
+ return r.elements.every((_,m)=>hasNonzeroInternalForce(r,m));
 }
 function checkpoints(type,r){
  const out=[];
@@ -339,6 +394,7 @@ function quadraticIntervals(opt,r){
  }
  return out;
 }
+let diagramRenderSequence=0;
 function diagram(opt,type,shared,r){
  // すべての骨組パターンについて、部材のピクセル/mを共通にする。
  const cfg=r.cfg,g=svgGeometry(cfg,36,160,400,253),col={N:'#118f88',Q:'#3679ba',M:'#cf6445'}[type];
@@ -351,6 +407,8 @@ function diagram(opt,type,shared,r){
  const path=pp=>pp.map((p,i)=>`${i?'L':'M'}${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' ');
  const V=(m,x,side='left')=>optionForce(opt,type,r,m,x,side);
  const shapes=[];
+ const patternId=type.toLowerCase()+'-'+(++diagramRenderSequence);
+ const hatchDefs=`<defs><pattern id="hatch-${patternId}-ab" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M-3 3l7-7M0 10l10-10M7 13l7-7" stroke="${col}" stroke-width="1" opacity=".65"/></pattern><pattern id="hatch-${patternId}-bc" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M-3 7l7 7M0 0l10 10M7-3l7 7" stroke="${col}" stroke-width="1" opacity=".65"/></pattern></defs>`;
  for(let m=0;m<2;m++){
   for(const [start,end] of adjacent(breakpoints(cfg,m))){
    const baseline=[],curve=[];
@@ -358,7 +416,8 @@ function diagram(opt,type,shared,r){
     const x=start+(end-start)*j/36,side=j===0?'right':j===36?'left':'right';
     baseline.push(locate(m,x,0));curve.push(locate(m,x,V(m,x,side)));
    }
-   shapes.push(`<path d="${path([...baseline,...curve.slice().reverse()])}Z" fill="${col}" fill-opacity=".12"/><path d="${path(curve)}" fill="none" stroke="${col}" stroke-width="3"/>`);
+   const outline=path([...baseline,...curve.slice().reverse()]);
+   shapes.push(`<path d="${outline}Z" fill="${col}" fill-opacity=".08"/><path d="${outline}Z" fill="url(#hatch-${patternId}-${m===0?'ab':'bc'})"/><path d="${path(curve)}" fill="none" stroke="${col}" stroke-width="3"/>`);
   }
  }
  for(const ld of cfg.loads){
@@ -368,22 +427,23 @@ function diagram(opt,type,shared,r){
   }
  }
  const text=(x,y,s,sz=15,anchor='start',color='#294b60')=>`<text x="${x}" y="${y}" font-size="${sz}" font-weight="750" text-anchor="${anchor}" fill="${color}" paint-order="stroke" stroke="#fff" stroke-width="3">${HTML(s)}</text>`;
- const unit=type==='M'?'kN·m':'kN',rows=[];
+ const unit=type==='M'?'kNm':'kN',rows=[];
+ const measure=v=>`${type==='M'?fmt(v):signed(v)} ${unit}`;
  for(let m=0;m<2;m++){
-  const len=r.elements[m].L,fmtV=v=>type==='M'?fmt(v):signed(v);
-  rows.push(`${r.elements[m].name}：始端 ${fmtV(V(m,0,'right'))} → 終端 ${fmtV(V(m,len,'left'))} ${unit}`);
+  const len=r.elements[m].L;
+  rows.push(`${r.elements[m].name}：始端 ${measure(V(m,0,'right'))} → 終端 ${measure(V(m,len,'left'))}`);
  }
  if(type==='N')rows.push('引張（＋） ／ 圧縮（−）');
  if(type==='Q'){
   for(const ld of cfg.loads.filter(x=>x.type==='point')){
    const l=V(ld.member,ld.x,'left'),rr=V(ld.member,ld.x,'right');
-   if(Math.abs(l-rr)>EPS)rows.push(`${r.elements[ld.member].name} s=${ld.x}m：左 ${signed(l)} ／ 右 ${signed(rr)} kN`);
+   if(Math.abs(l-rr)>EPS)rows.push(`${r.elements[ld.member].name} s=${ld.x}m：左 ${signed(l)} kN ／ 右 ${signed(rr)} kN`);
   }
  }
  if(type==='M'){
-  for(const ld of cfg.loads.filter(x=>x.type==='moment'))rows.push(`${r.elements[ld.member].name} s=${ld.x}m：左 ${fmt(V(ld.member,ld.x,'left'))} ／ 右 ${fmt(V(ld.member,ld.x,'right'))} kN·m`);
+  for(const ld of cfg.loads.filter(x=>x.type==='moment'))rows.push(`${r.elements[ld.member].name} s=${ld.x}m：左 ${fmt(V(ld.member,ld.x,'left'))} kNm ／ 右 ${fmt(V(ld.member,ld.x,'right'))} kNm`);
   const critical=criticalM(opt,r);
-  rows.push(`最大 |M| = ${fmt(critical.abs.value)} kN·m（${critical.label}）`);
+  rows.push(`最大 |M| = ${fmt(critical.abs.value)} kNm（${critical.label}）`);
   const quad=quadraticIntervals(opt,r);
   rows.push(quad.length?'2次曲線：'+quad.map(z=>`${r.elements[z.m].name} ${z.start}〜${z.end}m`).join('、'):'2次曲線：なし');
   for(const z of quad){
@@ -398,22 +458,110 @@ function diagram(opt,type,shared,r){
  const vals=[];
  for(let m=0;m<2;m++){
   const len=r.elements[m].L,ref=g.pos(m,len/2),v=V(m,len/2);
-  vals.push(text(ref[0]+(cfg.orientation==='left'?19:-43),ref[1]-(r.elements[m].horizontal?22:0),type==='M'?fmt(v):signed(v),15));
+  vals.push(text(ref[0]+(cfg.orientation==='left'?19:-43),ref[1]-(r.elements[m].horizontal?22:0),measure(v),13));
  }
  const base=289,height=base+rows.length*25+17;
  const chartLabels=g.nodes.map((p,i)=>text(p[0]+(i===2?10:-14),p[1]+(i===0?19:-12),'ABC'[i],15));
+ // Solid member-name tags identify which region belongs to AB or BC even if an area is zero.
+ const memberLabels=g.segments.map((seg,m)=>{
+  const a=seg[0],b=seg[1],mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+  const horizontal=Math.abs(b[0]-a[0])>Math.abs(b[1]-a[1]);
+  const x=mid[0]+(horizontal?0:(cfg.orientation==='left'?-28:26));
+  const y=mid[1]+(horizontal?23:-5);
+  return `<rect x="${x-17}" y="${y-14}" width="34" height="19" rx="5" fill="white" fill-opacity=".92" stroke="${col}" stroke-width=".8"/>${text(x,y,m===0?'AB':'BC',13,'middle','#23435b')}`;
+ });
  const info=rows.map((val,i)=>text(16,base+22+i*25,val,i>4?14:15));
- return `<svg class="numeric-diagram" viewBox="0 0 560 ${height}" role="img" aria-label="${type}図、${cfg.pattern}形片持ちラーメン"><path d="${path(g.nodes)}" fill="none" stroke="#9fb3c2" stroke-dasharray="4 4" stroke-width="3"/>${shapes.join('')}${vals.join('')}${chartLabels.join('')}<rect x="9" y="${base}" width="542" height="${rows.length*25+8}" rx="8" fill="#eff4f8"/>${info.join('')}</svg>`;
+ return `<svg class="numeric-diagram" viewBox="0 0 560 ${height}" role="img" aria-label="${type}図、${cfg.pattern}形片持ちラーメン">${hatchDefs}<path d="${path(g.nodes)}" fill="none" stroke="#9fb3c2" stroke-dasharray="4 4" stroke-width="3"/>${shapes.join('')}${vals.join('')}${chartLabels.join('')}${memberLabels.join('')}<rect x="9" y="${base}" width="542" height="${rows.length*25+8}" rx="8" fill="#eff4f8"/>${info.join('')}</svg>`;
 }
 function explanation(type,cfg,r){
  if(type==='N')return '切断面の自由端側にある外力を部材軸方向に投影してNを求めます。引張を正、圧縮を負とします。';
  if(type==='Q')return '自由端側の合力から、部材に垂直な成分を取り出します。集中荷重位置で段差、等分布荷重区間では直線変化が生じます。';
  return '任意断面より自由端側の外力が作るモーメントを合計します。集中モーメント位置では段差、等分布荷重区間では2次曲線になります。表示値は符号を省いています。';
 }
+
+// Nickname-based local leaderboard. Only the cantilever category accepts results until other structures ship.
+const RANK_KEY='frameQuiz:localLeaderboard:v1',NICK_KEY='frameQuiz:nickname:v1';
+const RANK_CATEGORY={cantilever:'片持ちラーメン',simple:'単純ラーメン',threepin:'3ピンラーメン'};
+let playerName='',activeStreak=0,activeCategory='cantilever',rankCategory='cantilever',sessionStarted=false;
+const blankRanks=()=>({cantilever:[],simple:[],threepin:[]});
+let ranks=blankRanks();
+function loadRanks(){
+ try{
+  const raw=JSON.parse(localStorage.getItem(RANK_KEY)||'{}');
+  const safe=blankRanks();
+  for(const cat of Object.keys(safe)){
+   const a=Array.isArray(raw[cat])?raw[cat]:[];
+   safe[cat]=a.filter(e=>e&&typeof e.name==='string'&&e.name.trim()&&Number.isSafeInteger(e.best)&&e.best>0)
+   .map(e=>({name:e.name.slice(0,16),best:Math.min(e.best,100000),at:Number(e.at)||0}))
+   .sort((a,b)=>b.best-a.best||a.at-b.at).slice(0,100);
+  }
+  return safe;
+ }catch(_){return blankRanks();}
+}
+function saveRanks(){try{localStorage.setItem(RANK_KEY,JSON.stringify(ranks))}catch(_){}}
+function personalBest(cat=activeCategory){return ranks[cat]?.find(e=>e.name===playerName)?.best||0;}
+function updateStreakBar(){
+ document.getElementById('currentNickname').textContent=playerName||'—';
+ document.getElementById('currentStreak').textContent=activeStreak;
+ document.getElementById('personalBest').textContent=personalBest();
+}
+function renderRankings(){
+ document.querySelectorAll('[data-rank-category]').forEach(btn=>{
+  const chosen=btn.dataset.rankCategory===rankCategory;
+  btn.classList.toggle('active',chosen);btn.setAttribute('aria-pressed',String(chosen));
+ });
+ const entries=ranks[rankCategory].slice(0,10),area=document.getElementById('rankingContent');
+ if(entries.length===0){area.innerHTML=`<div class="rank-empty">${RANK_CATEGORY[rankCategory]}：まだ記録がありません。${rankCategory!=='cantilever'?'（出題機能は今後追加予定）':''}</div>`;return;}
+ area.innerHTML=`<table class="rank-table"><thead><tr><th scope="col">順位</th><th scope="col">ニックネーム</th><th scope="col">連続全問正解</th></tr></thead><tbody>${entries.map((entry,i)=>`<tr class="${sessionStarted&&entry.name===playerName?'rank-me':''}"><td>${i+1}位</td><td>${HTML(entry.name)}</td><td>${entry.best} 問</td></tr>`).join('')}</tbody></table>`;
+}
+function registerPerfect(){
+ activeStreak++;
+ const existing=ranks[activeCategory].find(e=>e.name===playerName);
+ if(!existing){ranks[activeCategory].push({name:playerName,best:activeStreak,at:Date.now()});}
+ else if(activeStreak>existing.best){existing.best=activeStreak;existing.at=Date.now();}
+ ranks[activeCategory].sort((a,b)=>b.best-a.best||a.at-b.at);
+ ranks[activeCategory]=ranks[activeCategory].slice(0,100);
+ saveRanks();updateStreakBar();renderRankings();
+}
+function resetStreak(){if(activeStreak!==0){activeStreak=0;updateStreakBar()}}
+function onStart(e){
+ e.preventDefault();
+ const nick=document.getElementById('nickname').value.trim().replace(/\s+/g,' ');
+ const err=document.getElementById('playerError');
+ if(!nick||[...nick].length>16||/[<>\u0000-\u001f]/.test(nick)){
+  err.textContent='ニックネームを1〜16文字で入力してください。';err.hidden=false;return;
+ }
+ err.hidden=true;playerName=nick;activeStreak=0;sessionStarted=true;activeCategory='cantilever';
+ try{localStorage.setItem(NICK_KEY,nick)}catch(_){}
+ document.getElementById('nicknameGate').hidden=true;
+ document.getElementById('gameContent').hidden=false;
+ updateStreakBar();renderRankings();newQuestion();
+}
+function changePlayer(){
+ sessionStarted=false;playerName='';resetStreak();
+ document.getElementById('nicknameGate').hidden=false;
+ document.getElementById('gameContent').hidden=true;
+ document.getElementById('nickname').focus();
+}
+document.getElementById('playerForm').addEventListener('submit',onStart);
+document.getElementById('changeNickname').addEventListener('click',changePlayer);
+for(const tab of document.querySelectorAll('[data-rank-category]'))tab.addEventListener('click',()=>{rankCategory=tab.dataset.rankCategory;renderRankings()});
+window.addEventListener('storage',e=>{if(e.key===RANK_KEY){ranks=loadRanks();updateStreakBar();renderRankings()}});
+ranks=loadRanks();
+try{document.getElementById('nickname').value=localStorage.getItem(NICK_KEY)||''}catch(_){}
+renderRankings();
+
 function newQuestion(){
+ if(!sessionStarted)return;
+ if(state&&!state.graded)resetStreak();
  const settings=readSettings();let cfg,r,opts,err;
  for(let i=0;i<100;i++){
-  try{cfg=randomConfig(settings);r=analyze(cfg);opts={N:alternatives('N',r),Q:alternatives('Q',r),M:alternatives('M',r)};err=null;break}
+  try{
+   cfg=randomConfig(settings);r=analyze(cfg);
+   if(!isUsefulFrameProblem(r))throw Error('部材全域で応力がゼロとなる骨組を除外しました');
+   opts={N:alternatives('N',r),Q:alternatives('Q',r),M:alternatives('M',r)};
+   err=null;break;
+  }
   catch(e){err=e}
  }
  if(err){document.getElementById('questionGrid').textContent=`問題生成エラー：${err.message}`;return}
@@ -432,7 +580,7 @@ function newQuestion(){
  document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
   const options=opts[type],marks=checkpoints(type,r);
   const shared=Math.max(1,...options.flatMap(o=>marks.map(({m,x,side})=>Math.abs(optionForce(o,type,r,m,x,side)))));
-  return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${options.map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${diagram(o,type,shared,r)}</button>`).join('')}</div><div class="hint-row">単位：${type==='M'?'kN·m（数値は符号なし）':'kN（符号付き）'} ／候補間は同一倍率 ／ 部材方向 AB・BC</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
+  return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${options.map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${diagram(o,type,shared,r)}</button>`).join('')}</div><div class="member-legend"><span><i class="hatch-swatch"></i>AB部材</span><span><i class="hatch-swatch bc"></i>BC部材</span></div><div class="hint-row">数値ごとに${type==='M'?'kNm（符号なし）':'kN（符号付き）'}を表示 ／候補間は同一倍率</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
  }).join('');
  const score=document.getElementById('score');score.hidden=true;score.innerHTML='';
  const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
@@ -458,16 +606,17 @@ function grade(){
   const msg=document.getElementById(`feedback-${type}`);msg.className='answer-feedback '+(pass?'good':'bad');
   msg.textContent=(pass?'正解です。':`正解は${'ABCD'[correct]}です。`)+explanation(type,state.cfg,state.r);msg.hidden=false;
  }
+ if(score===3)registerPerfect();else resetStreak();
  const R=state.r.reactions,b=document.getElementById('score');b.hidden=false;
- b.innerHTML=`<strong>${score} / 3 正解</strong><p>固定端反力（全体のつり合い）：Ax=${signed(R.Ax)} kN、Ay=${signed(R.Ay)} kN、MA=${signed(R.MA)} kN·m（反時計回り＋）。${score===3?'全問正解です。':'図と数値を見比べましょう。'}</p>`;
+ b.innerHTML=`<strong>${score} / 3 正解</strong><p>固定端反力（全体のつり合い）：Ax=${signed(R.Ax)} kN、Ay=${signed(R.Ay)} kN、MA=${signed(R.MA)} kN·m（反時計回り＋）。${score===3?'全問正解です。連続記録：'+activeStreak+'問。':'図と数値を見比べましょう。連続記録は0問に戻りました。'}</p>`;
  document.getElementById('grade').disabled=true;document.getElementById('grade').textContent='採点済み';b.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 document.getElementById('questionGrid').addEventListener('click',e=>{const btn=e.target.closest('.choice');if(btn)choose(btn.dataset.type,Number(btn.dataset.choice))});
 document.getElementById('grade').addEventListener('click',grade);
 for(const id of ['nextTop','nextBottom'])document.getElementById(id).addEventListener('click',newQuestion);
 for(const id of ['structureType','framePattern','loadType','loadCount','supportSide'])document.getElementById(id).addEventListener('change',newQuestion);
-window.__FRAME_QUIZ_CORE__={analyze,randomConfig,alternatives,optionForce,criticalM,diagram,breakpoints,quadraticIntervals,checkpoints,worldGeometry,svgGeometry,problemFigure,curveArrow,getState:()=>state};
-newQuestion();
+window.__FRAME_QUIZ_CORE__={analyze,randomConfig,alternatives,optionForce,criticalM,diagram,breakpoints,quadraticIntervals,checkpoints,worldGeometry,svgGeometry,problemFigure,curveArrow,isUsefulFrameProblem,hasNonzeroInternalForce,getState:()=>state};
+// ニックネーム入力後に最初の問題を生成します。
 </script>
 </body>
 </html>
