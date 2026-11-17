@@ -44,6 +44,9 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 .rank-table{width:100%;border-collapse:collapse;font-size:13px}.rank-table th,.rank-table td{padding:9px 11px;border-bottom:1px solid #e4ebf1;text-align:left}.rank-table th{background:#f1f6fa;color:#55758a;font-size:11px}.rank-table td:last-child,.rank-table th:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:750}
 .rank-empty{padding:19px 11px;color:#7c8e9e;font-size:13px}.rank-me{background:#eaf6fb}.leaderboard-warning{font-size:11px!important;color:#6c8193!important;margin:10px 0 0!important}
 @media(max-width:650px){.player-gate{padding:15px}.player-form button{width:100%}.leaderboard-panel{padding:13px}.profile-bar{padding:9px}}
+/* Online API feedback */
+.network-status{background:#fff4ee;color:#a34736;border:1px solid #e8b6a4;border-radius:10px;padding:12px 15px;font-weight:700;font-size:13px;margin:12px 0}
+.choice:disabled{cursor:default}
 </style>
 </head>
 <body>
@@ -52,12 +55,12 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 <main class="shell">
   <section class="player-gate" id="nicknameGate" aria-labelledby="playerTitle">
     <h2 id="playerTitle">ニックネームでチャレンジ</h2>
-    <p>最初にニックネームを入力して開始してください。N・Q・Mの3つを全問正解すると「1問連続正解」として記録します。</p>
+    <p>ニックネームを入力してオンラインで開始します。全員共通のランキングに名前と最高連続全問正解数が公開されます。N・Q・Mをすべて正解すると1問加算されます。</p>
     <form class="player-form" id="playerForm"><label for="nickname" style="font-weight:800">ニックネーム</label><input id="nickname" name="nickname" type="text" autocomplete="nickname" maxlength="16" required placeholder="例：構造マスター"><button type="submit">プレイ開始 →</button></form>
     <p id="playerError" class="player-error" role="alert" hidden></p>
   </section>
   <div id="gameContent" hidden>
-  <div class="profile-bar"><span>プレイヤー：<strong id="currentNickname">—</strong></span><span class="streak-values">連続全問正解 <strong id="currentStreak">0</strong> 問 ／ 自己最高 <strong id="personalBest">0</strong> 問</span><button type="button" id="changeNickname">ニックネーム変更</button></div>
+  <div class="profile-bar"><span>プレイヤー：<strong id="currentNickname">—</strong></span><span class="streak-values">連続全問正解 <strong id="currentStreak">0</strong> 問 ／ 今回の最高 <strong id="personalBest">0</strong> 問</span><button type="button" id="changeNickname">ニックネーム変更</button></div>
   <section class="control-board" aria-label="問題選択ゲージ">
     <div class="controls-heading"><strong>問題選択</strong><span>構造形式・骨組パターン・荷重形式・荷重数・支持位置を選択</span></div>
     <div class="filter-grid">
@@ -78,10 +81,11 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   <div id="questionGrid" class="question-grid" aria-live="off"></div>
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
+   <p id="networkStatus" class="network-status" role="status" hidden></p>
   <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「A→B→C」として統一しています。パターンAは柱AB・梁BC、パターンBは梁AB・手すり状の柱BCです。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には節点位置の値を表示し、最大絶対値と2次曲線の区間は下の注記に表示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。骨組図の水平・鉛直の長さは同じ縮尺で描きます。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
   </div><!-- gameContent -->
   <section id="leaderboard" class="leaderboard-panel" aria-labelledby="leaderboardTitle">
-    <h2 id="leaderboardTitle">連続全問正解ランキング　TOP 10</h2>
+    <h2 id="leaderboardTitle">オンライン連続全問正解ランキング　TOP 10</h2>
     <p>1問につきN・Q・Mすべて正解で+1。不正解・未解答で次の問題へ進むと連続記録は0に戻ります。</p>
     <div class="rank-tabs" role="group" aria-label="構造形式別ランキング">
       <button type="button" class="active" data-rank-category="cantilever" aria-pressed="true">片持ちラーメン</button>
@@ -89,7 +93,7 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
       <button type="button" data-rank-category="threepin" aria-pressed="false">3ピンラーメン（準備中）</button>
     </div>
     <div id="rankingContent" aria-live="polite"></div>
-    <p class="leaderboard-warning">現在は、この端末・このブラウザ内に保存したニックネームのランキングです。他の端末と共有する全国・クラス共通ランキングには、別途サーバーの設定が必要です。</p>
+    <p class="leaderboard-warning">ランキングはCloudflare D1で共有されています。ニックネームは全員に公開されます。ログイン認証はないため同じ名前を使う人を区別できず、順位は学習用途の参考記録です。</p>
   </section>
   <div class="footer"><span>FRAME QUIZ · STRUCTURE &amp; PLAY / 学習用</span><span>静定構造の釣合い式に基づく学習用の問題です。実務の構造設計には用いないでください。</span><a href="../nqm/index.html">NQM図作成ツールへ →</a></div>
 </main>
@@ -109,7 +113,7 @@ const dot=(a,b)=>a[0]*b[0]+a[1]*b[1];
 const cross=(a,b)=>a[0]*b[1]-a[1]*b[0];
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
 const EPS=1e-8;
-let round=0,state=null;
+let round=0;
 function readSettings(){return {
  structure:document.getElementById('structureType').value,
  pattern:document.getElementById('framePattern').value,
@@ -468,144 +472,186 @@ function explanation(type,cfg,r){
  return '任意断面より自由端側の外力が作るモーメントを合計します。集中モーメント位置では段差、等分布荷重区間では2次曲線になります。表示値は符号を省いています。';
 }
 
-// Nickname-based local leaderboard. Only the cantilever category accepts results until other structures ship.
-const RANK_KEY='frameQuiz:localLeaderboard:v1',NICK_KEY='frameQuiz:nickname:v1';
+// Online shared leaderboard. Round issuance and scorekeeping are authoritative on Cloudflare Workers.
+const API_BASE='https://frame-quiz-api.y-fujihara.workers.dev';
+const SESSION_KEY='frameQuiz:onlineSession:v1',NICK_KEY='frameQuiz:nickname:v1';
 const RANK_CATEGORY={cantilever:'片持ちラーメン',simple:'単純ラーメン',threepin:'3ピンラーメン'};
-let playerName='',activeStreak=0,activeCategory='cantilever',rankCategory='cantilever',sessionStarted=false;
-const blankRanks=()=>({cantilever:[],simple:[],threepin:[]});
-let ranks=blankRanks();
-function loadRanks(){
- try{
-  const raw=JSON.parse(localStorage.getItem(RANK_KEY)||'{}');
-  const safe=blankRanks();
-  for(const cat of Object.keys(safe)){
-   const a=Array.isArray(raw[cat])?raw[cat]:[];
-   safe[cat]=a.filter(e=>e&&typeof e.name==='string'&&e.name.trim()&&Number.isSafeInteger(e.best)&&e.best>0)
-   .map(e=>({name:e.name.slice(0,16),best:Math.min(e.best,100000),at:Number(e.at)||0}))
-   .sort((a,b)=>b.best-a.best||a.at-b.at).slice(0,100);
-  }
-  return safe;
- }catch(_){return blankRanks();}
+let playerName='',activeStreak=0,sessionBest=0,rankCategory='cantilever',sessionStarted=false;
+let sessionId='',state=null,roundLoading=false,gradeLoading=false,rankVersion=0;
+function showStatus(message=''){
+ const el=document.getElementById('networkStatus');el.hidden=!message;el.textContent=message;
 }
-function saveRanks(){try{localStorage.setItem(RANK_KEY,JSON.stringify(ranks))}catch(_){}}
-function personalBest(cat=activeCategory){return ranks[cat]?.find(e=>e.name===playerName)?.best||0;}
+async function api(path,data){
+ let res;
+ try{
+  res=await fetch(API_BASE+path,{
+   method:data===undefined?'GET':'POST',
+   headers:data===undefined?{}:{'Content-Type':'application/json'},
+   body:data===undefined?undefined:JSON.stringify(data),
+   cache:'no-store'
+  });
+ }catch(_){throw new Error('ランキングサーバーに接続できません。通信状態を確認してください。');}
+ let body;
+ try{body=await res.json()}catch(_){throw new Error('サーバーから正常な応答がありません。');}
+ if(!res.ok)throw new Error(typeof body?.error==='string'?body.error:'サーバーエラー '+res.status);
+ return body;
+}
+function rememberSession(){
+ try{sessionStorage.setItem(SESSION_KEY,JSON.stringify({sessionId,playerName,sessionBest}))}catch(_){}
+}
 function updateStreakBar(){
  document.getElementById('currentNickname').textContent=playerName||'—';
  document.getElementById('currentStreak').textContent=activeStreak;
- document.getElementById('personalBest').textContent=personalBest();
+ document.getElementById('personalBest').textContent=sessionBest;
 }
-function renderRankings(){
+async function renderRankings(){
  document.querySelectorAll('[data-rank-category]').forEach(btn=>{
   const chosen=btn.dataset.rankCategory===rankCategory;
   btn.classList.toggle('active',chosen);btn.setAttribute('aria-pressed',String(chosen));
  });
- const entries=ranks[rankCategory].slice(0,10),area=document.getElementById('rankingContent');
- if(entries.length===0){area.innerHTML=`<div class="rank-empty">${RANK_CATEGORY[rankCategory]}：まだ記録がありません。${rankCategory!=='cantilever'?'（出題機能は今後追加予定）':''}</div>`;return;}
- area.innerHTML=`<table class="rank-table"><thead><tr><th scope="col">順位</th><th scope="col">ニックネーム</th><th scope="col">連続全問正解</th></tr></thead><tbody>${entries.map((entry,i)=>`<tr class="${sessionStarted&&entry.name===playerName?'rank-me':''}"><td>${i+1}位</td><td>${HTML(entry.name)}</td><td>${entry.best} 問</td></tr>`).join('')}</tbody></table>`;
+ const area=document.getElementById('rankingContent'),selected=rankCategory,version=++rankVersion;
+ area.textContent='オンラインランキングを取得中…';
+ try{
+  const data=await api('/rankings?category='+encodeURIComponent(selected));
+  if(version!==rankVersion)return;
+  const rows=Array.isArray(data.rankings)?data.rankings.slice(0,10):[];
+  if(!rows.length){area.innerHTML=`<div class="rank-empty">${RANK_CATEGORY[selected]}：まだ記録がありません。${selected!=='cantilever'?'（出題機能は準備中）':''}</div>`;return;}
+  area.innerHTML=`<table class="rank-table"><thead><tr><th scope="col">順位</th><th scope="col">ニックネーム</th><th scope="col">最高連続正解</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${sessionStarted&&r.nickname===playerName?'rank-me':''}"><td>${i+1}位</td><td>${HTML(String(r.nickname||''))}</td><td>${Number(r.best_streak)||0} 問</td></tr>`).join('')}</tbody></table>`;
+ }catch(e){if(version===rankVersion)area.innerHTML=`<div class="rank-empty">ランキングを取得できません。通信状況を確認してください。${HTML(e.message)}</div>`;}
 }
-function registerPerfect(){
- activeStreak++;
- const existing=ranks[activeCategory].find(e=>e.name===playerName);
- if(!existing){ranks[activeCategory].push({name:playerName,best:activeStreak,at:Date.now()});}
- else if(activeStreak>existing.best){existing.best=activeStreak;existing.at=Date.now();}
- ranks[activeCategory].sort((a,b)=>b.best-a.best||a.at-b.at);
- ranks[activeCategory]=ranks[activeCategory].slice(0,100);
- saveRanks();updateStreakBar();renderRankings();
-}
-function resetStreak(){if(activeStreak!==0){activeStreak=0;updateStreakBar()}}
-function onStart(e){
- e.preventDefault();
- const nick=document.getElementById('nickname').value.trim().replace(/\s+/g,' ');
- const err=document.getElementById('playerError');
- if(!nick||[...nick].length>16||/[<>\u0000-\u001f]/.test(nick)){
-  err.textContent='ニックネームを1〜16文字で入力してください。';err.hidden=false;return;
- }
- err.hidden=true;playerName=nick;activeStreak=0;sessionStarted=true;activeCategory='cantilever';
- try{localStorage.setItem(NICK_KEY,nick)}catch(_){}
+async function activateSession(nick,id,best=0){
+ playerName=nick;sessionId=id;sessionBest=best;activeStreak=0;sessionStarted=true;state=null;
  document.getElementById('nicknameGate').hidden=true;
  document.getElementById('gameContent').hidden=false;
- updateStreakBar();renderRankings();newQuestion();
+ showStatus('');updateStreakBar();rememberSession();
+ await newQuestion();
+}
+async function onStart(e){
+ e.preventDefault();
+ const input=document.getElementById('nickname');
+ const nick=input.value.trim().replace(/\s+/g,' ');
+ const err=document.getElementById('playerError'),btn=document.querySelector('#playerForm button');
+ if(!nick||[...nick].length>16||/[<>\u0000-\u001f\u007f]/.test(nick)){
+  err.textContent='ニックネームを1〜16文字で入力してください。';err.hidden=false;return;
+ }
+ btn.disabled=true;btn.textContent='接続中…';err.hidden=true;
+ try{
+  const session=await api('/sessions',{nickname:nick,category:'cantilever'});
+  if(!session.session_id)throw new Error('セッションIDを受信できませんでした。');
+  try{localStorage.setItem(NICK_KEY,nick)}catch(_){}
+  await activateSession(nick,session.session_id);
+ }catch(ex){
+  if(!sessionStarted){err.textContent=ex.message;err.hidden=false;}
+ }finally{btn.disabled=false;btn.textContent='プレイ開始 →';}
 }
 function changePlayer(){
- sessionStarted=false;playerName='';resetStreak();
+ if(roundLoading||gradeLoading)return;
+ sessionStarted=false;playerName='';sessionId='';state=null;activeStreak=0;sessionBest=0;
+ try{sessionStorage.removeItem(SESSION_KEY)}catch(_){}
  document.getElementById('nicknameGate').hidden=false;
  document.getElementById('gameContent').hidden=true;
  document.getElementById('nickname').focus();
+ renderRankings();
+}
+async function newQuestion(){
+ if(!sessionStarted||roundLoading||gradeLoading)return;
+ roundLoading=true;
+ const nextIds=['nextTop','nextBottom'];nextIds.forEach(id=>document.getElementById(id).disabled=true);
+ showStatus('');
+ const abandoning=!!(state&&!state.graded),settings=readSettings();
+ try{
+  const result=await api('/rounds',{session_id:sessionId,settings,skip:abandoning});
+  if(!result?.round_id||!result.cfg||!result.choices)throw new Error('出題データが不完全です。');
+  const cfg=result.cfg,r=analyze(cfg),choices=result.choices;
+  if(!['N','Q','M'].every(t=>Array.isArray(choices[t])&&choices[t].length===4&&choices[t].every(o=>typeof o.svg==='string')))
+   throw new Error('4択の図を受信できませんでした。');
+  activeStreak=Number(result.current_streak)||0;
+  sessionBest=Math.max(sessionBest,activeStreak);
+  rememberSession();updateStreakBar();
+  round++;state={roundId:result.round_id,cfg,r,choices,settings,selected:{N:null,Q:null,M:null},graded:false};
+  document.getElementById('questionNumber').textContent='QUESTION '+String(round).padStart(2,'0');
+  document.getElementById('problemFigure').innerHTML=problemFigure(cfg);
+  const typeName=cfg.pattern==='A'?'パターンA（柱→梁）':'パターンB（梁→手すり）';
+  document.getElementById('supportDescription').textContent=`${typeName}・${cfg.orientation==='left'?'左':'右'}固定 ／ A：固定端・B：剛接合・C：自由端`;
+  document.getElementById('loadDescription').innerHTML=cfg.loads.map(ld=>{
+   const name=ld.type==='point'?'集中荷重':ld.type==='moment'?'モーメント荷重':'等分布荷重';
+   const pos=ld.type==='udl'?`${ld.start}〜${ld.end} m`:`${ld.x} m`;
+   const dir=ld.type==='point'||ld.type==='udl'?(ld.Fy<0?'下向き':ld.Fx>0?'右向き':'左向き'):(ld.value>0?'反時計回り':'時計回り');
+   return `<div style="margin-bottom:7px">${HTML(name)}：${fmt(ld.value)} ${ld.type==='udl'?'kN/m':ld.type==='moment'?'kN·m':'kN'}（${ld.member===0?'AB':'BC'}、${pos}、${dir}）</div>`;
+  }).join('');
+  document.getElementById('factNote').textContent=`部材：${r.elements[0].horizontal?'梁':'柱'} A→B、${r.elements[1].horizontal?'梁':'柱'} B→C。実寸比例（水平・鉛直とも62px/m）。`;
+  document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
+   return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${choices[type].map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${o.svg}</button>`).join('')}</div><div class="member-legend"><span><i class="hatch-swatch ${r.elements[0].horizontal?'horizontal-member':'vertical-member'}"></i>AB部材</span><span><i class="hatch-swatch ${r.elements[1].horizontal?'horizontal-member':'vertical-member'}"></i>BC部材</span></div><div class="hint-row">部材端（A・B・C）の数値は${type==='M'?'kNm（符号なし）':'kN（符号付き）'}。Mの最大値は下の注記に表示 ／候補間は同一倍率</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
+  }).join('');
+  const resultBox=document.getElementById('score');resultBox.hidden=true;resultBox.innerHTML='';
+  const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
+ }catch(err){showStatus('問題を取得できませんでした：'+err.message+'　もう一度「別の問題を出す」を押してください。');}
+ finally{roundLoading=false;nextIds.forEach(id=>document.getElementById(id).disabled=false);}
+}
+function choose(type,j){
+ if(!state||state.graded||roundLoading||gradeLoading)return;
+ state.selected[type]=j;
+ document.querySelectorAll(`.choice[data-type="${type}"]`).forEach(x=>{
+  const selected=Number(x.dataset.choice)===j;
+  x.classList.toggle('is-selected',selected);x.setAttribute('aria-pressed',String(selected));
+ });
+ document.getElementById(`state-${type}`).textContent='選択済み';
+ const done=['N','Q','M'].every(t=>state.selected[t]!==null);
+ const btn=document.getElementById('grade');btn.disabled=!done;btn.textContent=done?'答え合わせする':'3つ選んで答え合わせ';
+}
+async function grade(){
+ if(!state||state.graded||roundLoading||gradeLoading||!['N','Q','M'].every(t=>state.selected[t]!==null))return;
+ gradeLoading=true;showStatus('');
+ const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='サーバーで採点中…';
+ for(const id of ['nextTop','nextBottom'])document.getElementById(id).disabled=true;
+ try{
+  const response=await api('/answers',{session_id:sessionId,round_id:state.roundId,answers:state.selected});
+  if(!response?.correct||!Number.isInteger(response.score))throw new Error('採点結果が不完全です。');
+  state.graded=true;activeStreak=Number(response.current_streak)||0;
+  sessionBest=Math.max(sessionBest,activeStreak);rememberSession();updateStreakBar();
+  for(const type of ['N','Q','M']){
+   const correct=response.correct[type],picked=state.selected[type],pass=correct===picked;
+   document.querySelectorAll(`.choice[data-type="${type}"]`).forEach(x=>{
+    x.disabled=true;const j=Number(x.dataset.choice);
+    if(j===correct){x.classList.add('is-correct');x.querySelector('.choice-marker').textContent='✓ 正解';}
+    else if(j===picked){x.classList.add('is-wrong');x.querySelector('.choice-marker').textContent='×';}
+   });
+   document.getElementById(`state-${type}`).textContent=pass?'正解！':'不正解';
+   const msg=document.getElementById(`feedback-${type}`);
+   msg.className='answer-feedback '+(pass?'good':'bad');
+   msg.textContent=(pass?'正解です。':`正解は${'ABCD'[correct]}です。`)+explanation(type,state.cfg,state.r);
+   msg.hidden=false;
+  }
+  const R=state.r.reactions,b=document.getElementById('score');b.hidden=false;
+  b.innerHTML=`<strong>${response.score} / 3 正解</strong><p>固定端反力（全体のつり合い）：Ax=${signed(R.Ax)} kN、Ay=${signed(R.Ay)} kN、MA=${signed(R.MA)} kN·m（反時計回り＋）。${response.perfect?'全問正解です。連続記録：'+activeStreak+'問。':'図と数値を見比べましょう。連続記録は0問に戻りました。'}</p>`;
+  btn.textContent='採点済み';b.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(response.perfect)await renderRankings();
+ }catch(err){
+  showStatus('採点結果を確認できませんでした：'+err.message+'　採点されている可能性があるため、連打せず必要に応じて再読み込みしてください。');
+  btn.disabled=false;btn.textContent='もう一度採点結果を確認';
+ }finally{
+  gradeLoading=false;
+  for(const id of ['nextTop','nextBottom'])document.getElementById(id).disabled=false;
+ }
 }
 document.getElementById('playerForm').addEventListener('submit',onStart);
 document.getElementById('changeNickname').addEventListener('click',changePlayer);
 for(const tab of document.querySelectorAll('[data-rank-category]'))tab.addEventListener('click',()=>{rankCategory=tab.dataset.rankCategory;renderRankings()});
-window.addEventListener('storage',e=>{if(e.key===RANK_KEY){ranks=loadRanks();updateStreakBar();renderRankings()}});
-ranks=loadRanks();
-try{document.getElementById('nickname').value=localStorage.getItem(NICK_KEY)||''}catch(_){}
-renderRankings();
-
-function newQuestion(){
- if(!sessionStarted)return;
- if(state&&!state.graded)resetStreak();
- const settings=readSettings();let cfg,r,opts,err;
- for(let i=0;i<100;i++){
-  try{
-   cfg=randomConfig(settings);r=analyze(cfg);
-   if(!isUsefulFrameProblem(r))throw Error('部材全域で応力がゼロとなる骨組を除外しました');
-   opts={N:alternatives('N',r),Q:alternatives('Q',r),M:alternatives('M',r)};
-   err=null;break;
-  }
-  catch(e){err=e}
- }
- if(err){document.getElementById('questionGrid').textContent=`問題生成エラー：${err.message}`;return}
- round++;state={cfg,r,opts,settings,selected:{N:null,Q:null,M:null},graded:false};
- document.getElementById('questionNumber').textContent='QUESTION '+String(round).padStart(2,'0');
- document.getElementById('problemFigure').innerHTML=problemFigure(cfg);
- const typeName=cfg.pattern==='A'?'パターンA（柱→梁）':'パターンB（梁→手すり）';
- document.getElementById('supportDescription').textContent=`${typeName}・${cfg.orientation==='left'?'左':'右'}固定 ／ A：固定端・B：剛接合・C：自由端`;
- document.getElementById('loadDescription').innerHTML=cfg.loads.map(ld=>{
-  const name=ld.type==='point'?'集中荷重':ld.type==='moment'?'モーメント荷重':'等分布荷重';
-  const pos=ld.type==='udl'?`${ld.start}〜${ld.end} m`:`${ld.x} m`;
-  const dir=ld.type==='point'||ld.type==='udl'? (ld.Fy<0?'下向き':ld.Fx>0?'右向き':'左向き'):(ld.value>0?'反時計回り':'時計回り');
-  return `<div style="margin-bottom:7px">${HTML(name)}：${fmt(ld.value)} ${ld.type==='udl'?'kN/m':ld.type==='moment'?'kN·m':'kN'}（${ld.member===0?'AB':'BC'}、${pos}、${dir}）</div>`;
- }).join('');
- document.getElementById('factNote').textContent=`部材：${r.elements[0].horizontal?'梁':'柱'} A→B、${r.elements[1].horizontal?'梁':'柱'} B→C。実寸比例（水平・鉛直とも62px/m）。`;
- document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
-  const options=opts[type],marks=checkpoints(type,r);
-  const shared=Math.max(1,...options.flatMap(o=>marks.map(({m,x,side})=>Math.abs(optionForce(o,type,r,m,x,side)))));
-  return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${options.map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${diagram(o,type,shared,r)}</button>`).join('')}</div><div class="member-legend"><span><i class="hatch-swatch ${r.elements[0].horizontal?'horizontal-member':'vertical-member'}"></i>AB部材</span><span><i class="hatch-swatch ${r.elements[1].horizontal?'horizontal-member':'vertical-member'}"></i>BC部材</span></div><div class="hint-row">部材端（A・B・C）の数値は${type==='M'?'kNm（符号なし）':'kN（符号付き）'}。Mの最大値は下の注記に表示 ／候補間は同一倍率</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
- }).join('');
- const score=document.getElementById('score');score.hidden=true;score.innerHTML='';
- const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
-}
-function choose(type,j){
- if(!state||state.graded)return;state.selected[type]=j;
- document.querySelectorAll(`.choice[data-type="${type}"]`).forEach(x=>{const selected=Number(x.dataset.choice)===j;x.classList.toggle('is-selected',selected);x.setAttribute('aria-pressed',String(selected))});
- document.getElementById(`state-${type}`).textContent='選択済み';const done=['N','Q','M'].every(t=>state.selected[t]!==null);
- const btn=document.getElementById('grade');btn.disabled=!done;btn.textContent=done?'答え合わせする':'3つ選んで答え合わせ';
-}
-function grade(){
- if(!state||state.graded||!['N','Q','M'].every(t=>state.selected[t]!==null))return;
- state.graded=true;let score=0;
- for(const type of ['N','Q','M']){
-  const correct=state.opts[type].findIndex(x=>x.id==='正解'),picked=state.selected[type],pass=correct===picked;
-  if(pass)score++;
-  document.querySelectorAll(`.choice[data-type="${type}"]`).forEach(x=>{
-   x.disabled=true;const j=Number(x.dataset.choice);
-   if(j===correct){x.classList.add('is-correct');x.querySelector('.choice-marker').textContent='✓ 正解'}
-   else if(j===picked){x.classList.add('is-wrong');x.querySelector('.choice-marker').textContent='×'}
-  });
-  document.getElementById(`state-${type}`).textContent=pass?'正解！':'不正解';
-  const msg=document.getElementById(`feedback-${type}`);msg.className='answer-feedback '+(pass?'good':'bad');
-  msg.textContent=(pass?'正解です。':`正解は${'ABCD'[correct]}です。`)+explanation(type,state.cfg,state.r);msg.hidden=false;
- }
- if(score===3)registerPerfect();else resetStreak();
- const R=state.r.reactions,b=document.getElementById('score');b.hidden=false;
- b.innerHTML=`<strong>${score} / 3 正解</strong><p>固定端反力（全体のつり合い）：Ax=${signed(R.Ax)} kN、Ay=${signed(R.Ay)} kN、MA=${signed(R.MA)} kN·m（反時計回り＋）。${score===3?'全問正解です。連続記録：'+activeStreak+'問。':'図と数値を見比べましょう。連続記録は0問に戻りました。'}</p>`;
- document.getElementById('grade').disabled=true;document.getElementById('grade').textContent='採点済み';b.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-document.getElementById('questionGrid').addEventListener('click',e=>{const btn=e.target.closest('.choice');if(btn)choose(btn.dataset.type,Number(btn.dataset.choice))});
+document.getElementById('questionGrid').addEventListener('click',e=>{
+ const btn=e.target.closest('.choice');if(btn)choose(btn.dataset.type,Number(btn.dataset.choice));
+});
 document.getElementById('grade').addEventListener('click',grade);
 for(const id of ['nextTop','nextBottom'])document.getElementById(id).addEventListener('click',newQuestion);
 for(const id of ['structureType','framePattern','loadType','loadCount','supportSide'])document.getElementById(id).addEventListener('change',newQuestion);
-window.__FRAME_QUIZ_CORE__={analyze,randomConfig,alternatives,optionForce,criticalM,diagram,breakpoints,quadraticIntervals,checkpoints,worldGeometry,svgGeometry,problemFigure,curveArrow,isUsefulFrameProblem,hasNonzeroInternalForce,getState:()=>state};
-// ニックネーム入力後に最初の問題を生成します。
+try{document.getElementById('nickname').value=localStorage.getItem(NICK_KEY)||''}catch(_){}
+renderRankings();
+// Resume the current tab's session, including any unanswered server-issued question.
+try{
+ const saved=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null');
+ if(saved?.sessionId&&saved?.playerName){activateSession(saved.playerName,saved.sessionId,Number(saved.sessionBest)||0);}
+}catch(_){}
+window.__FRAME_QUIZ_CORE__={analyze,worldGeometry,svgGeometry,problemFigure,curveArrow,isUsefulFrameProblem,getState:()=>state};
+// 出題・採点・ランキングは Cloudflare Workers + D1 に接続します。
 </script>
 </body>
 </html>
