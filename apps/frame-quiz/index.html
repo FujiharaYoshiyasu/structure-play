@@ -25,13 +25,13 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   <section class="board" aria-labelledby="problemTitle">
     <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">片持ちラーメンの支持条件と荷重</h2><small>この図に生じる断面力を考えよう</small></div><div class="problem-controls"><select id="difficulty" class="pill-button" aria-label="難易度"><option value="basic">初級</option><option value="standard" selected>中級</option><option value="advanced">上級</option></select><button id="nextTop" type="button" class="pill-button">別の問題を出す ↻</button></div></div>
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note">部材：柱 A→B、梁 B→C。<br>静定構造物のため、剛性ではなく力のつり合いだけで断面力を求めています。</div></div></div>
-    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。各候補には符号・数値を表示します（M図は kN·m）。</p>
+    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。</p>
   </section>
   <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">符号・数値・最大値・曲線区間まで確認（全3問）</span></div>
   <div id="questionGrid" class="question-grid" aria-live="off"></div>
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
-  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「柱 A→B」「梁 B→C」として統一しています。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。表示値は符号付きの計算値を小数第2位まで丸めたものです。M図には部材端の値・最大値・最小値と最大絶対値を表示し、2次曲線の区間を明示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
+  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「柱 A→B」「梁 B→C」として統一しています。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には部材端の値・極値点での大きさと最大絶対値を表示し、2次曲線の区間を明示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
   <div class="footer"><span>FRAME QUIZ · STRUCTURE &amp; PLAY / 学習用</span><span>静定構造の釣合い式に基づく学習用の問題です。実務の構造設計には用いないでください。</span><a href="../nqm/index.html">NQM図作成ツールへ →</a></div>
 </main>
 <script>
@@ -170,8 +170,14 @@ function problemFigure(cfg){
   arrows.push(`<path d="M${tail} ${y}H${tip}" stroke="#c94c36" stroke-width="3.8" fill="none"/><path d="M${tip+(H>0?-12:12)} ${y-8}L${tip} ${y}L${tip+(H>0?-12:12)} ${y+8}" stroke="#c94c36" fill="none" stroke-width="3.8"/>`);
   arrows.push(`<text x="523" y="105" text-anchor="middle" fill="#ae3b30" font-weight="800" font-size="16">H=${Math.abs(H)} kN</text>`);
  }
- const xP=175+309*a/L;
- const loc=(P&&a<L)?`<path d="M${xP} 117V285" stroke="#d1a59e" stroke-dasharray="3 4"/><text x="${(175+xP)/2}" y="292" text-anchor="middle" font-size="12" fill="#ab675d">a=${fixed(a)} m</text>`:'';
+ // 荷重位置はBからの水平距離で明示。柱脚・全長寸法・荷重矢印を避けた高さに置く。
+ const xP=175+309*a/L,dimY=183;
+ const loc=P?`<g aria-label="集中荷重位置 Bから${fixed(a)}m">
+   <path d="M${xP.toFixed(2)} ${H&&a===L?149:118}V${dimY+5}" stroke="#6f9cba" stroke-width="1.6" stroke-dasharray="4 4" fill="none"/>
+   <path d="M175 ${dimY}H${xP.toFixed(2)}" stroke="#245f87" stroke-width="2.1" fill="none"/>
+   <path d="M175 ${dimY-8}v16M${xP.toFixed(2)} ${dimY-8}v16" stroke="#245f87" stroke-width="2.1" fill="none"/>
+   <text x="${((175+xP)/2).toFixed(2)}" y="210" text-anchor="middle" font-size="17" font-weight="850" fill="#245f87" paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round">a = ${fixed(a)} m</text>
+  </g>`:'';
  return `<svg viewBox="0 0 650 349" role="img" aria-label="静定片持ちラーメン。A固定、B剛接合、C自由端。荷重と寸法を表示"><rect x="1" y="1" width="648" height="347" rx="14" fill="#fbfdff"/><g stroke="#2c4860" stroke-width="6" stroke-linejoin="round" fill="none"><path d="M175 268V112H484"/></g><path d="M114 277H236" stroke="#536d80" stroke-width="4"/><g stroke="#a3b4c4" stroke-width="1.8">${Array.from({length:15},(_,i)=>`<path d="M${119+i*8} 279l-10 10"/>`).join('')}</g>${arrows.join('')}${loc}<g fill="#29475f" font-size="19" font-weight="900"><text x="148" y="268">A</text><text x="145" y="108">B</text><text x="497" y="104">C</text></g><g stroke="#aab9c6" fill="none" stroke-width="1.4"><path d="M175 316H484M175 309v14M484 309v14M97 112V268M91 112h12M91 268h12"/></g><g fill="#6b8193" font-size="15" font-weight="750"><text x="330" y="340" text-anchor="middle">L = ${L} m</text><text x="83" y="190" transform="rotate(-90 83 190)" text-anchor="middle">h = ${h} m</text></g><text x="375" y="276" fill="#8594a2" font-weight="700" font-size="13">C：自由端</text><text x="32" y="316" fill="#8594a2" font-weight="700" font-size="13">A：固定端</text></svg>`;
 }
 function diagram(option,type,shared,r){
@@ -206,7 +212,7 @@ function diagram(option,type,shared,r){
  }
  const line=(x,y,s,anchor='start',size=16,cls='')=>`<text x="${x}" y="${y}" font-size="${size}" text-anchor="${anchor}" fill="#25455c" font-weight="750" class="${cls}">${HTML(s)}</text>`;
  const labels=[];const stats=[];let graphBottom=type==='M'?422:382;
- const {cfg}=r;
+ const {cfg}=r;const mval=x=>Math.abs(x).toFixed(2); // M図のみ符号を省略。符号付き計算値と正解判定は維持。
  if(type==='N'){
   labels.push(line(109,180,fmt(V(0,0)),'end',20),line(280,53,fmt(V(1,0)),'middle',20));
   stats.push(line(18,304,`柱 AB：${fmt(V(0,0))} kN`, 'start',18,'band-text'));
@@ -220,7 +226,7 @@ function diagram(option,type,shared,r){
   else stats.push(line(18,339,cfg.q&&option.f[1]?'梁BC：等分布荷重区間は直線変化':'各部材で一定（節点荷重以外に横荷重なし）','start',15,'band-text'));
  }else{
   const c=criticalM(option,r);
-  labels.push(line(26,240,`A ${fmt(V(0,0))}`,'start',16),line(28,96,`B ${fmt(V(0,cfg.h))}`,'start',16),line(163,59,`B ${fmt(V(1,0))}`,'start',16),line(392,59,`C ${fmt(V(1,cfg.L))}`,'end',16));
+  labels.push(line(26,240,`A ${mval(V(0,0))}`,'start',16),line(28,96,`B ${mval(V(0,cfg.h))}`,'start',16),line(163,59,`B ${mval(V(1,0))}`,'start',16),line(392,59,`C ${mval(V(1,cfg.L))}`,'end',16));
   let topTag='';
   if(cfg.q&&option.f[1]){
    paths.push(`<path d="M155 78v-10h245v10" stroke="#a46a3c" stroke-width="1.8" fill="none"/>`);
@@ -229,13 +235,13 @@ function diagram(option,type,shared,r){
   const dot=locate(c.abs.m,c.abs.x,c.abs.value);
   paths.push(`<circle cx="${dot[0].toFixed(2)}" cy="${dot[1].toFixed(2)}" r="5.7" fill="${color}" stroke="#fff" stroke-width="1.8"/>`);
   labels.push(topTag);
-  stats.push(line(18,304,`柱AB：A ${fmt(V(0,0))} → B ${fmt(V(0,cfg.h))}`,'start',17,'band-text'));
-  stats.push(line(18,337,`梁BC：B ${fmt(V(1,0))} → C ${fmt(V(1,cfg.L))}`,'start',17,'band-text'));
-  stats.push(line(18,370,`M最大 ${fmt(c.max.value)}　M最小 ${fmt(c.min.value)}`,'start',17,'band-text'));
+  stats.push(line(18,304,`柱AB：A ${mval(V(0,0))} → B ${mval(V(0,cfg.h))}`,'start',17,'band-text'));
+  stats.push(line(18,337,`梁BC：B ${mval(V(1,0))} → C ${mval(V(1,cfg.L))}`,'start',17,'band-text'));
+  stats.push(line(18,370,`計算上の最大点 |M| ${mval(c.max.value)} ／最小点 |M| ${mval(c.min.value)}`,'start',17,'band-text'));
   stats.push(line(18,402,`最大|M| ${Math.abs(c.abs.value).toFixed(2)} kN·m（${c.abs.label}）`,'start',17,'band-text'));
   stats.push(line(320,402,cfg.q&&option.f[1]?`2次曲線 BC：0.00〜${fixed(cfg.L)} m`:'2次曲線：なし','start',14,'band-text'));
  }
- return `<svg class="numeric-diagram" viewBox="0 0 560 ${graphBottom}" role="img" aria-label="${type}図候補。各部材の応力値、符号を表示"><path d="M155 247V94H400" fill="none" stroke="#a8bbc9" stroke-width="3" stroke-dasharray="4 4"/>${paths.join('')}${labels.join('')}<g fill="#5d7890" font-weight="800" font-size="14">${line(143,265,'A','end',15)}${line(143,80,'B','end',15)}${line(410,82,'C','start',15)}</g><rect x="9" y="282" width="542" height="${type==='M'?135:83}" rx="9" fill="#f0f5f9"/>${stats.join('')}</svg>`;
+ return `<svg class="numeric-diagram" viewBox="0 0 560 ${graphBottom}" role="img" aria-label="${type}図候補。${type==='M'?'符号を省いた曲げモーメントの大きさ':'符号付きの断面力値'}を表示"><path d="M155 247V94H400" fill="none" stroke="#a8bbc9" stroke-width="3" stroke-dasharray="4 4"/>${paths.join('')}${labels.join('')}<g fill="#5d7890" font-weight="800" font-size="14">${line(143,265,'A','end',15)}${line(143,80,'B','end',15)}${line(410,82,'C','start',15)}</g><rect x="9" y="282" width="542" height="${type==='M'?135:83}" rx="9" fill="#f0f5f9"/>${stats.join('')}</svg>`;
 }
 function explanation(type,cfg,r){
  const R=r.reactions;
