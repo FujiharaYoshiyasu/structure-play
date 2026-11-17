@@ -12,10 +12,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fffaf2">
-  <meta name="description" content="無料で遊べる構造力学ゲーム「MOMENT BATTLE」、数字の配置戦略ゲーム「765」、ラーメンのN・Q・M図作成ツールを公開。スマホ・PCで使える学習用Webアプリ集。">
+  <meta name="description" content="無料で遊べる構造力学ゲーム「MOMENT BATTLE」、数字戦略ゲーム「765」、NQM図作成ツール、ラーメン応力図4択クイズを公開。スマホ・PCで使える学習用Webアプリ集。">
   <meta property="og:type" content="website">
   <meta property="og:title" content="構造力学ゲームと学習ツール | STRUCTURE & PLAY">
-  <meta property="og:description" content="無料で遊べる構造力学ゲーム、数字戦略ゲーム765、ラーメンのNQM図作成ツール。">
+  <meta property="og:description" content="無料で遊べる構造力学ゲーム、数字戦略ゲーム765、NQM図作成ツール、ラーメン応力図4択クイズ。">
   <title>構造力学ゲーム・NQM図作成・数字ゲーム765 | STRUCTURE & PLAY</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/style.css">
@@ -43,7 +43,7 @@
       <div class="hero-copy">
         <div class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span> WELCOME TO OUR LITTLE WEB LAB</div>
         <h1 id="hero-title">つくって、<br><em>あそんで、</em><br>学ぶ<span class="period">。</span></h1>
-        <p class="hero-description">構造のしくみを見える形に。<br>数字の面白さを、ゲームに。<br>ちょっと触ってみたくなる、3つのWebアプリを集めました。</p>
+        <p class="hero-description">構造のしくみを見える形に。<br>数字の面白さを、ゲームに。<br>ちょっと触ってみたくなる、4つのWebアプリを集めました。</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#apps">アプリを見てみる <span aria-hidden="true">↗</span></a>
           <a class="text-link" href="#about">このサイトについて <span aria-hidden="true">→</span></a>
@@ -76,15 +76,15 @@
 
     <section class="apps-section" id="apps" aria-labelledby="apps-heading">
       <div class="shell">
-        <div class="section-kicker">OUR WEB APPS / 001—003</div>
+        <div class="section-kicker">OUR WEB APPS / 001—004</div>
         <div class="section-header">
           <div><h2 id="apps-heading">アプリを探す<span class="section-spark">✳</span></h2><p>気になるものから、自由にのぞいてみてください。</p></div>
-          <p class="app-count"><strong id="visible-count">03</strong><span>APPS</span></p>
+          <p class="app-count"><strong id="visible-count">04</strong><span>APPS</span></p>
         </div>
         <div class="filter-row" role="group" aria-label="アプリの種類で絞り込み">
-          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true">すべて <small>3</small></button>
+          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true">すべて <small>4</small></button>
           <button type="button" class="filter-button" data-filter="game" aria-pressed="false">ゲーム <small>2</small></button>
-          <button type="button" class="filter-button" data-filter="study" aria-pressed="false">学習ツール <small>1</small></button>
+          <button type="button" class="filter-button" data-filter="study" aria-pressed="false">学習ツール <small>2</small></button>
         </div>
 
         <div class="app-grid" id="app-grid">
@@ -100,8 +100,12 @@
             <div class="card-media media-nqm"><img src="assets/nqm.svg" alt="ラーメン構造の骨組と応力図のイメージ" loading="lazy"><span class="media-index">03 / TOOL</span></div>
             <div class="card-content"><div class="card-tags"><span class="category-tag tag-green">構造力学 × 学習ツール</span><span class="status-tag" data-status="nqm">公開準備中</span></div><h3>NQM DIAGRAM</h3><p class="app-jp-title">ラーメンのN・Q・M図作成</p><p class="card-description">節点・部材・支持条件・荷重を設定して、軸力図N、せん断力図Q、曲げモーメント図Mを視覚的に確認するための学習ツール。</p><a class="card-link" href="apps/nqm/index.html" aria-label="NQM図作成ツールのページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
           </article>
+          <article class="app-card" data-category="study" data-app="frame-quiz">
+            <div class="card-media media-nqm"><img src="assets/frame-quiz.svg" alt="ラーメン構造とN・Q・M図の4択クイズのイメージ" loading="lazy"><span class="media-index">04 / QUIZ</span></div>
+            <div class="card-content"><div class="card-tags"><span class="category-tag tag-green">構造力学 × クイズ</span><span class="status-tag" data-status="frame-quiz">公開中</span></div><h3>FRAME QUIZ</h3><p class="app-jp-title">ラーメン応力図の4択クイズ</p><p class="card-description">支持条件・荷重が示されたラーメン図を見て、N図・Q図・M図の正しい形をそれぞれ4択から選ぶ学習ゲーム。採点と解説つき。</p><a class="card-link" href="apps/frame-quiz/index.html" aria-label="ラーメン応力図クイズのページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+          </article>
         </div>
-        <p class="list-note" id="app-list-status" aria-live="polite">現在3つのアプリを表示しています。</p>
+        <p class="list-note" id="app-list-status" aria-live="polite">現在4つのアプリを表示しています。</p>
       </div>
     </section>
 
