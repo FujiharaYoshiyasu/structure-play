@@ -3,6 +3,7 @@ const APP_STATUS = {
   'moment-battle': 'published',
   '765': 'published',
   'nqm': 'published',
+  'frame-quiz': 'published',
 };
 
 (() => {
