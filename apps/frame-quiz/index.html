@@ -434,6 +434,9 @@ function makeQuestion(settings){
   // statical exactness: end-pin and hinge moments must vanish.
   if(Math.abs(r.force('M',0,0))>1e-6||Math.abs(r.force('M',r.elements.length-1,r.elements.at(-1).L))>1e-6)continue;
   if(cfg.structure==='threepin'&&Math.abs(r.force('M',1,r.elements[1].L))>1e-6)continue;
+  // N・Q・Mの部材端値は整数のみ採用し、符号・分布の学習に集中できるようにする。
+  const endpointForces=r.elements.flatMap((el,m)=>['N','Q','M'].flatMap(t=>[r.force(t,m,0,'right'),r.force(t,m,el.L,'left')]));
+  if(!endpointForces.every(v=>Math.abs(v-Math.round(v))<1e-6))continue;
   const options={N:alternatives('N',r),Q:alternatives('Q',r),M:alternatives('M',r)};
   const correct=Object.fromEntries(['N','Q','M'].map(t=>[t,options[t].findIndex(o=>o.f.every(z=>z===1)&&o.bias.every(z=>z===0))]));
   return {cfg,options,correct,choices:optionsSVG(r,options)};
