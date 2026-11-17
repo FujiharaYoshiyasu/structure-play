@@ -331,47 +331,60 @@ function problemFigure(cfg){
  const horizontal=cfg.pattern==='A'?1:0,vertical=1-horizontal;
  const hor=cfg.pattern==='A'?[b,c]:[a,b],ver=cfg.pattern==='A'?[a,b]:[b,c];
  const below=cfg.pattern==='A'?hor[0][1]+120:hor[0][1]+50;
- const minX=Math.min(hor[0][0],hor[1][0]),maxX=Math.max(hor[0][0],hor[1][0]);
+ // 荷重の見た目は数値に比例させる（例：1kNに対して2kNは2倍の長さ）。
+ const pointSpan=v=>16*Math.max(1,Math.abs(v));
+ const udlSpan=v=>14*Math.max(1,Math.abs(v));
+ const momentRadius=v=>12*Math.max(1,Math.abs(v));
  // 荷重は必ず部材の上に作用点が来る。ラベルは数値＋単位のみ。
  let horizontalMarks=0,verticalMarks=0;
  for(const ld of cfg.loads){
   const el=ld.member,p=ld.type==='udl'?P(el,(ld.start+ld.end)/2):P(el,ld.x);
-  const isHor=el===horizontal,origin=isHor?'horizontal':'vertical';
+  const isHor=el===horizontal;
   const labelVal=`${fmt(ld.value)} ${ld.type==='udl'?'kN/m':ld.type==='moment'?'kN·m':'kN'}`;
   if(ld.type==='moment'){
-   parts.push(curveArrow(p[0],p[1],21,ld.value>0));
+   const radius=momentRadius(ld.value);
+   parts.push(curveArrow(p[0],p[1],radius,ld.value>0));
    const offset=horizontalMarks+verticalMarks;
-   if(isHor){parts.push(label(p[0],p[1]-34-(offset%2)*18,labelVal,'#b24f35',17));}
-   else parts.push(label(p[0]+d*41,p[1]-27-(offset%2)*15,labelVal,'#b24f35',17));
+   if(isHor){parts.push(label(p[0],p[1]-radius-16-(offset%2)*18,labelVal,'#b24f35',17));}
+   else parts.push(label(p[0]+d*(radius+24),p[1]-radius+8-(offset%2)*15,labelVal,'#b24f35',17));
   }else if(ld.type==='point'){
+   const reach=pointSpan(ld.value);
    if(isHor){
-    const top=p[1]-84;parts.push(`<path d="M${p[0]} ${top}V${p[1]-9}m-8-13 8 13 8-13" stroke="#c9553b" stroke-width="3.2" fill="none"/>`);
+    const top=p[1]-(reach+11);parts.push(`<path d="M${p[0]} ${top}V${p[1]-9}m-8-13 8 13 8-13" stroke="#c9553b" stroke-width="3.2" fill="none"/>`);
     parts.push(label(p[0]+8,top-10,labelVal,'#b24f35',17,'middle'));
    }else{
-    const px=p[0]-d*85,stop=p[0]-d*10;parts.push(`<path d="M${px} ${p[1]}H${stop}m${-d*13} -8 ${d*13} 8 ${-d*13} 8" stroke="#c9553b" stroke-width="3.2" fill="none"/>`);
+    const px=p[0]-d*(reach+12),stop=p[0]-d*10;parts.push(`<path d="M${px} ${p[1]}H${stop}m${-d*13} -8 ${d*13} 8 ${-d*13} 8" stroke="#c9553b" stroke-width="3.2" fill="none"/>`);
     parts.push(label(px-d*5,p[1]-15,labelVal,'#b24f35',17));
    }
   }else{
-   const s=P(el,ld.start),t=P(el,ld.end),steps=Math.max(2,Math.ceil((ld.end-ld.start)*2));
+   const s=P(el,ld.start),t=P(el,ld.end),steps=Math.max(2,Math.ceil((ld.end-ld.start)*2)),reach=udlSpan(ld.value);
    if(isHor){
-    const yy=s[1]-75;parts.push(`<path d="M${s[0]} ${yy}H${t[0]}" stroke="#c9553b" stroke-width="2.8"/>`);
+    const yy=s[1]-reach;parts.push(`<path d="M${s[0]} ${yy}H${t[0]}" stroke="#c9553b" stroke-width="2.8"/>`);
     for(let j=0;j<=steps;j++){const x=s[0]+(t[0]-s[0])*j/steps;parts.push(`<path d="M${x} ${yy}V${s[1]-9}m-5-9 5 9 5-9" stroke="#c9553b" stroke-width="2" fill="none"/>`)}
     parts.push(label(p[0],yy-12,labelVal,'#b24f35',17));
    }else{
-    const xx=s[0]-d*75;parts.push(`<path d="M${xx} ${s[1]}V${t[1]}" stroke="#c9553b" stroke-width="2.8"/>`);
+    const xx=s[0]-d*reach;parts.push(`<path d="M${xx} ${s[1]}V${t[1]}" stroke="#c9553b" stroke-width="2.8"/>`);
     for(let j=0;j<=steps;j++){const y=s[1]+(t[1]-s[1])*j/steps;parts.push(`<path d="M${xx} ${y}H${s[0]-d*9}m${-d*9}-5 ${d*9} 5 ${-d*9} 5" stroke="#c9553b" stroke-width="1.9" fill="none"/>`)}
     parts.push(label(xx-d*5,p[1]-20,labelVal,'#b24f35',17));
    }
   }
-  if(ld.type!=='udl'){
-   if(isHor){const originPt=hor[0],end=P(el,ld.x),yy=below+horizontalMarks*28;horizontalMarks++;
-    parts.push(`<path d="M${originPt[0]} ${yy}H${end[0]}M${originPt[0]} ${yy-7}v14M${end[0]} ${yy-7}v14" stroke="#467da2" fill="none" stroke-width="1.7"/>`);
-    parts.push(`<path d="M${end[0]} ${p[1]+8}V${yy+6}" stroke="#b1c8d8" stroke-width="1.1" stroke-dasharray="4 4"/>`);
-    parts.push(label((originPt[0]+end[0])/2,yy-11,`${ld.x} m`,'#376b91',16));
-   }else{const originPt=ver[0],end=P(el,ld.x),xx=ver[0][0]+d*(65+verticalMarks*23);verticalMarks++;
-    parts.push(`<path d="M${xx} ${originPt[1]}V${end[1]}M${xx-7} ${originPt[1]}h14M${xx-7} ${end[1]}h14" stroke="#467da2" fill="none" stroke-width="1.7"/>`);
-    parts.push(label(xx+d*18,(originPt[1]+end[1])/2,`${ld.x} m`,'#376b91',16));
+  if(ld.type==='udl'){
+   if(isHor){const start=P(el,ld.start),end=P(el,ld.end),yy=below+horizontalMarks*28;horizontalMarks++;
+    parts.push(`<path d="M${start[0]} ${yy}H${end[0]}M${start[0]} ${yy-7}v14M${end[0]} ${yy-7}v14" stroke="#467da2" fill="none" stroke-width="1.7"/>`);
+    parts.push(`<path d="M${start[0]} ${p[1]+8}V${yy+6}M${end[0]} ${p[1]+8}V${yy+6}" stroke="#b1c8d8" stroke-width="1.1" stroke-dasharray="4 4"/>`);
+    parts.push(label((start[0]+end[0])/2,yy-11,`${ld.start}〜${ld.end} m`,'#376b91',16));
+   }else{const start=P(el,ld.start),end=P(el,ld.end),xx=ver[0][0]+d*(65+verticalMarks*23);verticalMarks++;
+    parts.push(`<path d="M${xx} ${start[1]}V${end[1]}M${xx-7} ${start[1]}h14M${xx-7} ${end[1]}h14" stroke="#467da2" fill="none" stroke-width="1.7"/>`);
+    parts.push(`<path d="M${start[0]-d*8} ${start[1]}H${xx-d*8}M${end[0]-d*8} ${end[1]}H${xx-d*8}" stroke="#b1c8d8" stroke-width="1.1" stroke-dasharray="4 4"/>`);
+    parts.push(label(xx+d*18,(start[1]+end[1])/2,`${ld.start}〜${ld.end} m`,'#376b91',16));
    }
+  }else if(isHor){const originPt=hor[0],end=P(el,ld.x),yy=below+horizontalMarks*28;horizontalMarks++;
+   parts.push(`<path d="M${originPt[0]} ${yy}H${end[0]}M${originPt[0]} ${yy-7}v14M${end[0]} ${yy-7}v14" stroke="#467da2" fill="none" stroke-width="1.7"/>`);
+   parts.push(`<path d="M${end[0]} ${p[1]+8}V${yy+6}" stroke="#b1c8d8" stroke-width="1.1" stroke-dasharray="4 4"/>`);
+   parts.push(label((originPt[0]+end[0])/2,yy-11,`${ld.x} m`,'#376b91',16));
+  }else{const originPt=ver[0],end=P(el,ld.x),xx=ver[0][0]+d*(65+verticalMarks*23);verticalMarks++;
+   parts.push(`<path d="M${xx} ${originPt[1]}V${end[1]}M${xx-7} ${originPt[1]}h14M${xx-7} ${end[1]}h14" stroke="#467da2" fill="none" stroke-width="1.7"/>`);
+   parts.push(label(xx+d*18,(originPt[1]+end[1])/2,`${ld.x} m`,'#376b91',16));
   }
  }
  // 全寸法線：水平と鉛直の縮尺は完全に共通。
