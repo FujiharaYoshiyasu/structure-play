@@ -31,7 +31,7 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   <div id="questionGrid" class="question-grid" aria-live="off"></div>
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
-  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「柱 A→B」「梁 B→C」として統一しています。各応力図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>の値を描いています。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。表示値は符号付きの計算値を小数第2位まで丸めたものです。M図には部材端の値・最大値・最小値と最大絶対値を表示し、2次曲線の区間を明示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
+  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「柱 A→B」「梁 B→C」として統一しています。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。表示値は符号付きの計算値を小数第2位まで丸めたものです。M図には部材端の値・最大値・最小値と最大絶対値を表示し、2次曲線の区間を明示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
   <div class="footer"><span>FRAME QUIZ · STRUCTURE &amp; PLAY / 学習用</span><span>静定構造の釣合い式に基づく学習用の問題です。実務の構造設計には用いないでください。</span><a href="../nqm/index.html">NQM図作成ツールへ →</a></div>
 </main>
 <script>
@@ -180,7 +180,9 @@ function diagram(option,type,shared,r){
  const scale=60/Math.max(shared,1e-6),paths=[];
  function locate(m,x,v){
   const el=r.elements[m],p=segs[m][0],e=segs[m][1];const dx=e[0]-p[0],dy=e[1]-p[1],le=Math.hypot(dx,dy);
-  const nx=dy/le,ny=-dx/le;
+  // M図は引張側に表示するため、N・Q図と法線方向を反転する。断面力の符号・数値は変えない。
+  const normalDirection=type==='M'?-1:1;
+  const nx=normalDirection*dy/le,ny=-normalDirection*dx/le;
   return [p[0]+dx*x/el.L+nx*v*scale,p[1]+dy*x/el.L+ny*v*scale];
  }
  const pts=items=>items.map((p,j)=>`${j===0?'M':'L'}${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' ');
