@@ -28,8 +28,9 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 
 /* Member-identifiable NQM diagrams and player ranking */
 .member-legend{display:flex;flex-wrap:wrap;gap:12px;color:#536f85;font-size:11px;font-weight:750;margin:6px 0 3px}
-.hatch-swatch{display:inline-block;width:24px;height:13px;border:1px solid #90a7b6;border-radius:2px;margin-right:5px;vertical-align:middle;background:repeating-linear-gradient(125deg,transparent 0 5px,#478d99 6px 7px,transparent 8px 13px)}
-.hatch-swatch.bc{background:repeating-linear-gradient(55deg,transparent 0 5px,#478d99 6px 7px,transparent 8px 13px)}
+.hatch-swatch{display:inline-block;width:24px;height:13px;border:1px solid #90a7b6;border-radius:2px;margin-right:5px;vertical-align:middle;background:#f7fcfd}
+.hatch-swatch.horizontal-member{background:repeating-linear-gradient(90deg,transparent 0 5px,#478d99 5px 6px,transparent 6px 11px)}
+.hatch-swatch.vertical-member{background:repeating-linear-gradient(0deg,transparent 0 5px,#478d99 5px 6px,transparent 6px 11px)}
 .player-gate{border:1px solid #bfd6e8;background:linear-gradient(130deg,#e9f4fb,#fff);border-radius:16px;padding:20px 24px;margin-bottom:18px}
 .player-gate h2{margin:0 0 4px;font-size:21px}.player-gate p{margin:2px 0 12px;color:#647c90;font-size:12px}
 .player-form{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.player-form input{font:inherit;font-size:16px;border:1px solid #a3c2d8;border-radius:9px;padding:12px 13px;min-width:190px;max-width:100%;flex:1;color:#163b58;background:white}
@@ -73,11 +74,11 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note" id="factNote">部材：A→B→C。応力図の方向と荷重位置を確認してください。</div></div></div>
     <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。</p>
   </section>
-  <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">符号・数値・最大値・曲線区間まで確認（全3問）</span></div>
+  <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">節点の数値・最大値・曲線区間を確認（全3問）</span></div>
   <div id="questionGrid" class="question-grid" aria-live="off"></div>
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
-  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「A→B→C」として統一しています。パターンAは柱AB・梁BC、パターンBは梁AB・手すり状の柱BCです。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には部材端の値・極値点での大きさと最大絶対値を表示し、2次曲線の区間を明示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。骨組図の水平・鉛直の長さは同じ縮尺で描きます。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
+  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>このクイズでは部材の向きを「A→B→C」として統一しています。パターンAは柱AB・梁BC、パターンBは梁AB・手すり状の柱BCです。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には節点位置の値を表示し、最大絶対値と2次曲線の区間は下の注記に表示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>固定端A、剛節点B、自由端Cの静定構造です。骨組図の水平・鉛直の長さは同じ縮尺で描きます。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
   </div><!-- gameContent -->
   <section id="leaderboard" class="leaderboard-panel" aria-labelledby="leaderboardTitle">
     <h2 id="leaderboardTitle">連続全問正解ランキング　TOP 10</h2>
@@ -408,7 +409,8 @@ function diagram(opt,type,shared,r){
  const V=(m,x,side='left')=>optionForce(opt,type,r,m,x,side);
  const shapes=[];
  const patternId=type.toLowerCase()+'-'+(++diagramRenderSequence);
- const hatchDefs=`<defs><pattern id="hatch-${patternId}-ab" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M-3 3l7-7M0 10l10-10M7 13l7-7" stroke="${col}" stroke-width="1" opacity=".65"/></pattern><pattern id="hatch-${patternId}-bc" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M-3 7l7 7M0 0l10 10M7-3l7 7" stroke="${col}" stroke-width="1" opacity=".65"/></pattern></defs>`;
+ // ハッチングは部材軸に直交させる。水平部材=縦線、鉛直部材=横線。
+ const hatchDefs=`<defs>${r.elements.map((el,m)=>`<pattern id="hatch-${patternId}-${m===0?'ab':'bc'}" width="10" height="10" patternUnits="userSpaceOnUse"><path d="${el.horizontal?'M5 0V10':'M0 5H10'}" stroke="${col}" stroke-width="1.15" opacity=".72"/></pattern>`).join('')}</defs>`;
  for(let m=0;m<2;m++){
   for(const [start,end] of adjacent(breakpoints(cfg,m))){
    const baseline=[],curve=[];
@@ -427,21 +429,14 @@ function diagram(opt,type,shared,r){
   }
  }
  const text=(x,y,s,sz=15,anchor='start',color='#294b60')=>`<text x="${x}" y="${y}" font-size="${sz}" font-weight="750" text-anchor="${anchor}" fill="${color}" paint-order="stroke" stroke="#fff" stroke-width="3">${HTML(s)}</text>`;
- const unit=type==='M'?'kNm':'kN',rows=[];
+ const unit=type==='M'?'kNm':'kN',rows=['節点位置の断面力（AB：A/B、BC：B/C）'];
  const measure=v=>`${type==='M'?fmt(v):signed(v)} ${unit}`;
  for(let m=0;m<2;m++){
   const len=r.elements[m].L;
-  rows.push(`${r.elements[m].name}：始端 ${measure(V(m,0,'right'))} → 終端 ${measure(V(m,len,'left'))}`);
+  rows.push(`${r.elements[m].name}：${'ABC'[m]} ${measure(V(m,0,'right'))} → ${'ABC'[m+1]} ${measure(V(m,len,'left'))}`);
  }
  if(type==='N')rows.push('引張（＋） ／ 圧縮（−）');
- if(type==='Q'){
-  for(const ld of cfg.loads.filter(x=>x.type==='point')){
-   const l=V(ld.member,ld.x,'left'),rr=V(ld.member,ld.x,'right');
-   if(Math.abs(l-rr)>EPS)rows.push(`${r.elements[ld.member].name} s=${ld.x}m：左 ${signed(l)} kN ／ 右 ${signed(rr)} kN`);
-  }
- }
  if(type==='M'){
-  for(const ld of cfg.loads.filter(x=>x.type==='moment'))rows.push(`${r.elements[ld.member].name} s=${ld.x}m：左 ${fmt(V(ld.member,ld.x,'left'))} kNm ／ 右 ${fmt(V(ld.member,ld.x,'right'))} kNm`);
   const critical=criticalM(opt,r);
   rows.push(`最大 |M| = ${fmt(critical.abs.value)} kNm（${critical.label}）`);
   const quad=quadraticIntervals(opt,r);
@@ -451,15 +446,9 @@ function diagram(opt,type,shared,r){
    if(r.elements[z.m].horizontal)shapes.push(`<path d="M${a[0]} ${a[1]-9}v-8H${b[0]}v8" fill="none" stroke="#a76f40" stroke-width="1.8"/>`);
    else shapes.push(`<path d="M${a[0]+d*9} ${a[1]}h${d*8}V${b[1]}h${-d*8}" fill="none" stroke="#a76f40" stroke-width="1.8"/>`);
   }
-  const p=locate(critical.abs.m,critical.abs.x,critical.abs.value);
-  shapes.push(`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" stroke="white" stroke-width="1.5" fill="${col}"/>`);
  }
- // 図中にも値を記載、下表で両端・最大値と不連続点を確認可能。
+ // 部材途中に数値を重ねず、節点の断面力を下の表に明記する。
  const vals=[];
- for(let m=0;m<2;m++){
-  const len=r.elements[m].L,ref=g.pos(m,len/2),v=V(m,len/2);
-  vals.push(text(ref[0]+(cfg.orientation==='left'?19:-43),ref[1]-(r.elements[m].horizontal?22:0),measure(v),13));
- }
  const base=289,height=base+rows.length*25+17;
  const chartLabels=g.nodes.map((p,i)=>text(p[0]+(i===2?10:-14),p[1]+(i===0?19:-12),'ABC'[i],15));
  // Solid member-name tags identify which region belongs to AB or BC even if an area is zero.
@@ -580,7 +569,7 @@ function newQuestion(){
  document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
   const options=opts[type],marks=checkpoints(type,r);
   const shared=Math.max(1,...options.flatMap(o=>marks.map(({m,x,side})=>Math.abs(optionForce(o,type,r,m,x,side)))));
-  return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${options.map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${diagram(o,type,shared,r)}</button>`).join('')}</div><div class="member-legend"><span><i class="hatch-swatch"></i>AB部材</span><span><i class="hatch-swatch bc"></i>BC部材</span></div><div class="hint-row">数値ごとに${type==='M'?'kNm（符号なし）':'kN（符号付き）'}を表示 ／候補間は同一倍率</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
+  return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${options.map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${diagram(o,type,shared,r)}</button>`).join('')}</div><div class="member-legend"><span><i class="hatch-swatch ${r.elements[0].horizontal?'horizontal-member':'vertical-member'}"></i>AB部材</span><span><i class="hatch-swatch ${r.elements[1].horizontal?'horizontal-member':'vertical-member'}"></i>BC部材</span></div><div class="hint-row">部材端（A・B・C）の数値は${type==='M'?'kNm（符号なし）':'kN（符号付き）'}。Mの最大値は下の注記に表示 ／候補間は同一倍率</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
  }).join('');
  const score=document.getElementById('score');score.hidden=true;score.innerHTML='';
  const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
