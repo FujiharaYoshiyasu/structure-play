@@ -12,7 +12,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--text);font-family:Inter,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif;font-size:14px;line-height:1.65}button,select{font:inherit}button{cursor:pointer}button:focus-visible,summary:focus-visible{outline:3px solid #70ace4;outline-offset:2px}button:disabled{cursor:default}[hidden]{display:none!important}svg{font-family:inherit}.shell{width:min(1160px,calc(100% - 36px));margin-inline:auto}
 .top{background:#101e30;color:#d4e3f4;padding:11px 0;font-size:12px}.top a{color:inherit;text-decoration:none;font-weight:700}.top a:hover{text-decoration:underline}
 .mast{background:linear-gradient(125deg,#14283f 15%,#234260);color:#fff;padding:32px 0 33px}.mast-inner{display:flex;justify-content:space-between;align-items:center;gap:24px}.eyebrow{color:#96c2e9;letter-spacing:.22em;font-size:11px;font-weight:800}.mast h1{font-size:clamp(29px,4.8vw,45px);line-height:1.24;margin:7px 0 10px;letter-spacing:.005em}.mast h1 span{color:#f5b179}.mast p{margin:0;color:#d1deeb;font-size:13px}.mast-label{border:1px solid #6c8aa6;border-radius:15px;padding:15px 22px;white-space:nowrap;text-align:center;font-size:12px;font-weight:800;letter-spacing:.16em;color:#d0e6f7}.mast-label strong{display:block;font-size:33px;color:#fff;letter-spacing:.04em;line-height:1.3}
-main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 9px 30px #203b5510;padding:24px 27px;margin-bottom:20px}.board-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.step{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e7f1fa;color:#286596;font-size:15px;font-weight:900;flex:0 0 auto}.board-title h2{font-size:20px;line-height:1.3;margin:0}.board-title small{color:var(--muted);font-size:12px}.problem-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-left:auto}.pill-button{border:1px solid #c9d6e2;background:#fff;border-radius:9px;color:#234c70;font-weight:750;padding:9px 12px;font-size:12px}.pill-button:hover{background:#edf5fc}.pill-button.primary{background:#266ca6;color:#fff;border-color:#266ca6}.pill-button.primary:hover{background:#195686}.problem-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.72fr);gap:19px;align-items:stretch}.figure-box{background:#fbfdff;border:1px solid #e3eaf0;border-radius:13px;min-width:0;display:grid;place-items:center;padding:8px}.figure-box svg{display:block;width:100%;max-width:670px;height:auto}.problem-facts{background:#f6f9fc;border:1px solid #e5ecf3;border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:14px}.tag{border-radius:100px;padding:5px 10px;font-weight:800;letter-spacing:.04em;font-size:10px;color:#38628d;background:#e5eff8;display:inline-block;width:max-content}.fact-label{display:block;font-size:10px;font-weight:850;letter-spacing:.12em;color:#8a9db0}.fact-value{font-size:17px;font-weight:850;line-height:1.45;margin:3px 0 0}.fact-note{font-size:11px;color:#6c8296;line-height:1.9;border-top:1px solid #dee7ee;padding-top:12px;margin-top:auto}.instructions{font-size:12px;color:#60778b;margin:11px 0 0}.quiz-head{display:flex;align-items:center;gap:11px;margin:27px 0 15px}.quiz-head h2{font-size:22px;margin:0}.quiz-head .muted{font-size:12px;color:var(--muted)}.question-grid{display:grid;gap:18px}.question{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px 21px;box-shadow:0 6px 22px #25456509}.question-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.letter{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-weight:900;color:#fff}.question[data-type="N"] .letter{background:var(--cyan)}.question[data-type="Q"] .letter{background:var(--blue)}.question[data-type="M"] .letter{background:var(--orange)}.question-head h3{margin:0;font-size:18px}.question-head small{color:var(--muted);font-size:11px}.answer-state{margin-left:auto;color:#7c90a2;font-weight:800;font-size:12px}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choice{min-width:0;padding:12px 10px 8px;background:#fbfdff;border:2px solid #e0e9f1;border-radius:11px;color:var(--text);position:relative;text-align:left;transition:background .14s,border-color .14s,transform .14s}.choice:hover:not(:disabled){border-color:#87b2d5;background:#f0f6fd;transform:translateY(-2px)}.choice.is-selected{border-color:#2a76b3;background:#eff7fd;box-shadow:0 0 0 1px #2a76b333}.choice.is-correct{border-color:#209168!important;background:#edf9f3}.choice.is-wrong{border-color:#c7584b;background:#fff3f0}.choice-title{font-size:12px;font-weight:900;padding-left:9px}.choice svg{display:block;width:100%;height:auto}.choice .numeric-diagram text{paint-order:stroke;stroke:#fbfdff;stroke-width:3px;stroke-linejoin:round}.choice .numeric-diagram .band-text{stroke:none}.choice-marker{font-weight:900;font-size:11px;position:absolute;right:12px;top:9px}.question[data-type="N"]{--diagram:var(--cyan)}.question[data-type="Q"]{--diagram:var(--blue)}.question[data-type="M"]{--diagram:var(--orange)}.hint-row{border-top:1px solid #eef2f6;margin-top:10px;padding-top:10px;color:#71879a;font-size:11px}.hint-row span{font-weight:750;color:#375875}.answer-feedback{padding:11px 13px;background:#f2f8fd;border-left:3px solid #69a4d1;margin:12px 0 0;border-radius:5px;font-size:12px}.answer-feedback.good{background:#eef8f3;border-color:#209168}.answer-feedback.bad{background:#fff4f1;border-color:#cc6c55}
+main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 9px 30px #203b5510;padding:24px 27px;margin-bottom:20px}.board-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.step{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e7f1fa;color:#286596;font-size:15px;font-weight:900;flex:0 0 auto}.board-title h2{font-size:20px;line-height:1.3;margin:0}.board-title small{color:var(--muted);font-size:12px}.problem-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-left:auto}.pill-button{border:1px solid #c9d6e2;background:#fff;border-radius:9px;color:#234c70;font-weight:750;padding:9px 12px;font-size:12px}.pill-button:hover{background:#edf5fc}.pill-button.primary{background:#266ca6;color:#fff;border-color:#266ca6}.pill-button.primary:hover{background:#195686}.problem-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.72fr);gap:19px;align-items:stretch}.figure-box{background:#fbfdff;border:1px solid #e3eaf0;border-radius:13px;min-width:0;display:grid;place-items:center;padding:8px}.figure-box svg{display:block;width:100%;max-width:670px;height:auto}.problem-facts{background:#f6f9fc;border:1px solid #e5ecf3;border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:14px}.tag{border-radius:100px;padding:5px 10px;font-weight:800;letter-spacing:.04em;font-size:10px;color:#38628d;background:#e5eff8;display:inline-block;width:max-content}.fact-label{display:block;font-size:10px;font-weight:850;letter-spacing:.12em;color:#8a9db0}.fact-value{font-size:17px;font-weight:850;line-height:1.45;margin:3px 0 0}.fact-note{font-size:11px;color:#6c8296;line-height:1.9;border-top:1px solid #dee7ee;padding-top:12px;margin-top:auto}.instructions{font-size:12px;color:#60778b;margin:11px 0 0}.quiz-head{display:flex;align-items:center;gap:11px;margin:27px 0 15px}.quiz-head h2{font-size:22px;margin:0}.quiz-head .muted{font-size:12px;color:var(--muted)}.question-grid{display:grid;gap:18px}.question{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px 21px;box-shadow:0 6px 22px #25456509}.question-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.letter{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-weight:900;color:#fff}.question[data-type="N"] .letter{background:var(--cyan)}.question[data-type="Q"] .letter{background:var(--blue)}.question[data-type="M"] .letter{background:var(--orange)}.question-head h3{margin:0;font-size:18px}.question-head small{color:var(--muted);font-size:11px}.answer-state{margin-left:auto;color:#7c90a2;font-weight:800;font-size:12px}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choice{min-width:0;padding:12px 10px 8px;background:#fbfdff;border:2px solid #e0e9f1;border-radius:11px;color:var(--text);position:relative;text-align:left;transition:background .14s,border-color .14s,transform .14s}.choice:hover:not(:disabled){border-color:#87b2d5;background:#f0f6fd;transform:translateY(-2px)}.choice.is-selected{border-color:#2a76b3;background:#eff7fd;box-shadow:0 0 0 1px #2a76b333}.choice.is-correct{border-color:#209168!important;background:#edf9f3}.choice.is-wrong{border-color:#c7584b;background:#fff3f0}.choice-title{font-size:12px;font-weight:900;padding-left:9px}.choice svg{display:block;width:100%;height:auto;min-height:188px}.choice .numeric-diagram text{paint-order:stroke;stroke:#fbfdff;stroke-width:3px;stroke-linejoin:round}.choice .numeric-diagram .band-text{stroke:none}.choice-marker{font-weight:900;font-size:11px;position:absolute;right:12px;top:9px}.question[data-type="N"]{--diagram:var(--cyan)}.question[data-type="Q"]{--diagram:var(--blue)}.question[data-type="M"]{--diagram:var(--orange)}.hint-row{border-top:1px solid #eef2f6;margin-top:10px;padding-top:10px;color:#71879a;font-size:11px}.hint-row span{font-weight:750;color:#375875}.answer-feedback{padding:11px 13px;background:#f2f8fd;border-left:3px solid #69a4d1;margin:12px 0 0;border-radius:5px;font-size:12px}.answer-feedback.good{background:#eef8f3;border-color:#209168}.answer-feedback.bad{background:#fff4f1;border-color:#cc6c55}
 .actions{display:flex;gap:11px;justify-content:center;align-items:center;flex-wrap:wrap;margin:27px 0 16px}.main-button{border:0;border-radius:12px;background:#235f9b;color:#fff;font-weight:850;padding:15px 30px;font-size:15px;min-width:205px}.main-button:hover{background:#174c7f}.main-button:disabled{background:#9db0c0;opacity:.7}.secondary-button{border:1px solid #c3d3e1;color:#27547b;border-radius:12px;background:#fff;padding:14px 21px;font-weight:800}.secondary-button:hover{background:#eaf4fa}.score{background:#fff;border:1px solid #c4e1d2;border-radius:13px;padding:17px 21px;margin:19px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:16px}.score strong{font-size:24px;color:#207851}.score p{margin:0;color:#566e80;font-size:12px}.usage{background:#fff;border:1px solid var(--line);border-radius:13px;margin-top:26px;padding:17px 21px}.usage summary{font-weight:800;cursor:pointer;color:#334f6a}.usage p{font-size:12px;color:#607587}.usage ul{font-size:12px;color:#607587;line-height:2;margin-bottom:0}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#8293a2;font-size:11px;border-top:1px solid #dae4ed;padding:23px 0 8px}.footer a{color:#4d779b}
 @media(max-width:920px){.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-layout{grid-template-columns:minmax(0,1fr) minmax(210px,.62fr)}.problem-controls{margin-left:0}.board-title{align-items:flex-start}}@media(max-width:650px){.choice-grid{grid-template-columns:1fr}.mast{padding:26px 0}.mast-label{display:none}.mast p{font-size:12px}.shell{width:calc(100% - 22px)}main{padding:11px 0 35px}.board{padding:15px 13px}.board-title h2{font-size:17px}.problem-layout{grid-template-columns:1fr;gap:9px}.problem-facts{flex-direction:row;flex-wrap:wrap;gap:12px;padding:12px}.problem-facts>div{flex:1;min-width:130px}.fact-value{font-size:14px}.fact-note{margin-top:0;min-width:100%;padding-top:7px}.question{padding:14px 10px}.question-head h3{font-size:15px}.question-head small{display:none}.question-head{gap:8px}.choice-grid{gap:7px}.choice{padding:8px 2px 3px}.choice-title{padding-left:7px}.choice-marker{right:6px;top:7px}.quiz-head{flex-wrap:wrap;margin:21px 0 12px}.quiz-head h2{font-size:18px}.quiz-head .muted{width:100%}.actions{gap:8px}.main-button,.secondary-button{width:100%}.figure-box{padding:0;overflow-x:auto;display:block}.figure-box svg{min-width:510px;max-width:none}.hint-row{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
@@ -58,7 +58,7 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 .workspace-problem .pill-button{padding:5px 9px}
 .workspace-problem .problem-layout{display:flex;flex-direction:column;min-height:0;gap:7px;overflow:auto}
 .workspace-problem .figure-box{min-height:0;min-width:0;padding:4px;display:flex;align-items:center;justify-content:center;overflow:auto}
-.workspace-problem .figure-box svg{width:100%;min-width:0;max-width:100%;max-height:min(45dvh,415px);height:auto;object-fit:contain}
+.workspace-problem .figure-box svg{width:100%;min-width:0;max-width:100%;max-height:min(58dvh,560px);height:auto;object-fit:contain}
 .workspace-problem .problem-facts{display:block;padding:9px 12px;max-height:21dvh;min-height:38px;overflow:auto}
 .workspace-problem .problem-facts>div{margin:0 0 4px}
 .workspace-problem .fact-label{font-size:9px}
@@ -374,7 +374,19 @@ function graph(cfg,scale,ox,oy){
  const g=geometry(cfg),nodes=g.nodes.map(([x,y])=>[ox+x*scale,oy-y*scale]);
  const segments=pairs(nodes);
  const pos=(m,s)=>{const a=nodes[m],b=nodes[m+1],L=g.members[m].L;return [a[0]+(b[0]-a[0])*s/L,a[1]+(b[1]-a[1])*s/L]};
- return {nodes,segments,pos};
+ return {nodes,segments,pos,scale};
+}
+function fittedGraph(cfg,left,top,width,height,fill=1){
+ const geo=geometry(cfg);
+ const xs=geo.nodes.map(p=>p[0]), ys=geo.nodes.map(p=>p[1]);
+ const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
+ const spanX=maxX-minX, spanY=maxY-minY, maxDim=Math.max(spanX,spanY,1);
+ const scale=(Math.min(width,height)*fill)/maxDim;
+ const ox=left + (width - spanX*scale)/2 - minX*scale;
+ const oy=top + (height - spanY*scale)/2 + maxY*scale;
+ const g=graph(cfg,scale,ox,oy);
+ g.maxDim=maxDim;g.bounds={minX,maxX,minY,maxY,spanX,spanY,left,top,width,height};
+ return g;
 }
 function optionsSVG(r,opts){
  const result={};
@@ -384,7 +396,7 @@ function optionsSVG(r,opts){
  }return result;
 }
 function diagramSVG(opt,type,max,r,uid='preview'){
- const cfg=r.cfg,g=graph(cfg,46,190,323),col={N:'#0b8f87',Q:'#3978b6',M:'#cf6348'}[type];
+ const cfg=r.cfg,g=fittedGraph(cfg,80,46,560,300,1),col={N:'#0b8f87',Q:'#3978b6',M:'#cf6348'}[type];
  const px=Math.min(19,55/Math.max(1,max));
  const ntype=type==='M'?-1:1;
  const vals=(m,s,side='left')=>value(opt,type,r,m,s,side);
@@ -449,7 +461,7 @@ function diagramSVG(opt,type,max,r,uid='preview'){
  return `<svg class="numeric-diagram" viewBox="0 0 720 480" role="img" aria-label="${CAT[cfg.structure]}・${type}図"><defs>${defs}</defs><path d="${path(g.nodes)}" fill="none" stroke="#9cb0c1" stroke-width="3" stroke-dasharray="5 5"/>${body.join('')}${pointLabels}${tags.join('')}${note.join('')}</svg>`;
 }
 function problemSVG(cfg){
- const g=graph(cfg,65,260,540),gg=geometry(cfg);const chunks=[];
+ const g=fittedGraph(cfg,170,55,550,300,1),gg=geometry(cfg);const chunks=[];
  const p=(m,x)=>g.pos(m,x),node=tag=>g.nodes[gg.names.indexOf(tag)];
  const path=arr=>arr.map((z,i)=>`${i?'L':'M'}${z[0].toFixed(1)} ${z[1].toFixed(1)}`).join(' ');
  const lab=(x,y,msg,size=17,col='#365771')=>`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="sans-serif" font-size="${size}" font-weight="750" text-anchor="middle" fill="${col}" stroke="white" stroke-width="4" paint-order="stroke">${escape(msg)}</text>`;
@@ -457,7 +469,7 @@ function problemSVG(cfg){
  const dim=(member,start,end,index,axis,caption)=>{
   const aa=p(member,start),bb=p(member,end);
   const horizontal=axis==='horizontal';
-  const off=horizontal?[0,65+index*28]:(gg.members[member].a[0]<cfg.L/2?[-82-index*28,0]:[82+index*28,0]);
+  const off=horizontal?[0,46+index*22]:(gg.members[member].a[0]<cfg.L/2?[-55-index*20,0]:[55+index*20,0]);
   const a=add(aa,off),b=add(bb,off),ticks=horizontal?`M${a[0]} ${a[1]-7}v14M${b[0]} ${b[1]-7}v14`:`M${a[0]-7} ${a[1]}h14M${b[0]-7} ${b[1]}h14`;
   chunks.push(`<path d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}${ticks}" fill="none" stroke="${stroke}" stroke-width="1.5"/>`);
   if(horizontal)chunks.push(lab((a[0]+b[0])/2,a[1]-9,caption,15));
@@ -474,12 +486,12 @@ function problemSVG(cfg){
   chunks.push(`<path d="M${from[0]} ${from[1]}L${to[0]} ${to[1]}M${left[0]} ${left[1]}L${to[0]} ${to[1]}L${right[0]} ${right[1]}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round"/>`);
  }
  function circleArrow(center,ccw){
-  const r=18,a=155*Math.PI/180,b=385*Math.PI/180;
+  const r=9,a=155*Math.PI/180,b=385*Math.PI/180;
   const start=ccw?b:a,end=ccw?a:b,sweep=ccw?0:1;
   const aa=[center[0]+r*Math.cos(start),center[1]+r*Math.sin(start)],bb=[center[0]+r*Math.cos(end),center[1]+r*Math.sin(end)];
   const ux=-(bb[1]-center[1])/r*(ccw?-1:1),uy=(bb[0]-center[0])/r*(ccw?-1:1);
-  const base=[bb[0]-ux*10,bb[1]-uy*10];
-  chunks.push(`<path d="M${aa[0]} ${aa[1]}A${r} ${r} 0 1 ${sweep} ${bb[0]} ${bb[1]}" fill="none" stroke="#d45e40" stroke-width="2.8"/><path d="M${bb[0]} ${bb[1]}L${base[0]+uy*5} ${base[1]-ux*5}L${base[0]-uy*5} ${base[1]+ux*5}Z" fill="#d45e40"/>`);
+  const base=[bb[0]-ux*11,bb[1]-uy*11];
+  chunks.push(`<path d="M${aa[0]} ${aa[1]}A${r} ${r} 0 1 ${sweep} ${bb[0]} ${bb[1]}" fill="none" stroke="#d45e40" stroke-width="2.8"/><path d="M${bb[0]} ${bb[1]}L${base[0]+uy*5.5} ${base[1]-ux*5.5}L${base[0]-uy*5.5} ${base[1]+ux*5.5}Z" fill="#d45e40"/>`);
  }
  chunks.push(`<path d="${path(g.nodes)}" stroke="#29425b" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`);
  function pin(pt,roller=false){
@@ -516,11 +528,11 @@ function problemSVG(cfg){
    chunks.push(lab(l[0]+(horizontal?0:-Math.sign(ld.Fx)*22),l[1]-12,`${fmt(ld.value)} kN/m`,16,'#b64f37'));
   }
   const axis=horizontal?'horizontal':'vertical';
-  segmentsFor(ld).forEach(([a,b],k)=>dim(ld.member,a,b,i*2+k,axis,`${fmt(b-a)} m`));
+  segmentsFor(ld).forEach(([a,b])=>dim(ld.member,a,b,i,axis,`${fmt(b-a)} m`));
  });
  for(let m=0;m<gg.members.length;m++){
   const el=gg.members[m];
-  dim(m,0,el.L,8,el.horizontal?'horizontal':'vertical',`${fmt(el.L)} m`);
+  dim(m,0,el.L,cfg.loads.length+1,el.horizontal?'horizontal':'vertical',`${fmt(el.L)} m`);
  }
  g.nodes.forEach((z,i)=>chunks.push(lab(z[0]+(i===0||i===g.nodes.length-1?-18:0),z[1]-16,gg.names[i],18,'#284359')));
  return `<svg viewBox="0 0 890 760" role="img" aria-label="${CAT[cfg.structure]}の支持条件・荷重図" style="width:100%;height:auto"><rect x="0" y="0" width="890" height="760" fill="#fbfdff" rx="12"/>${chunks.join('')}</svg>`;
@@ -758,12 +770,12 @@ function curveArrow(cx,cy,r,ccw){
  const pt=t=>[cx+r*Math.cos(rad(t)),cy+r*Math.sin(rad(t))];
  const a=pt(start),b=pt(end),t=rad(end);
  const ux=(ccw?1:-1)*Math.sin(t),uy=(ccw?-1:1)*Math.cos(t);
- const bx=b[0]-11*ux,by=b[1]-11*uy,px=-uy,py=ux;
- return `<path d="M${a[0].toFixed(2)} ${a[1].toFixed(2)} A${r} ${r} 0 1 ${sweep} ${b[0].toFixed(2)} ${b[1].toFixed(2)}" stroke="#c9553b" stroke-width="3.3" fill="none"/><path d="M${b[0].toFixed(2)} ${b[1].toFixed(2)}L${(bx+5*px).toFixed(2)} ${(by+5*py).toFixed(2)}L${(bx-5*px).toFixed(2)} ${(by-5*py).toFixed(2)}Z" fill="#c9553b"/>`;
+ const bx=b[0]-12.1*ux,by=b[1]-12.1*uy,px=-uy,py=ux;
+ return `<path d="M${a[0].toFixed(2)} ${a[1].toFixed(2)} A${r} ${r} 0 1 ${sweep} ${b[0].toFixed(2)} ${b[1].toFixed(2)}" stroke="#c9553b" stroke-width="3.3" fill="none"/><path d="M${b[0].toFixed(2)} ${b[1].toFixed(2)}L${(bx+5.5*px).toFixed(2)} ${(by+5.5*py).toFixed(2)}L${(bx-5.5*px).toFixed(2)} ${(by-5.5*py).toFixed(2)}Z" fill="#c9553b"/>`;
 }
 function problemFigure(cfg){
  // すべての部材は同じ尺度64px/m。A(柱+梁), B(梁+手すり)も寸法通り。
- const g=svgGeometry(cfg,62,245,615,445),P=g.pos;
+ const __maxDim=Math.max(cfg.L,cfg.h,1),__scale=300/__maxDim; const g=svgGeometry(cfg,__scale,190,670,390),P=g.pos;
  const parts=[],label=(x,y,txt,color='#2e4b66',size=18,anchor='middle')=>`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" fill="${color}" font-size="${size}" font-weight="800" text-anchor="${anchor}" paint-order="stroke" stroke="#fbfdff" stroke-width="5">${HTML(txt)}</text>`;
  const dimline=(a,b,txt,vert=false)=>{
   parts.push(`<path d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}" stroke="#7194ae" stroke-width="1.8"/><path d="M${a[0]-(vert?7:0)} ${a[1]-(vert?0:7)}l${vert?14:0} ${vert?0:14}M${b[0]-(vert?7:0)} ${b[1]-(vert?0:7)}l${vert?14:0} ${vert?0:14}" stroke="#7194ae" stroke-width="1.6"/>`);
@@ -785,7 +797,7 @@ function problemFigure(cfg){
  // 荷重の見た目は数値に比例させる（例：1kNに対して2kNは2倍の長さ）。
  const pointSpan=v=>16*Math.max(1,Math.abs(v));
  const udlSpan=v=>14*Math.max(1,Math.abs(v));
- const momentRadius=48; // 4 kN·m相当の固定サイズ
+ const momentRadius=24; // 4 kN·m相当の固定サイズの半径を1/2に調整
  // 荷重は必ず部材の上に作用点が来る。ラベルは数値＋単位のみ。
  let horizontalMarks=0,verticalMarks=0;
  for(const ld of cfg.loads){
@@ -858,7 +870,7 @@ function problemFigure(cfg){
   const labelY=i===2?p[1]-12:i===1?p[1]-13:p[1]+28;
   parts.push(label(labelX,labelY,'ABC'[i],'#253d55',19));
  }
- return `<svg viewBox="0 0 860 630" role="img" aria-label="${cfg.pattern==='A'?'柱と梁のL形（A）':'梁と手すり状のL形（B）'}、${cfg.orientation==='left'?'左':'右'}側固定。水平・鉛直とも62ピクセル毎メートル"><rect x="0" y="0" width="860" height="630" rx="12" fill="#fbfdff"/>${parts.join('')}</svg>`;
+ return `<svg viewBox="0 0 860 630" role="img" aria-label="${cfg.pattern==='A'?'柱と梁のL形（A）':'梁と手すり状のL形（B）'}、${cfg.orientation==='left'?'左':'右'}側固定。最大寸法を基準化して拡大表示"><rect x="0" y="0" width="860" height="630" rx="12" fill="#fbfdff"/>${parts.join('')}</svg>`;
 }
 function quadraticIntervals(opt,r){
  const out=[];
@@ -876,7 +888,7 @@ function quadraticIntervals(opt,r){
 let diagramRenderSequence=0;
 function diagram(opt,type,shared,r){
  // すべての骨組パターンについて、部材のピクセル/mを共通にする。
- const cfg=r.cfg,g=svgGeometry(cfg,36,160,400,253),col={N:'#118f88',Q:'#3679ba',M:'#cf6445'}[type];
+ const cfg=r.cfg,__maxDim=Math.max(r.cfg.L,r.cfg.h,1),g=svgGeometry(cfg,300/__maxDim,130,430,290),col={N:'#118f88',Q:'#3679ba',M:'#cf6445'}[type];
  const scale=Math.min(25,52/Math.max(shared,1));
  const normal=type==='M'?-1:1;
  function locate(m,s,v){
@@ -1102,6 +1114,50 @@ function annotateChoiceSvg(source,type,cfg){
  return svg.outerHTML;
 }
 
+
+// Trim unused SVG canvas without changing the relative scale between the four choices.
+// Ignore full-canvas background rectangles, but keep all text, loads and dimension lines.
+function visibleSvgBounds(svg){
+ const vb=svg.viewBox?.baseVal;
+ if(!vb)return null;
+ let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+ for(const child of svg.children){
+  const tag=child.tagName?.toLowerCase();
+  if(!tag||['defs','title','desc','metadata','style'].includes(tag))continue;
+  if(tag==='rect'){
+   const w=Number(child.getAttribute('width'))||0,h=Number(child.getAttribute('height'))||0;
+   if(w>=vb.width*.9&&h>=vb.height*.9)continue;
+  }
+  if(typeof child.getBBox!=='function')continue;
+  let b;try{b=child.getBBox()}catch(_){continue}
+  if(![b.x,b.y,b.width,b.height].every(Number.isFinite))continue;
+  if(b.width<.01&&b.height<.01)continue;
+  minX=Math.min(minX,b.x);minY=Math.min(minY,b.y);
+  maxX=Math.max(maxX,b.x+b.width);maxY=Math.max(maxY,b.y+b.height);
+ }
+ return Number.isFinite(minX)&&maxX>minX&&maxY>minY?{minX,minY,maxX,maxY}:null;
+}
+function setFittedSvgViewBox(svg,b){
+ const pad=Math.max(13,Math.min(22,Math.max(b.maxX-b.minX,b.maxY-b.minY)*.045));
+ const x=b.minX-pad,y=b.minY-pad,w=b.maxX-b.minX+2*pad,h=b.maxY-b.minY+2*pad;
+ svg.setAttribute('viewBox',[x,y,w,h].map(n=>Number(n.toFixed(2))).join(' '));
+}
+function fitDisplayedQuizSvgs(){
+ const drawing=document.querySelector('#problemFigure svg');
+ if(drawing){const bounds=visibleSvgBounds(drawing);if(bounds)setFittedSvgViewBox(drawing,bounds)}
+ for(const section of document.querySelectorAll('#questionGrid .question')){
+  const svgs=[...section.querySelectorAll('.choice svg')];
+  const boxes=svgs.map(visibleSvgBounds).filter(Boolean);
+  if(!boxes.length)continue;
+  // One common viewBox per N/Q/M group prevents wrong alternatives from being resized independently.
+  const common={
+   minX:Math.min(...boxes.map(b=>b.minX)),minY:Math.min(...boxes.map(b=>b.minY)),
+   maxX:Math.max(...boxes.map(b=>b.maxX)),maxY:Math.max(...boxes.map(b=>b.maxY))
+  };
+  svgs.forEach(svg=>setFittedSvgViewBox(svg,common));
+ }
+}
+
 async function newQuestion(){
  if(!sessionStarted||roundLoading||gradeLoading||portalBusy)return;
  const chosen=readSettings().structure;
@@ -1135,7 +1191,8 @@ async function newQuestion(){
   document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(type=>{
    return `<section class="question" data-type="${type}" aria-labelledby="title-${type}"><div class="question-head"><div class="letter">${type}</div><h3 id="title-${type}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[type]}図（${type}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${type}">未選択</span></div><div class="choice-grid">${choices[type].map((o,j)=>`<button type="button" class="choice" data-type="${type}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${annotateChoiceSvg(o.svg,type,cfg)}</button>`).join('')}</div><p class="answer-feedback" id="feedback-${type}" hidden></p></section>`;
   }).join('');
-  const resultBox=document.getElementById('score');resultBox.hidden=true;resultBox.innerHTML='';
+  fitDisplayedQuizSvgs();
+ const resultBox=document.getElementById('score');resultBox.hidden=true;resultBox.innerHTML='';
   const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
  }catch(err){showStatus('問題を取得できませんでした：'+err.message+'　もう一度「別の問題を出す」を押してください。');}
  finally{roundLoading=false;nextIds.forEach(id=>document.getElementById(id).disabled=false);}
@@ -1227,6 +1284,7 @@ function renderPortalQuestion(payload,category,isOnline,serverId=''){
  }).join('');
  document.getElementById('factNote').textContent='片持ちと同じ符号規約。全長・荷重位置は整数。単純ラーメンは左右支点高低差ありの問題を含み、3ピンは中央ヒンジまたは柱頭ヒンジでヒンジ位置のM=0。';
  document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(t=>`<section class="question" data-type="${t}" aria-labelledby="title-${t}"><div class="question-head"><div class="letter">${t}</div><h3 id="title-${t}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[t]}図（${t}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${t}">未選択</span></div><div class="choice-grid">${choices[t].map((x,j)=>`<button class="choice" type="button" data-type="${t}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${x.svg}</button>`).join('')}</div><p class="answer-feedback" id="feedback-${t}" hidden></p></section>`).join('');
+ fitDisplayedQuizSvgs();
  const gradeBtn=document.getElementById('grade');gradeBtn.disabled=true;gradeBtn.textContent='3つ選んで答え合わせ';
  const out=document.getElementById('score');out.hidden=true;out.innerHTML='';
  portalFeedbackStreak(portalState.streak,portalState.best);
