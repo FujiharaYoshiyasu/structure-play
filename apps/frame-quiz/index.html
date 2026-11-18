@@ -1275,8 +1275,18 @@ function resetAnswerScroll(){
  hideCelebration();
  const pane=document.getElementById('workspaceAnswers');
  if(!pane)return;
- pane.scrollTop=0;
- requestAnimationFrame(()=>{pane.scrollTop=0;});
+ // 新しい問題は必ずN図（軸力図）の見出しと選択肢から表示する。
+ // ページ全体を動かさず、独立してスクロールする解答エリアだけを移動する。
+ const revealN=()=>{
+  const firstN=pane.querySelector('.question[data-type="N"]');
+  if(!firstN){pane.scrollTop=0;return;}
+  const paneTop=pane.getBoundingClientRect().top;
+  const nTop=firstN.getBoundingClientRect().top;
+  const top=Math.max(0,pane.scrollTop+nTop-paneTop-8);
+  pane.scrollTop=top;
+ };
+ revealN();
+ requestAnimationFrame(revealN);
 }
 function focusAnswerTarget(target){
  if(!target)return;
