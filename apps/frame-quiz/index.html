@@ -112,6 +112,29 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
  .workspace-answers .choice{min-width:0;overflow:hidden}
  .workspace-answers .choice svg{display:block;width:100%;height:auto;aspect-ratio:var(--diagram-aspect,2);min-width:0;min-height:0;max-height:none;object-fit:contain;overflow:hidden}
 }
+
+/* Post-answer feedback: comparison stays within the independently scrollable answer pane. */
+.answer-comparison{margin:13px 0 0;padding:12px;border:1px solid #ccdae6;background:#f8fbff;border-radius:12px;animation:review-reveal .32s ease-out}
+.answer-comparison h4{margin:0 0 10px;font-size:13px;color:#31516d}
+.comparison-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.comparison-card{min-width:0;border:2px solid #d6e1eb;border-radius:10px;background:#fff;padding:7px;overflow:hidden}
+.comparison-card.is-mistake{border-color:#d78a80;background:#fff7f5}
+.comparison-card.is-answer{border-color:#7bbb9e;background:#f5fcf8}
+.comparison-card strong{font-size:12px;display:block;margin:0 2px 5px}
+.comparison-card svg{display:block;width:100%;height:auto;min-width:0;min-height:0;max-width:100%;aspect-ratio:var(--diagram-aspect,2);object-fit:contain;overflow:hidden}
+.answer-review-hint{font-size:11px;color:#607a90;margin:9px 0 0}
+.question:has(.answer-comparison){scroll-margin-top:14px}
+.celebration-layer{position:fixed;inset:0;display:grid;place-items:center;z-index:1000;pointer-events:none;overflow:hidden}
+.celebration-card{position:relative;z-index:2;text-align:center;width:min(90vw,370px);padding:26px 24px 20px;background:#fffef7;border:3px solid #e8c96b;border-radius:22px;box-shadow:0 18px 55px #152b4455;animation:celebrate-pop .5s cubic-bezier(.17,.67,.27,1.29) both}
+.celebration-title{font-size:clamp(27px,6vw,39px);font-weight:950;color:#aa6514;line-height:1.3;letter-spacing:.02em}
+.celebration-subtitle{font-size:15px;font-weight:800;color:#274c67;margin-top:6px}
+.celebration-streak{font-size:13px;color:#527087;margin-top:8px}
+.celebration-particle{position:absolute;left:50%;top:48%;width:10px;height:15px;background:var(--particle-color);border-radius:2px;opacity:0;animation:celebrate-confetti 1.4s ease-out forwards;animation-delay:var(--particle-delay)}
+@keyframes celebrate-pop{from{opacity:0;transform:scale(.75) translateY(30px)}60%{opacity:1;transform:scale(1.05) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes celebrate-confetti{0%{opacity:1;transform:translate(0,0) rotate(0)}72%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--spin))}}
+@keyframes review-reveal{from{opacity:.1;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.comparison-pair{grid-template-columns:1fr}.answer-comparison{padding:8px}.comparison-card{padding:7px}}
+@media(prefers-reduced-motion:reduce){.celebration-card,.celebration-particle,.answer-comparison{animation:none!important}.celebration-particle{display:none}}
 </style>
 </head>
 <body>
@@ -166,6 +189,14 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   </section>
   <div class="footer"><span>FRAME QUIZ · STRUCTURE &amp; PLAY / 学習用</span><span>静定構造の釣合い式に基づく学習用の問題です。実務の構造設計には用いないでください。</span><a href="../nqm/index.html">NQM図作成ツールへ →</a></div>
 </main>
+
+<div id="celebrationLayer" class="celebration-layer" hidden aria-live="polite" aria-atomic="true">
+ <div class="celebration-card" role="status">
+  <div class="celebration-title">おめでとう！</div>
+  <div class="celebration-subtitle">N・Q・M、3問すべて正解！</div>
+  <div class="celebration-streak" id="celebrationStreak"></div>
+ </div>
+</div>
 <script>
 'use strict';
 // Shared, deterministic static-equilibrium engine for simple and three-pin portal frames.
@@ -1215,6 +1246,110 @@ function fitDisplayedQuizSvgs(){
  }
 }
 
+// Game-feedback controls shared across the three frame families.
+let celebrationTimeout=null;
+function hideCelebration(){
+ if(celebrationTimeout!==null){clearTimeout(celebrationTimeout);celebrationTimeout=null;}
+ document.getElementById('celebrationLayer').hidden=true;
+ document.querySelectorAll('#celebrationLayer .celebration-particle').forEach(x=>x.remove());
+}
+function showCelebration(streak){
+ hideCelebration();
+ const layer=document.getElementById('celebrationLayer');
+ document.getElementById('celebrationStreak').textContent=`連続全問正解 ${streak} 問！`;
+ const colors=['#eaba48','#e87c78','#4fa7c7','#72bf90','#b48bdf'];
+ for(let i=0;i<22;i++){
+  const piece=document.createElement('span');piece.className='celebration-particle';
+  const angle=2*Math.PI*i/22,dist=120+(i%5)*24;
+  piece.style.setProperty('--particle-color',colors[i%colors.length]);
+  piece.style.setProperty('--dx',`${Math.round(Math.cos(angle)*dist)}px`);
+  piece.style.setProperty('--dy',`${Math.round(Math.sin(angle)*dist+40)}px`);
+  piece.style.setProperty('--spin',`${(i%2===0?1:-1)*(270+i*37)}deg`);
+  piece.style.setProperty('--particle-delay',`${(i%4)*.06}s`);
+  layer.appendChild(piece);
+ }
+ layer.hidden=false;
+ celebrationTimeout=setTimeout(()=>{layer.hidden=true;celebrationTimeout=null;},3000);
+}
+function resetAnswerScroll(){
+ hideCelebration();
+ const pane=document.getElementById('workspaceAnswers');
+ if(!pane)return;
+ pane.scrollTop=0;
+ requestAnimationFrame(()=>{pane.scrollTop=0;});
+}
+function focusAnswerTarget(target){
+ if(!target)return;
+ const pane=document.getElementById('workspaceAnswers');
+ if(!pane)return;
+ requestAnimationFrame(()=>{
+  const paneBox=pane.getBoundingClientRect(),targetBox=target.getBoundingClientRect();
+  const destination=pane.scrollTop+targetBox.top-paneBox.top-10;
+  pane.scrollTo({top:Math.max(0,destination),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+ });
+}
+function cloneReviewSvg(source){
+ const svg=source.cloneNode(true),prefix='review-'+(++reviewSvgSequence)+'-';
+ const idMap=new Map();
+ for(const node of svg.querySelectorAll('[id]')){
+  const old=node.id,next=prefix+old;idMap.set(old,next);node.id=next;
+ }
+ if(idMap.size){
+  for(const node of svg.querySelectorAll('*'))for(const attribute of Array.from(node.attributes)){
+   let value=attribute.value;
+   value=value.replace(/url\(#([^)]*)\)/g,(full,id)=>idMap.has(id)?`url(#${idMap.get(id)})`:full);
+   if(value.startsWith('#')&&idMap.has(value.slice(1)))value='#'+idMap.get(value.slice(1));
+   if(value!==attribute.value)node.setAttribute(attribute.name,value);
+  }
+ }
+ svg.removeAttribute('aria-label');
+ svg.setAttribute('aria-hidden','true');
+ return svg;
+}
+let reviewSvgSequence=0;
+function insertWrongAnswerComparisons(selected,correct){
+ let first=null;
+ const names={N:'軸力（N）図',Q:'せん断力（Q）図',M:'曲げモーメント（M）図'};
+ for(const type of ['N','Q','M']){
+  if(selected[type]===correct[type])continue;
+  const section=document.querySelector(`.question[data-type="${type}"]`);
+  if(!section)continue;
+  const card=document.createElement('div');card.className='answer-comparison';
+  card.setAttribute('role','region');card.setAttribute('aria-label',`${names[type]}の答え合わせ`);
+  const title=document.createElement('h4');title.textContent=`${names[type]}の答え合わせ`;card.appendChild(title);
+  const pair=document.createElement('div');pair.className='comparison-pair';
+  for(const [kind,index] of [['mistake',selected[type]],['answer',correct[type]]]){
+   const source=section.querySelector(`.choice[data-choice="${index}"] svg`);
+   if(!source)continue;
+   const item=document.createElement('div');item.className='comparison-card is-'+kind;
+   const head=document.createElement('strong');
+   head.textContent=kind==='mistake'?`× あなたの解答：${'ABCD'[index]}`:`✓ 正解：${'ABCD'[index]}`;
+   item.appendChild(head);item.appendChild(cloneReviewSvg(source));pair.appendChild(item);
+  }
+  card.appendChild(pair);
+  const hint=document.createElement('p');hint.className='answer-review-hint';
+  hint.textContent='2つの図の符号・形・数値を見比べて、違いを確認しましょう。';
+  card.appendChild(hint);
+  const feedback=section.querySelector('.answer-feedback');
+  if(feedback)feedback.insertAdjacentElement('afterend',card);else section.appendChild(card);
+  if(!first)first=card;
+ }
+ return first;
+}
+function afterGradingFeedback(selected,correct,perfect,streak){
+ if(perfect){
+  const score=document.getElementById('score');
+  const strong=score?.querySelector('strong');
+  if(strong)strong.textContent=`おめでとう！ 3 / 3 全問正解！`;
+  showCelebration(streak);
+  focusAnswerTarget(score);
+ }else{
+  hideCelebration();
+  const first=insertWrongAnswerComparisons(selected,correct);
+  focusAnswerTarget(first||document.getElementById('score'));
+ }
+}
+
 async function newQuestion(){
  if(!sessionStarted||roundLoading||gradeLoading||portalBusy)return;
  const chosen=readSettings().structure;
@@ -1251,6 +1386,7 @@ async function newQuestion(){
   fitDisplayedQuizSvgs();
  const resultBox=document.getElementById('score');resultBox.hidden=true;resultBox.innerHTML='';
   const btn=document.getElementById('grade');btn.disabled=true;btn.textContent='3つ選んで答え合わせ';
+  resetAnswerScroll();
  }catch(err){showStatus('問題を取得できませんでした：'+err.message+'　もう一度「別の問題を出す」を押してください。');}
  finally{roundLoading=false;nextIds.forEach(id=>document.getElementById(id).disabled=false);}
 }
@@ -1292,8 +1428,9 @@ async function grade(){
   }
   const R=state.r.reactions,b=document.getElementById('score');b.hidden=false;
   b.innerHTML=`<strong>${response.score} / 3 正解</strong><p>固定端反力（全体のつり合い）：Ax=${signed(R.Ax)} kN、Ay=${signed(R.Ay)} kN、MA=${signed(R.MA)} kN·m（反時計回り＋）。${response.perfect?'全問正解です。連続記録：'+activeStreak+'問。':'図と数値を見比べましょう。連続記録は0問に戻りました。'}</p>`;
-  btn.textContent='採点済み';b.scrollIntoView({behavior:'smooth',block:'nearest'});
-  if(response.perfect)await renderRankings();
+  btn.textContent='採点済み';
+  afterGradingFeedback(state.selected,response.correct,response.score===3,activeStreak);
+  if(response.score===3)await renderRankings();
  }catch(err){
   showStatus('採点結果を確認できませんでした：'+err.message+'　採点されている可能性があるため、連打せず必要に応じて再読み込みしてください。');
   btn.disabled=false;btn.textContent='もう一度採点結果を確認';
@@ -1344,6 +1481,7 @@ function renderPortalQuestion(payload,category,isOnline,serverId=''){
  fitDisplayedQuizSvgs();
  const gradeBtn=document.getElementById('grade');gradeBtn.disabled=true;gradeBtn.textContent='3つ選んで答え合わせ';
  const out=document.getElementById('score');out.hidden=true;out.innerHTML='';
+ resetAnswerScroll();
  portalFeedbackStreak(portalState.streak,portalState.best);
  showStatus(isOnline?'オンライン採点・ランキング有効':'この部門は準備中のサーバーに対応していないため、暫定的に端末内で採点・記録しています。');
 }
@@ -1409,7 +1547,8 @@ async function portalGrade(){
   const r=PortalEngine.analyze(s.cfg),box=document.getElementById('score');box.hidden=false;
   box.innerHTML=`<strong>${score} / 3 正解</strong><p>支持反力：Ax=${signed(r.reactions.Ax)} kN、Ay=${signed(r.reactions.Ay)} kN、Dx=${signed(r.reactions.Dx)} kN、Dy=${signed(r.reactions.Dy)} kN。${perfect?'全問正解！連続'+streak+'問。':'連続正解は0問に戻りました。'}</p>`;
   btn.textContent='採点済み';
-  if(perfect)await renderRankings();
+  afterGradingFeedback(s.selected,correct,score===3,streak);
+  if(score===3)await renderRankings();
  }catch(err){showStatus('採点できませんでした：'+err.message);btn.disabled=false;btn.textContent='もう一度採点する';}
  finally{portalBusy=false;for(const id of ['nextTop','nextBottom'])document.getElementById(id).disabled=false}
 }
