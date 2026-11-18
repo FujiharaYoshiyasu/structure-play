@@ -100,17 +100,17 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 }
 
 
-/* MOBILE: All engineering SVGs fit completely in horizontal 2:1 display frames. */
+/* MOBILE: adapt diagrams to content proportions instead of cropping tall frames into 2:1. */
 @media(max-width:760px){
  .quiz-workspace{height:calc(100dvh - 10px);min-height:0;overflow:hidden;gap:6px}
- .workspace-problem{position:relative;top:auto;flex:0 0 auto;width:100%;height:auto;max-height:none;min-height:0;padding:6px 8px;overflow:visible}
+ .workspace-problem{position:relative;top:auto;flex:0 0 auto;width:100%;height:auto;max-height:46dvh;min-height:0;padding:6px 8px;overflow:hidden}
  .workspace-problem .problem-layout{flex:0 0 auto;display:block;min-height:0;overflow:visible}
- .workspace-problem .figure-box{display:flex;align-items:center;justify-content:center;flex:0 0 auto;aspect-ratio:2 / 1;width:min(100%, calc((42dvh - 60px) * 2));height:auto;min-height:0;margin:0 auto;overflow:hidden;padding:3px}
+ .workspace-problem .figure-box{display:flex;align-items:center;justify-content:center;flex:0 0 auto;aspect-ratio:var(--diagram-aspect,2);width:min(100%, calc((42dvh - 56px) * var(--diagram-aspect,2)));height:auto;min-height:0;max-height:calc(42dvh - 56px);margin:0 auto;overflow:hidden;padding:3px}
  .workspace-problem .figure-box #problemFigure{display:flex;width:100%;height:100%;min-height:0;align-items:center;justify-content:center;overflow:hidden}
- .workspace-problem .figure-box svg{display:block;width:100%;height:100%;min-width:0;max-width:100%;max-height:100%;object-fit:contain;overflow:visible}
+ .workspace-problem .figure-box svg{display:block;width:100%;height:100%;min-width:0;max-width:100%;max-height:100%;object-fit:contain;overflow:hidden}
  .workspace-answers{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:none;overflow-y:auto}
  .workspace-answers .choice{min-width:0;overflow:hidden}
- .workspace-answers .choice svg{display:block;width:100%;height:auto;aspect-ratio:2 / 1;min-width:0;min-height:0;max-height:none;object-fit:contain;overflow:visible}
+ .workspace-answers .choice svg{display:block;width:100%;height:auto;aspect-ratio:var(--diagram-aspect,2);min-width:0;min-height:0;max-height:none;object-fit:contain;overflow:hidden}
 }
 </style>
 </head>
@@ -1175,24 +1175,43 @@ function visibleSvgBounds(svg){
  }
  return Number.isFinite(minX)&&maxX>minX&&maxY>minY?{minX,minY,maxX,maxY}:null;
 }
-function setFittedSvgViewBox(svg,b){
- const pad=Math.max(13,Math.min(22,Math.max(b.maxX-b.minX,b.maxY-b.minY)*.045));
- const x=b.minX-pad,y=b.minY-pad,w=b.maxX-b.minX+2*pad,h=b.maxY-b.minY+2*pad;
+// Choose the frame ratio from the drawing itself (including dimension lines and load labels).
+// Wide drawings stay near 2:1; square/tall drawings get a more generous vertical window.
+function diagramFrameAspect(b){
+ const width=b.maxX-b.minX,height=b.maxY-b.minY;
+ return Number(Math.max(1.08,Math.min(2,width/Math.max(height,1)*1.06)).toFixed(3));
+}
+function setFittedSvgViewBox(svg,b,aspect=diagramFrameAspect(b)){
+ const pad=Math.max(20,Math.min(35,Math.max(b.maxX-b.minX,b.maxY-b.minY)*.065));
+ let x=b.minX-pad,y=b.minY-pad,w=b.maxX-b.minX+2*pad,h=b.maxY-b.minY+2*pad;
+ // Expand the viewBox instead of using CSS clipping. Every annotation stays visible.
+ if(w/h<aspect){const excess=h*aspect-w;x-=excess/2;w+=excess}
+ else{const excess=w/aspect-h;y-=excess/2;h+=excess}
  svg.setAttribute('viewBox',[x,y,w,h].map(n=>Number(n.toFixed(2))).join(' '));
+ svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+ svg.style.setProperty('--diagram-aspect',String(aspect));
 }
 function fitDisplayedQuizSvgs(){
  const drawing=document.querySelector('#problemFigure svg');
- if(drawing){const bounds=visibleSvgBounds(drawing);if(bounds)setFittedSvgViewBox(drawing,bounds)}
+ if(drawing){
+  const bounds=visibleSvgBounds(drawing);
+  if(bounds){
+   const aspect=diagramFrameAspect(bounds);
+   document.querySelector('.workspace-problem .figure-box')?.style.setProperty('--diagram-aspect',String(aspect));
+   setFittedSvgViewBox(drawing,bounds,aspect);
+  }
+ }
  for(const section of document.querySelectorAll('#questionGrid .question')){
   const svgs=[...section.querySelectorAll('.choice svg')];
   const boxes=svgs.map(visibleSvgBounds).filter(Boolean);
   if(!boxes.length)continue;
-  // One common viewBox per N/Q/M group prevents wrong alternatives from being resized independently.
+  // All four candidates share one viewBox and one force scale.
   const common={
    minX:Math.min(...boxes.map(b=>b.minX)),minY:Math.min(...boxes.map(b=>b.minY)),
    maxX:Math.max(...boxes.map(b=>b.maxX)),maxY:Math.max(...boxes.map(b=>b.maxY))
   };
-  svgs.forEach(svg=>setFittedSvgViewBox(svg,common));
+  const aspect=diagramFrameAspect(common);
+  svgs.forEach(svg=>setFittedSvgViewBox(svg,common,aspect));
  }
 }
 
