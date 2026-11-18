@@ -99,6 +99,19 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
  .workspace-problem .instructions{display:none}
 }
 
+
+/* MOBILE: All engineering SVGs fit completely in horizontal 2:1 display frames. */
+@media(max-width:760px){
+ .quiz-workspace{height:calc(100dvh - 10px);min-height:0;overflow:hidden;gap:6px}
+ .workspace-problem{position:relative;top:auto;flex:0 0 auto;width:100%;height:auto;max-height:none;min-height:0;padding:6px 8px;overflow:visible}
+ .workspace-problem .problem-layout{flex:0 0 auto;display:block;min-height:0;overflow:visible}
+ .workspace-problem .figure-box{display:flex;align-items:center;justify-content:center;flex:0 0 auto;aspect-ratio:2 / 1;width:min(100%, calc((42dvh - 60px) * 2));height:auto;min-height:0;margin:0 auto;overflow:hidden;padding:3px}
+ .workspace-problem .figure-box #problemFigure{display:flex;width:100%;height:100%;min-height:0;align-items:center;justify-content:center;overflow:hidden}
+ .workspace-problem .figure-box svg{display:block;width:100%;height:100%;min-width:0;max-width:100%;max-height:100%;object-fit:contain;overflow:visible}
+ .workspace-answers{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:none;overflow-y:auto}
+ .workspace-answers .choice{min-width:0;overflow:hidden}
+ .workspace-answers .choice svg{display:block;width:100%;height:auto;aspect-ratio:2 / 1;min-width:0;min-height:0;max-height:none;object-fit:contain;overflow:visible}
+}
 </style>
 </head>
 <body>
@@ -128,7 +141,7 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   <section class="board workspace-problem" aria-labelledby="problemTitle">
     <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">ラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button></div></div>
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note" id="factNote">部材：A→B→C。応力図の方向と荷重位置を確認してください。</div></div></div>
-    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。</p>
+    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。一定値の部材は数値を1か所に集約し、変化がある部材では変化に必要な値を記載します。</p>
   </section>
   <div class="workspace-answers" id="workspaceAnswers" tabindex="0" aria-label="N・Q・M図の選択肢。ここをスクロールして解答します。">
   <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">応力図内の記号・数値・単位を確認（全3問）</span></div>
@@ -438,14 +451,37 @@ function diagramSVG(opt,type,max,r,uid='preview'){
   placed.push(best.box);
   tags.push(`<path d="M${anchor[0].toFixed(1)} ${anchor[1].toFixed(1)}L${best.x.toFixed(1)} ${best.y.toFixed(1)}" stroke="${col}" stroke-opacity=".35" stroke-width=".85"/><rect x="${(best.x-width/2).toFixed(1)}" y="${(best.y-H/2).toFixed(1)}" width="${width}" height="${H}" rx="4" fill="#fff" fill-opacity=".94" stroke="${col}" stroke-opacity=".4"/><text x="${best.x.toFixed(1)}" y="${(best.y+4).toFixed(1)}" font-size="12" font-weight="800" text-anchor="middle" fill="#26435c">${escape(caption)}</text>`);
  }
+ // 各部材で一定の値（0を含む）は1回のみ表示する。
+ // 変化する場合は、値が変わる区間端とM図の必要な極値のみ表示する。
+ function compactMemberValues(m){
+  const el=r.elements[m],cuts=breaks(cfg,m),raw=[];
+  const push=(s,v)=>{if(Number.isFinite(v))raw.push({s,v:Math.abs(v)<1e-8?0:v})};
+  for(let i=0;i<cuts.length-1;i++){
+   const a=cuts[i],b=cuts[i+1];
+   if(b-a<1e-8)continue;
+   push(a,vals(m,a,'right'));
+   if(type==='M'){
+    const q0=r.force('Q',m,a,'right'),q1=r.force('Q',m,b,'left');
+    if(q0*q1 < -1e-8){
+     const peak=a+(b-a)*q0/(q0-q1);
+     if(peak>a+1e-6&&peak<b-1e-6)push(peak,vals(m,peak,'right'));
+    }
+   }
+   push(b,vals(m,b,'left'));
+  }
+  if(!raw.length)return [{s:el.L/2,v:0}];
+  const result=[];
+  for(const sample of raw){
+   if(!result.length||Math.abs(result[result.length-1].v-sample.v)>1e-6)result.push(sample);
+  }
+  if(result.length===1)result[0]={s:el.L/2,v:result[0].v};
+  return result;
+ }
  r.elements.forEach((el,m)=>{
   const mid=g.pos(m,el.L/2);tags.push(text(mid[0]+(el.horizontal?0:22),mid[1]+(el.horizontal?21:0),el.name,13));
-  for(const [i,s]of [[0,0],[1,el.L]]){
-   const v=vals(m,s,i?'left':'right');
+  for(const {s,v} of compactMemberValues(m)){
    const caption=(type==='M'?fmt(v):signed(v))+' '+(type==='M'?'kNm':'kN');
    const anchor=g.pos(m,s);
-   // 柱の数値も応力図のある側に置き、線とラベルの対応を維持する。
-   // 0値は基線付近、正負がある場合は曲線端に寄せる。
    const annotationAnchor=!el.horizontal&&Math.abs(v)>1e-7?locate(m,s,v):anchor;
    chip(annotationAnchor,caption,el.horizontal);
   }
@@ -1087,14 +1123,14 @@ function annotateChoiceSvg(source,type,cfg){
  for(let m=0;m<2;m++){
   const line=m===0?rows.AB:rows.BC,[p,q]=seg[m],dx=q[0]-p[0],dy=q[1]-p[1],length=Math.hypot(dx,dy),ux=dx/length,uy=dy/length;
   const nx=dy/length*(type==='M'?-1:1),ny=-dx/length*(type==='M'?-1:1);
-  for(const [i,raw] of [line.from,line.to].entries()){
-   const value=Number(String(raw).replace('−','-').replace('＋','+'));
+  const endpoint=[line.from,line.to].map(raw=>Number(String(raw).replace('−','-').replace('＋','+')));
+  const identical=Math.abs(endpoint[0]-endpoint[1])<1e-7;
+  const markers=identical?[{i:0.5,value:endpoint[0]}]:endpoint.map((value,i)=>({i,value}));
+  for(const {i,value} of markers){
    const sign=type==='M'?'':value>1e-8?'⊕ ':value< -1e-8?'⊖ ':'';
-   const num=String(raw).replace(/^[+＋−-]/,'');
-   const caption=`${sign}${num} ${type==='M'?'kNm':'kN'}`;
-   const point=i===0?p:q,tangent=i===0?15:-15;
-   // Keep numerical values anchored to MEMBER ENDS, not to intermediate sections.
-   // Shift toward the plotted (signed) half plane, without hiding the base frame.
+   const caption=`${sign}${fmt(value)} ${type==='M'?'kNm':'kN'}`;
+   const point=[p[0]+(q[0]-p[0])*i,p[1]+(q[1]-p[1])*i];
+   const tangent=i===0?15:i===1?-15:0;
    const side=type==='M'?1:(value>1e-8?1:value< -1e-8?-1:1);
    const normalDistance=Math.abs(value)<1e-8?24:Math.max(20,Math.min(34,Math.abs(value)*1.2+16));
    const x=point[0]+ux*tangent+nx*side*normalDistance;
