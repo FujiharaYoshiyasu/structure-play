@@ -486,12 +486,13 @@ function problemSVG(cfg){
   chunks.push(`<path d="M${from[0]} ${from[1]}L${to[0]} ${to[1]}M${left[0]} ${left[1]}L${to[0]} ${to[1]}L${right[0]} ${right[1]}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round"/>`);
  }
  function circleArrow(center,ccw){
-  const r=9,a=155*Math.PI/180,b=385*Math.PI/180;
+  const r=18,a=155*Math.PI/180,b=385*Math.PI/180; // 単純・3ピン：旧半径9pxの2倍
   const start=ccw?b:a,end=ccw?a:b,sweep=ccw?0:1;
   const aa=[center[0]+r*Math.cos(start),center[1]+r*Math.sin(start)],bb=[center[0]+r*Math.cos(end),center[1]+r*Math.sin(end)];
   const ux=-(bb[1]-center[1])/r*(ccw?-1:1),uy=(bb[0]-center[0])/r*(ccw?-1:1);
-  const base=[bb[0]-ux*11,bb[1]-uy*11];
-  chunks.push(`<path d="M${aa[0]} ${aa[1]}A${r} ${r} 0 1 ${sweep} ${bb[0]} ${bb[1]}" fill="none" stroke="#d45e40" stroke-width="2.8"/><path d="M${bb[0]} ${bb[1]}L${base[0]+uy*5.5} ${base[1]-ux*5.5}L${base[0]-uy*5.5} ${base[1]+ux*5.5}Z" fill="#d45e40"/>`);
+  const headLength=r*(14/24),headHalfWidth=r*(6.4/24);
+  const base=[bb[0]-ux*headLength,bb[1]-uy*headLength];
+  chunks.push(`<path d="M${aa[0]} ${aa[1]}A${r} ${r} 0 1 ${sweep} ${bb[0]} ${bb[1]}" fill="none" stroke="#d45e40" stroke-width="2.8"/><path d="M${bb[0]} ${bb[1]}L${base[0]+uy*headHalfWidth} ${base[1]-ux*headHalfWidth}L${base[0]-uy*headHalfWidth} ${base[1]+ux*headHalfWidth}Z" fill="#d45e40"/>`);
  }
  chunks.push(`<path d="${path(g.nodes)}" stroke="#29425b" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`);
  function pin(pt,roller=false){
@@ -770,8 +771,9 @@ function curveArrow(cx,cy,r,ccw){
  const pt=t=>[cx+r*Math.cos(rad(t)),cy+r*Math.sin(rad(t))];
  const a=pt(start),b=pt(end),t=rad(end);
  const ux=(ccw?1:-1)*Math.sin(t),uy=(ccw?-1:1)*Math.cos(t);
- const bx=b[0]-12.1*ux,by=b[1]-12.1*uy,px=-uy,py=ux;
- return `<path d="M${a[0].toFixed(2)} ${a[1].toFixed(2)} A${r} ${r} 0 1 ${sweep} ${b[0].toFixed(2)} ${b[1].toFixed(2)}" stroke="#c9553b" stroke-width="3.3" fill="none"/><path d="M${b[0].toFixed(2)} ${b[1].toFixed(2)}L${(bx+5.5*px).toFixed(2)} ${(by+5.5*py).toFixed(2)}L${(bx-5.5*px).toFixed(2)} ${(by-5.5*py).toFixed(2)}Z" fill="#c9553b"/>`;
+ const headLength=r*(14/24),headHalfWidth=r*(6.4/24);
+ const bx=b[0]-headLength*ux,by=b[1]-headLength*uy,px=-uy,py=ux;
+ return `<path d="M${a[0].toFixed(2)} ${a[1].toFixed(2)} A${r} ${r} 0 1 ${sweep} ${b[0].toFixed(2)} ${b[1].toFixed(2)}" stroke="#c9553b" stroke-width="3.3" fill="none"/><path d="M${b[0].toFixed(2)} ${b[1].toFixed(2)}L${(bx+headHalfWidth*px).toFixed(2)} ${(by+headHalfWidth*py).toFixed(2)}L${(bx-headHalfWidth*px).toFixed(2)} ${(by-headHalfWidth*py).toFixed(2)}Z" fill="#c9553b"/>`;
 }
 function problemFigure(cfg){
  // すべての部材は同じ尺度64px/m。A(柱+梁), B(梁+手すり)も寸法通り。
