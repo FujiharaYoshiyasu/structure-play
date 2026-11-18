@@ -47,6 +47,58 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
 /* Online API feedback */
 .network-status{background:#fff4ee;color:#a34736;border:1px solid #e8b6a4;border-radius:10px;padding:12px 15px;font-weight:700;font-size:13px;margin:12px 0}
 .choice:disabled{cursor:default}
+
+/* 問題図は常に表示し、選択肢の領域だけを独立してスクロールする。 */
+.quiz-workspace{display:grid;grid-template-columns:minmax(340px,42%) minmax(0,1fr);gap:17px;align-items:start;min-width:0}
+.workspace-problem{position:sticky;top:12px;z-index:3;max-height:calc(100dvh - 24px);margin-bottom:0;padding:15px 13px;display:flex;flex-direction:column;overflow:hidden}
+.workspace-problem .board-title{margin-bottom:9px;gap:7px}
+.workspace-problem .board-title h2{font-size:17px}
+.workspace-problem .board-title small{font-size:10px}
+.workspace-problem .problem-controls{width:100%;justify-content:flex-end;margin:0}
+.workspace-problem .pill-button{padding:5px 9px}
+.workspace-problem .problem-layout{display:flex;flex-direction:column;min-height:0;gap:7px;overflow:auto}
+.workspace-problem .figure-box{min-height:0;min-width:0;padding:4px;display:flex;align-items:center;justify-content:center;overflow:auto}
+.workspace-problem .figure-box svg{width:100%;min-width:0;max-width:100%;max-height:min(45dvh,415px);height:auto;object-fit:contain}
+.workspace-problem .problem-facts{display:block;padding:9px 12px;max-height:21dvh;min-height:38px;overflow:auto}
+.workspace-problem .problem-facts>div{margin:0 0 4px}
+.workspace-problem .fact-label{font-size:9px}
+.workspace-problem .fact-value{font-size:12px;line-height:1.45;margin-top:1px}
+.workspace-problem .fact-note{font-size:10px;margin-top:6px;padding-top:5px;line-height:1.4}
+.workspace-problem .instructions{font-size:10px;margin:5px 0 0}
+.workspace-answers{min-width:0;height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior-y:contain;scrollbar-gutter:stable;border:1px solid #dbe4ec;border-radius:15px;background:#f5f8fb;padding:13px 12px 20px}
+.workspace-answers .quiz-head{margin:0 0 13px}
+.workspace-answers .quiz-head h2{font-size:18px}
+.workspace-answers .question-grid{gap:14px}
+.workspace-answers .question{padding:13px 11px}
+.workspace-answers .choice-grid{gap:8px}
+.workspace-answers .choice{padding:8px 4px 4px}
+.workspace-answers .actions{margin:18px 0 15px}
+.workspace-answers #score{scroll-margin-top:12px}
+@media(max-width:760px){
+ .quiz-workspace{display:flex;flex-direction:column;gap:8px}
+ .workspace-problem{position:sticky;top:0;width:100%;height:39dvh;max-height:39dvh;min-height:220px;padding:7px 9px;z-index:10;box-shadow:0 6px 19px #17364c20}
+ .workspace-problem .board-title{margin-bottom:3px;flex-wrap:nowrap}
+ .workspace-problem .board-title h2{font-size:13px}
+ .workspace-problem .board-title small{display:none}
+ .workspace-problem .step{height:27px;width:27px}
+ .workspace-problem .problem-controls{width:auto;margin-left:auto;justify-content:flex-end}
+ .workspace-problem .problem-controls .pill-button{font-size:10px;padding:5px 7px;white-space:nowrap}
+ .workspace-problem .problem-layout{flex:1;min-height:0;overflow:hidden}
+ .workspace-problem .figure-box{flex:1;overflow:auto;min-height:0}
+ .workspace-problem .figure-box svg{width:100%;min-width:380px;max-width:none;max-height:100%;height:auto;display:block}
+ .workspace-problem .problem-facts,.workspace-problem .instructions{display:none}
+ .workspace-answers{width:100%;height:calc(61dvh - 18px);min-height:260px;padding:10px 7px 14px}
+ .workspace-answers .choice-grid{grid-template-columns:1fr}
+ .workspace-answers .quiz-head h2{font-size:16px}
+ .workspace-answers .quiz-head .muted{display:none}
+ .workspace-answers .choice{padding:7px 3px}
+}
+@media(min-width:761px) and (max-height:650px){
+ .workspace-problem .figure-box svg{max-height:38dvh}
+ .workspace-problem .problem-facts{max-height:18dvh}
+ .workspace-problem .instructions{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -64,25 +116,29 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   <section class="control-board" aria-label="問題選択ゲージ">
     <div class="controls-heading"><strong>問題選択</strong><span>構造形式・骨組パターン・荷重形式・荷重数・支持位置を選択</span></div>
     <div class="filter-grid">
-      <label>構造形式<select id="structureType"><option value="cantilever">片持ちラーメン</option><option value="simple">単純ラーメン（ピン＋ローラー）</option><option value="threepin">3ピンラーメン（中央ヒンジ）</option><option value="random">ランダム（3形式）</option></select></label>
+      <label>構造形式<select id="structureType"><option value="cantilever">片持ちラーメン</option><option value="simple">単純ラーメン（ピン＋ローラー）</option><option value="threepin">3ピンラーメン（中央・柱頭ヒンジ）</option><option value="random">ランダム（3形式）</option></select></label>
       <label>骨組パターン<select id="framePattern"><option value="random" selected>ランダム（A・B＋左右反転）</option><option value="A">パターンA（柱→梁）</option><option value="B">パターンB（梁→腰壁）</option></select></label>
       <label>荷重形式<select id="loadType"><option value="random">ランダム</option><option value="point">集中荷重</option><option value="udl">等分布荷重</option><option value="moment">モーメント荷重</option></select></label>
       <label>荷重数<select id="loadCount"><option value="random">ランダム（1〜3個）</option><option value="1" selected>1個</option><option value="2">2個</option><option value="3">3個</option></select></label>
       <label><span id="supportLabel">固定端位置</span><select id="supportSide"><option value="random">左右ランダム</option><option value="left">左側</option><option value="right">右側</option></select></label>
     </div>
-    <p class="control-note">片持ち（A/B・左右反転）・単純ラーメン（ピン＋ローラー）・3ピンラーメン（両端ピン＋梁中央ヒンジ）から出題します。部材長・荷重位置は整数で最大5 m。全域がN＝Q＝M＝0の部材を含む問題は除外します。</p>
+    <p class="control-note">片持ち（A/B・左右反転）・単純ラーメン（ピン＋ローラー、左右支点高低差ありを含む）・3ピンラーメン（中央ヒンジまたは柱頭ヒンジ、左右支点高低差ありを含む）から出題します。部材長・荷重位置は整数で最大5 m。全域がN＝Q＝M＝0の部材を含む問題は除外します。</p>
   </section>
-  <section class="board" aria-labelledby="problemTitle">
+  <div class="quiz-workspace">
+  <section class="board workspace-problem" aria-labelledby="problemTitle">
     <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">ラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button></div></div>
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note" id="factNote">部材：A→B→C。応力図の方向と荷重位置を確認してください。</div></div></div>
     <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。</p>
   </section>
+  <div class="workspace-answers" id="workspaceAnswers" tabindex="0" aria-label="N・Q・M図の選択肢。ここをスクロールして解答します。">
   <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">応力図内の記号・数値・単位を確認（全3問）</span></div>
   <div id="questionGrid" class="question-grid" aria-live="off"></div>
   <div class="actions"><button id="grade" class="main-button" type="button" disabled>3つ選んで答え合わせ</button><button id="nextBottom" class="secondary-button" type="button">新しい問題へ →</button></div>
   <div id="score" class="score" aria-live="polite" hidden></div>
    <p id="networkStatus" class="network-status" role="status" hidden></p>
-  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>片持ちラーメンの部材方向はA→B→C、単純・3ピンラーメンは左支点A→梁→右支点Dの順です。3ピンでは梁中央Eがヒンジとなり、E点の曲げモーメントは0です。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には節点位置の値を表示し、最大絶対値と2次曲線の区間は下の注記に表示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>片持ちは固定端A・自由端C、単純ラーメンはピン＋ローラーの2支点、3ピンラーメンは両端ピン＋中央ヒンジの静定構造です。骨組図の水平・鉛直の長さは同じ縮尺で描きます。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
+  </div><!-- workspace-answers -->
+  </div><!-- quiz-workspace -->
+  <details class="usage"><summary>応力図の描き方・符号の約束</summary><p>片持ちラーメンの部材方向はA→B→C、単純・3ピンラーメンは左支点A→梁→右支点Dの順です。3ピンでは梁中央Eまたは柱頭B・Cにヒンジがあり、ヒンジ位置の曲げモーメントは0です。N・Q図は、その部材方向に向かって<strong>左側に正（＋）、右側に負（−）</strong>で描きます。<strong>M図は断面の引張側に描くため、正（＋）を部材方向の右側、負（−）を左側</strong>に表示します。たとえば、梁BCの下向き荷重による負の曲げモーメントは梁の上側に描きます。4択の小図には同じ種類の応力図について共通の描画倍率を使用します。N・Q図は符号付き、M図は符号なしの絶対値を小数第2位まで表示します（M図の描く側は引張側です）。M図には節点位置の値を表示し、最大絶対値と2次曲線の区間は下の注記に表示します。応力図の色の面積は断面力の大小を表します。</p><ul><li><strong>N図（軸力）</strong>：引張を正、圧縮を負。途中に軸方向荷重のない部材では一定。</li><li><strong>Q図（せん断力）</strong>：各部材方向の断面位置 s で dM/ds＝Q と定め、集中荷重位置で不連続に変化。</li><li><strong>M図（曲げモーメント）</strong>：局所軸で M'(x)=Q(x)。等分布荷重下では放物線状、集中荷重のみでは区分的に直線状。</li></ul><p>片持ちは固定端A・自由端C、単純ラーメンはピン＋ローラーの2支点、3ピンラーメンは両端ピン＋中央または柱頭ヒンジの静定構造です。骨組図の水平・鉛直の長さは同じ縮尺で描きます。荷重・寸法・反力の釣合いによりN・Q・Mを求められます。支持条件の記号や符号の表し方は教材によって異なることがあるため、部材の向きと約束を確認してください。</p></details>
   </div><!-- gameContent -->
   <section id="leaderboard" class="leaderboard-panel" aria-labelledby="leaderboardTitle">
     <h2 id="leaderboardTitle">オンライン連続全問正解ランキング　TOP 10</h2>
@@ -115,22 +171,53 @@ const fmt=v=>Math.abs(v-Math.round(v))<1e-7?String(Math.round(Math.abs(v))):Stri
 const signed=v=>Math.abs(v)<EPS?'0':(v<0?'⊖ ':'⊕ ')+fmt(v);
 const CAT={simple:'単純ラーメン',threepin:'3ピンラーメン'};
 function geometry(cfg){
- const L=cfg.L,h=cfg.h;
- const A=[0,0],B=[0,h],C=[L,h],D=[L,0],E=[L/2,h];
- const nodes=cfg.structure==='threepin'?[A,B,E,C,D]:[A,B,C,D];
- const names=cfg.structure==='threepin'?['A','B','E','C','D']:['A','B','C','D'];
+ const L=cfg.L,topY=cfg.topY??cfg.h??4,baseLeft=cfg.baseLeft||0,baseRight=cfg.baseRight||0;
+ const A=[0,baseLeft],B=[0,topY],C=[L,topY],D=[L,baseRight];
+ let nodes,names,E=null,hingeNodeName=null,hingeNodeIndex=-1,leftMembers=[];
+ if(cfg.structure==='threepin'&&cfg.hinge==='mid'){
+  E=[L/2,topY];
+  nodes=[A,B,E,C,D];names=['A','B','E','C','D'];hingeNodeName='E';hingeNodeIndex=2;leftMembers=[0,1];
+ }else{
+  nodes=[A,B,C,D];names=['A','B','C','D'];
+  if(cfg.structure==='threepin'){
+   hingeNodeName=cfg.hinge==='left'?'B':'C';
+   hingeNodeIndex=cfg.hinge==='left'?1:2;
+   leftMembers=cfg.hinge==='left'?[0]:[0,1];
+  }
+ }
  const members=pairs(nodes).map(([a,b],i)=>{
   const v=sub(b,a),len=Math.hypot(...v);
   return {a,b,L:len,u:v.map(z=>z/len),horizontal:Math.abs(v[1])<EPS,name:names[i]+names[i+1]};
  });
- return {nodes,names,members,A,B,C,D,E};
+ return {nodes,names,members,A,B,C,D,E,topY,baseLeft,baseRight,hingeNodeName,hingeNodeIndex,hingePoint:hingeNodeIndex>=0?nodes[hingeNodeIndex]:null,leftMembers,leftMemberSet:new Set(leftMembers)};
+}
+function solveLinear(rows,b){
+ const n=rows.length,m=rows[0].length;
+ const a=rows.map((row,i)=>[...row,b[i]]);
+ for(let col=0,row=0;col<m&&row<n;col++,row++){
+  let piv=row;for(let r=row+1;r<n;r++)if(Math.abs(a[r][col])>Math.abs(a[piv][col]))piv=r;
+  if(Math.abs(a[piv][col])<1e-10)throw new Error('Reaction solve failed');
+  [a[row],a[piv]]=[a[piv],a[row]];
+  const div=a[row][col];for(let c=col;c<=m;c++)a[row][c]/=div;
+  for(let r=0;r<n;r++)if(r!==row){const f=a[r][col];if(Math.abs(f)>1e-12)for(let c=col;c<=m;c++)a[r][c]-=f*a[row][c];}
+ }
+ return a.map(row=>row[m]);
 }
 function generateConfig(raw){
  const structure=raw.structure==='threepin'?'threepin':'simple';
- const L=structure==='threepin'?4:pick([3,4,5]);
- const h=pick([2,3,4,5]);
- const pin=structure==='threepin'?'both':(raw.support==='random'?pick(['left','right']):raw.support==='right'?'right':'left');
- const cfg={structure,L,h,pin,loads:[]};
+ let L=pick([3,4,5]),topY=pick([3,4,5]),baseLeft=0,baseRight=0;
+ const uneven=Math.random()<0.45 && topY>=3;
+ if(uneven){
+  const delta=pick(Array.from({length:topY-1},(_,i)=>i+1));
+  if(Math.random()<0.5)baseLeft=delta;else baseRight=delta;
+ }
+ let pin=structure==='simple'?(raw.support==='random'?pick(['left','right']):raw.support==='right'?'right':'left'):'both';
+ let hinge='mid';
+ if(structure==='threepin'){
+  hinge=pick(['mid','left','right']);
+  if(hinge==='mid')L=4;
+ }
+ const cfg={structure,L,topY,baseLeft,baseRight,pin,hinge,loads:[]};
  const g=geometry(cfg), count=raw.count==='random'?pick([1,2,3]):Number(raw.count)||1;
  const kinds=Array.from({length:Math.min(3,Math.max(1,count))},()=>raw.loadType==='random'?pick(['point','udl','moment']):['point','udl','moment'].includes(raw.loadType)?raw.loadType:'point');
  const used=new Set(),occupied=g.members.map(()=>new Set());
@@ -174,20 +261,32 @@ function analyze(cfg){
  for(const ld of cfg.loads){
   if(ld.type==='udl'){
    const dist=ld.end-ld.start;
-   terms.push({member:ld.member,type:'udl',start:ld.start,end:ld.end,p:point(ld.member,(ld.start+ld.end)/2),F:[ld.Fx*dist,ld.Fy*dist],couple:0});
+   terms.push({member:ld.member,type:'udl',start:ld.start,end:ld.end,p:point(ld.member,(ld.start+ld.end)/2),w:[ld.Fx,ld.Fy],F:[ld.Fx*dist,ld.Fy*dist],couple:0});
   }else terms.push({member:ld.member,type:ld.type,x:ld.x,p:point(ld.member,ld.x),F:ld.type==='moment'?[0,0]:[ld.Fx,ld.Fy],couple:ld.type==='moment'?ld.value:0});
  }
- let Fx=0,Fy=0,M_A=0,ML_E=0;
- for(const t of terms){Fx+=t.F[0];Fy+=t.F[1];M_A+=cross(sub(t.p,g.A),t.F)+t.couple;
-  if(cfg.structure==='threepin'&&t.member<=1)ML_E+=cross(sub(t.p,g.E),t.F)+t.couple;
+ let Fx=0,Fy=0,M_A=0;
+ for(const t of terms){Fx+=t.F[0];Fy+=t.F[1];M_A+=cross(sub(t.p,g.A),t.F)+t.couple;}
+ let Ax=0,Ay=0,Dx=0,Dy=0;
+ if(cfg.structure==='simple'){
+  const rows=[
+   [1,0,1,0],
+   [0,1,0,1],
+   [0,0,-(g.D[1]-g.A[1]),g.D[0]-g.A[0]],
+   cfg.pin==='left'?[0,0,1,0]:[1,0,0,0]
+  ];
+  [Ax,Ay,Dx,Dy]=solveLinear(rows,[-Fx,-Fy,-M_A,0]);
+ }else{
+  const H=g.hingePoint;
+  let M_left=0;
+  for(const t of terms){if(g.leftMemberSet.has(t.member))M_left+=cross(sub(t.p,H),t.F)+t.couple;}
+  const rows=[
+   [1,0,1,0],
+   [0,1,0,1],
+   [0,0,-(g.D[1]-g.A[1]),g.D[0]-g.A[0]],
+   [-(g.A[1]-H[1]),g.A[0]-H[0],0,0]
+  ];
+  [Ax,Ay,Dx,Dy]=solveLinear(rows,[-Fx,-Fy,-M_A,-M_left]);
  }
- const Dy=-M_A/cfg.L,Ay=-Fy-Dy;
- let Ax=0,Dx=0;
- if(cfg.structure==='threepin'){
-  Ax=((cfg.L/2)*Ay-ML_E)/cfg.h;
-  Dx=-Fx-Ax;
- }else if(cfg.pin==='left')Ax=-Fx;
- else Dx=-Fx;
  const reactions={Ax,Ay,Dx,Dy},reactionsRight=[Dx,Dy];
  function tail(m,s,side='left'){
   const origin=point(m,s);
@@ -197,9 +296,7 @@ function analyze(cfg){
    if(t.type==='udl'){
     const start=t.member===m?Math.max(s,t.start):t.start,end=t.end;
     if(end<=start+EPS)continue;
-    const dist=end-start,p=point(t.member,(start+end)/2);
-    const f=[cfg.loads.find(ld=>ld.member===t.member&&ld.type==='udl'&&ld.start===t.start&&ld.end===t.end)?.Fx??t.F[0]/(t.end-t.start),cfg.loads.find(ld=>ld.member===t.member&&ld.type==='udl'&&ld.start===t.start&&ld.end===t.end)?.Fy??t.F[1]/(t.end-t.start)];
-    const ff=[f[0]*dist,f[1]*dist];
+    const dist=end-start,p=point(t.member,(start+end)/2),ff=[t.w[0]*dist,t.w[1]*dist];
     F=add(F,ff);M+=cross(sub(p,origin),ff);
    }else{
     if(t.member===m&&(t.x<s-EPS||(Math.abs(t.x-s)<EPS&&side==='right')))continue;
@@ -212,7 +309,7 @@ function analyze(cfg){
   const t=tail(m,s,side),u=ms[m].u;
   return type==='N'?dot(t.F,u):type==='Q'?-cross(u,t.F):t.M;
  }
- return {cfg,geometry:g,elements:ms,reactions,force,external:{Fx,Fy,M_A,ML_E},tail};
+ return {cfg,geometry:g,elements:ms,reactions,force,external:{Fx,Fy,M_A},tail};
 }
 function breaks(cfg,m){const g=geometry(cfg);return unique([0,g.members[m].L,...cfg.loads.filter(ld=>ld.member===m).flatMap(ld=>ld.type==='udl'?[ld.start,ld.end]:[ld.x])]);}
 function isUseful(r){return r.elements.every((_,m)=>pairs(breaks(r.cfg,m)).some(([a,b])=>b-a>EPS&&[.19,.5,.81].some(t=>['N','Q','M'].some(kind=>Math.abs(r.force(kind,m,a+(b-a)*t))>1e-7))));}
@@ -293,7 +390,7 @@ function diagramSVG(opt,type,max,r,uid='preview'){
  const vals=(m,s,side='left')=>value(opt,type,r,m,s,side);
  const path=points=>points.map(([x,y],i)=>`${i?'L':'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
  const text=(x,y,msg,size=14)=>`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${size}" font-weight="800" text-anchor="middle" fill="#26435c" stroke="#fff" stroke-width="2.5" paint-order="stroke">${escape(msg)}</text>`;
- function locate(m,s,v){const p=g.pos(m,s),el=r.elements[m];return [p[0]+el.u[1]*ntype*v*px,p[1]-el.u[0]*ntype*v*px];}
+ function locate(m,s,v){const p=g.pos(m,s),el=r.elements[m];return [p[0]-el.u[1]*ntype*v*px,p[1]-el.u[0]*ntype*v*px];}
  const defs=r.elements.map((el,m)=>`<pattern id="h-${uid}-${m}" patternUnits="userSpaceOnUse" width="9" height="9"><path d="${el.horizontal?'M4 0V9':'M0 4H9'}" fill="none" stroke="${col}" stroke-width="1.05" opacity=".7"/></pattern>`).join('');
  const body=[];
  for(let m=0;m<r.elements.length;m++)for(const [a,b]of pairs(breaks(cfg,m))){
@@ -334,11 +431,15 @@ function diagramSVG(opt,type,max,r,uid='preview'){
   for(const [i,s]of [[0,0],[1,el.L]]){
    const v=vals(m,s,i?'left':'right');
    const caption=(type==='M'?fmt(v):signed(v))+' '+(type==='M'?'kNm':'kN');
-   chip(g.pos(m,s),caption,el.horizontal);
+   const anchor=g.pos(m,s);
+   // 柱の数値も応力図のある側に置き、線とラベルの対応を維持する。
+   // 0値は基線付近、正負がある場合は曲線端に寄せる。
+   const annotationAnchor=!el.horizontal&&Math.abs(v)>1e-7?locate(m,s,v):anchor;
+   chip(annotationAnchor,caption,el.horizontal);
   }
  });
  const pointLabels=g.nodes.map((p,i)=>text(p[0]-11,p[1]+(i===0||i===g.nodes.length-1?22:-15),r.geometry.names[i],15)).join('');
- if(cfg.structure==='threepin'){const p=g.nodes[2];body.push(`<circle cx="${p[0]}" cy="${p[1]}" r="5.5" fill="white" stroke="#334b65" stroke-width="2"/>`)}
+ if(cfg.structure==='threepin'){const p=g.nodes[r.geometry.hingeNodeIndex];body.push(`<circle cx="${p[0]}" cy="${p[1]}" r="5.5" fill="white" stroke="#334b65" stroke-width="2"/>`)}
  const note=[];
  if(type==='M'){
   const peak=extremaM(opt,r),curves=curvesM(opt,r);
@@ -354,7 +455,7 @@ function problemSVG(cfg){
  const lab=(x,y,msg,size=17,col='#365771')=>`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="sans-serif" font-size="${size}" font-weight="750" text-anchor="middle" fill="${col}" stroke="white" stroke-width="4" paint-order="stroke">${escape(msg)}</text>`;
  const stroke='#497e9f';
  const dim=(member,start,end,index,axis,caption)=>{
-  const u=gg.members[member].u,aa=p(member,start),bb=p(member,end);
+  const aa=p(member,start),bb=p(member,end);
   const horizontal=axis==='horizontal';
   const off=horizontal?[0,65+index*28]:(gg.members[member].a[0]<cfg.L/2?[-82-index*28,0]:[82+index*28,0]);
   const a=add(aa,off),b=add(bb,off),ticks=horizontal?`M${a[0]} ${a[1]-7}v14M${b[0]} ${b[1]-7}v14`:`M${a[0]-7} ${a[1]}h14M${b[0]-7} ${b[1]}h14`;
@@ -372,15 +473,14 @@ function problemSVG(cfg){
   const left=add(base,[norm[0]*6,norm[1]*6]),right=sub(base,[norm[0]*6,norm[1]*6]);
   chunks.push(`<path d="M${from[0]} ${from[1]}L${to[0]} ${to[1]}M${left[0]} ${left[1]}L${to[0]} ${to[1]}L${right[0]} ${right[1]}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round"/>`);
  }
- function circleArrow(center,magnitude,ccw){
-  const r=4*Math.abs(magnitude),a=155*Math.PI/180,b=385*Math.PI/180;
+ function circleArrow(center,ccw){
+  const r=18,a=155*Math.PI/180,b=385*Math.PI/180;
   const start=ccw?b:a,end=ccw?a:b,sweep=ccw?0:1;
   const aa=[center[0]+r*Math.cos(start),center[1]+r*Math.sin(start)],bb=[center[0]+r*Math.cos(end),center[1]+r*Math.sin(end)];
   const ux=-(bb[1]-center[1])/r*(ccw?-1:1),uy=(bb[0]-center[0])/r*(ccw?-1:1);
   const base=[bb[0]-ux*10,bb[1]-uy*10];
   chunks.push(`<path d="M${aa[0]} ${aa[1]}A${r} ${r} 0 1 ${sweep} ${bb[0]} ${bb[1]}" fill="none" stroke="#d45e40" stroke-width="2.8"/><path d="M${bb[0]} ${bb[1]}L${base[0]+uy*5} ${base[1]-ux*5}L${base[0]-uy*5} ${base[1]+ux*5}Z" fill="#d45e40"/>`);
  }
- // Support and frame outline.
  chunks.push(`<path d="${path(g.nodes)}" stroke="#29425b" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`);
  function pin(pt,roller=false){
   const [x,y]=pt;chunks.push(`<path d="M${x} ${y}l-16 20h32Z" fill="#eef5fc" stroke="#4d6f86" stroke-width="2.2"/>`);
@@ -389,13 +489,12 @@ function problemSVG(cfg){
  }
  pin(node('A'),cfg.structure==='simple'&&cfg.pin==='right');
  pin(node('D'),cfg.structure==='simple'&&cfg.pin==='left');
- if(cfg.structure==='threepin'){const e=node('E');chunks.push(`<circle cx="${e[0]}" cy="${e[1]}" r="8" fill="white" stroke="#29425b" stroke-width="2.5"/>`)}
- // load geometry. Cross-sectional length is proportional to force intensity.
+ if(cfg.structure==='threepin'&&gg.hingeNodeName){const e=node(gg.hingeNodeName);chunks.push(`<circle cx="${e[0]}" cy="${e[1]}" r="8" fill="white" stroke="#29425b" stroke-width="2.5"/>`)}
  cfg.loads.forEach((ld,i)=>{
   const el=gg.members[ld.member],horizontal=el.horizontal;
   if(ld.type==='moment'){
-   const at=p(ld.member,ld.x);circleArrow(at,ld.value,ld.value>0);
-   chunks.push(lab(at[0]+(horizontal?0:(el.a[0]<cfg.L/2?-62:62)),at[1]-4*Math.abs(ld.value)-12,`${fmt(ld.value)} kNm`,16,'#b64f37'));
+   const at=p(ld.member,ld.x);circleArrow(at,ld.value>0);
+   chunks.push(lab(at[0]+(horizontal?0:(el.a[0]<cfg.L/2?-62:62)),at[1]-32,`${fmt(ld.value)} kNm`,16,'#b64f37'));
   }else if(ld.type==='point'){
    const at=p(ld.member,ld.x),length=ld.value*8;
    const dir=[Math.sign(ld.Fx),-Math.sign(ld.Fy)];
@@ -405,36 +504,41 @@ function problemSVG(cfg){
   }else{
    const n=Math.max(2,2*(ld.end-ld.start)),length=ld.value*7;
    const dir=[Math.sign(ld.Fx),-Math.sign(ld.Fy)];
+   const tails=[];
    for(let j=0;j<=n;j++){
     const at=p(ld.member,ld.start+(ld.end-ld.start)*j/n);
-    arrow([at[0]-dir[0]*(length+5),at[1]-dir[1]*(length+5)],[at[0]-dir[0]*5,at[1]-dir[1]*5]);
+    const from=[at[0]-dir[0]*(length+5),at[1]-dir[1]*(length+5)],to=[at[0]-dir[0]*5,at[1]-dir[1]*5];
+    tails.push(from);arrow(from,to);
    }
+   if(tails.length>=2)chunks.push(`<path d="M${tails[0][0]} ${tails[0][1]}L${tails[tails.length-1][0]} ${tails[tails.length-1][1]}" fill="none" stroke="#d45e40" stroke-width="2.4"/>`);
    const mid=p(ld.member,(ld.start+ld.end)/2);
    const l=[mid[0]-dir[0]*(length+5),mid[1]-dir[1]*(length+5)];
    chunks.push(lab(l[0]+(horizontal?0:-Math.sign(ld.Fx)*22),l[1]-12,`${fmt(ld.value)} kN/m`,16,'#b64f37'));
   }
   const axis=horizontal?'horizontal':'vertical';
-  const cutpoints=segmentsFor(ld);
-  // One line divided at all relevant positions (left / loaded / right sections).
-  cutpoints.forEach(([a,b])=>dim(ld.member,a,b,i,axis,`${fmt(b-a)} m`));
+  segmentsFor(ld).forEach(([a,b],k)=>dim(ld.member,a,b,i*2+k,axis,`${fmt(b-a)} m`));
  });
- // Overall member lengths, separated from load-position lines.
  for(let m=0;m<gg.members.length;m++){
   const el=gg.members[m];
-  if(el.horizontal)dim(m,0,el.L,4,'horizontal',`${fmt(el.L)} m`);
-  else dim(m,0,el.L,4,'vertical',`${fmt(el.L)} m`);
+  dim(m,0,el.L,8,el.horizontal?'horizontal':'vertical',`${fmt(el.L)} m`);
  }
- g.nodes.forEach((z,i)=>chunks.push(lab(z[0]+(i===0||i===g.nodes.length-1?-18:0),z[1]+(i===0||i===g.nodes.length-1?-16:-16),gg.names[i],18,'#284359')));
+ g.nodes.forEach((z,i)=>chunks.push(lab(z[0]+(i===0||i===g.nodes.length-1?-18:0),z[1]-16,gg.names[i],18,'#284359')));
  return `<svg viewBox="0 0 890 760" role="img" aria-label="${CAT[cfg.structure]}の支持条件・荷重図" style="width:100%;height:auto"><rect x="0" y="0" width="890" height="760" fill="#fbfdff" rx="12"/>${chunks.join('')}</svg>`;
 }
 function makeQuestion(settings){
  for(let n=0;n<260;n++)try{
   const cfg=generateConfig(settings),r=analyze(cfg);
   if(!isUseful(r))continue;
-  // statical exactness: end-pin and hinge moments must vanish.
   if(Math.abs(r.force('M',0,0))>1e-6||Math.abs(r.force('M',r.elements.length-1,r.elements.at(-1).L))>1e-6)continue;
-  if(cfg.structure==='threepin'&&Math.abs(r.force('M',1,r.elements[1].L))>1e-6)continue;
-  // N・Q・Mの部材端値は整数のみ採用し、符号・分布の学習に集中できるようにする。
+  if(cfg.structure==='threepin'){
+   if(cfg.hinge==='mid'){
+    if(Math.abs(r.force('M',1,r.elements[1].L))>1e-6||Math.abs(r.force('M',2,0,'right'))>1e-6)continue;
+   }else if(cfg.hinge==='left'){
+    if(Math.abs(r.force('M',0,r.elements[0].L))>1e-6||Math.abs(r.force('M',1,0,'right'))>1e-6)continue;
+   }else{
+    if(Math.abs(r.force('M',1,r.elements[1].L))>1e-6||Math.abs(r.force('M',2,0,'right'))>1e-6)continue;
+   }
+  }
   const endpointForces=r.elements.flatMap((el,m)=>['N','Q','M'].flatMap(t=>[r.force(t,m,0,'right'),r.force(t,m,el.L,'left')]));
   if(!endpointForces.every(v=>Math.abs(v-Math.round(v))<1e-6))continue;
   const options={N:alternatives('N',r),Q:alternatives('Q',r),M:alternatives('M',r)};
@@ -681,7 +785,7 @@ function problemFigure(cfg){
  // 荷重の見た目は数値に比例させる（例：1kNに対して2kNは2倍の長さ）。
  const pointSpan=v=>16*Math.max(1,Math.abs(v));
  const udlSpan=v=>14*Math.max(1,Math.abs(v));
- const momentRadius=48; // モーメント荷重は4 kN·m相当の一定半径で表示
+ const momentRadius=48; // 4 kN·m相当の固定サイズ
  // 荷重は必ず部材の上に作用点が来る。ラベルは数値＋単位のみ。
  let horizontalMarks=0,verticalMarks=0;
  for(const ld of cfg.loads){
@@ -754,7 +858,7 @@ function problemFigure(cfg){
   const labelY=i===2?p[1]-12:i===1?p[1]-13:p[1]+28;
   parts.push(label(labelX,labelY,'ABC'[i],'#253d55',19));
  }
- return `<svg viewBox="0 0 860 630" role="img" aria-label="${cfg.pattern==='A'?'柱と梁のL形（A）':'梁と腰壁のL形（B）'}、${cfg.orientation==='left'?'左':'右'}側固定。水平・鉛直とも62ピクセル毎メートル"><rect x="0" y="0" width="860" height="630" rx="12" fill="#fbfdff"/>${parts.join('')}</svg>`;
+ return `<svg viewBox="0 0 860 630" role="img" aria-label="${cfg.pattern==='A'?'柱と梁のL形（A）':'梁と手すり状のL形（B）'}、${cfg.orientation==='left'?'左':'右'}側固定。水平・鉛直とも62ピクセル毎メートル"><rect x="0" y="0" width="860" height="630" rx="12" fill="#fbfdff"/>${parts.join('')}</svg>`;
 }
 function quadraticIntervals(opt,r){
  const out=[];
@@ -1115,13 +1219,13 @@ function renderPortalQuestion(payload,category,isOnline,serverId=''){
  document.getElementById('problemTitle').textContent=PortalEngine.CAT[category]+'の支持条件と荷重';
  document.getElementById('problemFigure').innerHTML=PortalEngine.problemSVG(cfg);
  round++;document.getElementById('questionNumber').textContent='QUESTION '+String(round).padStart(2,'0');
- document.getElementById('supportDescription').textContent=category==='simple'?`A/D：${cfg.pin==='left'?'Aピン＋Dローラー':'Aローラー＋Dピン'} ／ B・C：剛接合`:'A/D：ピン支持 ／ B・C：剛接合 ／ E：ヒンジ（M=0）';
+ document.getElementById('supportDescription').textContent=category==='simple'?`A/D：${cfg.pin==='left'?'Aピン＋Dローラー':'Aローラー＋Dピン'}${cfg.baseLeft!==cfg.baseRight?' ／ 左右支点高低差あり':''} ／ B・C：剛接合`:`A/D：ピン支持${cfg.baseLeft!==cfg.baseRight?' ／ 左右支点高低差あり':''} ／ ${cfg.hinge==='mid'?'E：中央ヒンジ（M=0）':cfg.hinge==='left'?'B：柱頭ヒンジ（M=0）':'C：柱頭ヒンジ（M=0）'}`;
  document.getElementById('loadDescription').innerHTML=cfg.loads.map(ld=>{
   const n=ld.type==='point'?'集中荷重':ld.type==='udl'?'等分布荷重':'モーメント荷重';
   const w=ld.type==='udl'?ld.start+'～'+ld.end+'m':ld.x+'m';
   return `<div>${HTML(n)}：${fmt(ld.value)} ${ld.type==='point'?'kN':ld.type==='udl'?'kN/m':'kNm'}（${PortalEngine.geometry(cfg).members[ld.member].name}、${w}）</div>`;
  }).join('');
- document.getElementById('factNote').textContent='片持ちと同じ符号規約。全長・荷重位置は整数、3ピンの中央ヒンジはM=0。';
+ document.getElementById('factNote').textContent='片持ちと同じ符号規約。全長・荷重位置は整数。単純ラーメンは左右支点高低差ありの問題を含み、3ピンは中央ヒンジまたは柱頭ヒンジでヒンジ位置のM=0。';
  document.getElementById('questionGrid').innerHTML=['N','Q','M'].map(t=>`<section class="question" data-type="${t}" aria-labelledby="title-${t}"><div class="question-head"><div class="letter">${t}</div><h3 id="title-${t}">${{N:'軸力',Q:'せん断力',M:'曲げモーメント'}[t]}図（${t}図）</h3><small>正しい図を1つ選んでください</small><span class="answer-state" id="state-${t}">未選択</span></div><div class="choice-grid">${choices[t].map((x,j)=>`<button class="choice" type="button" data-type="${t}" data-choice="${j}" aria-pressed="false"><span class="choice-title">${'ABCD'[j]}</span><span class="choice-marker"></span>${x.svg}</button>`).join('')}</div><p class="answer-feedback" id="feedback-${t}" hidden></p></section>`).join('');
  const gradeBtn=document.getElementById('grade');gradeBtn.disabled=true;gradeBtn.textContent='3つ選んで答え合わせ';
  const out=document.getElementById('score');out.hidden=true;out.innerHTML='';
