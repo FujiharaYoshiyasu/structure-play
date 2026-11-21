@@ -21,6 +21,30 @@
   <link rel="stylesheet" href="assets/style.css">
   <script defer src="assets/site.js"></script>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/">
+  <style>
+    .apps-section { padding-block: clamp(32px, 6vw, 76px); background: #fffaf2; }
+    .section-header { margin-top: 0; }
+    .section-header h1 { font-size: clamp(29px, 4vw, 52px); line-height: 1.3; margin: 0; }
+    .filter-button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+    .app-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .app-tile { height: 100%; display: flex; flex-direction: column; color: inherit; }
+    .app-card:focus-within { outline: 3px solid #365cab; outline-offset: 3px; }
+    .card-media { height: auto; aspect-ratio: 3 / 2; }
+    .card-media img { object-fit: contain; }
+    .card-content { padding: 16px; position: relative; }
+    .card-content h2 { font-size: clamp(15px, 1.55vw, 23px); line-height: 1.25; margin: 0 22px 5px 0; }
+    .card-content p { font-size: 13px; line-height: 1.6; margin: 0; color: #4c5c72; }
+    .tile-arrow { position: absolute; right: 13px; top: 15px; }
+    .about-summary { padding-block: 24px; }
+    .about-summary h2 { font-size: 16px; margin: 0 0 6px; }
+    .about-summary p { margin: 0; font-size: 14px; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    @media (max-width: 800px) {
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .card-content { padding: 12px; }
+      .tile-arrow { top: 10px; right: 10px; }
+    }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#apps">アプリ一覧へ移動</a>
@@ -31,91 +55,76 @@
         <span class="brand-word">STRUCTURE<span class="brand-amp">&</span>PLAY<span class="brand-sub">遊びと学びの実験室</span></span>
       </a>
       <nav class="top-nav" aria-label="メインメニュー">
-        <a href="#apps">アプリ一覧</a>
         <a href="#about">このサイトについて</a>
-        <a class="nav-pill" href="#apps">さっそく見る <span aria-hidden="true">↗</span></a>
+        <a class="nav-pill" href="#apps">アプリ一覧</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero shell" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <div class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span> WELCOME TO OUR LITTLE WEB LAB</div>
-        <h1 id="hero-title">つくって、<br><em>あそんで、</em><br>学ぶ<span class="period">。</span></h1>
-        <p class="hero-description">構造のしくみを見える形に。<br>数字の面白さを、ゲームに。<br>ちょっと触ってみたくなる、4つのWebアプリを集めました。</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#apps">アプリを見てみる <span aria-hidden="true">↗</span></a>
-          <a class="text-link" href="#about">このサイトについて <span aria-hidden="true">→</span></a>
-        </div>
-        <div class="hero-metadata" aria-label="サイトの特徴">
-          <span><i aria-hidden="true">✓</i> インストール不要</span>
-          <span><i aria-hidden="true">✓</i> ブラウザで利用</span>
-        </div>
-      </div>
-      <div class="hero-graphic" role="img" aria-label="梁と鳥、765の数字盤、NQM図をイメージしたイラスト">
-        <div class="hero-backdrop"></div>
-        <div class="doodle doodle-star d1" aria-hidden="true">✳</div>
-        <div class="doodle doodle-star d2" aria-hidden="true">✳</div>
-        <div class="doodle doodle-dot" aria-hidden="true"></div>
-        <div class="hero-panel hero-panel-frame" aria-hidden="true">
-          <div class="mini-label">N · Q · M</div>
-          <svg viewBox="0 0 190 130" focusable="false"><path d="M38 99V25H146V99" fill="none" stroke="#23324b" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><path d="M25 105h26m-13-7-12 7 12 6m95-6h26m-13-7-12 7 12 6" stroke="#23324b" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M38 25Q91 83 146 25" fill="none" stroke="#fa6a42" stroke-width="5" stroke-linecap="round"/><path d="M92 5v19m-7-6 7 7 7-7" stroke="#23324b" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
-        </div>
-        <div class="hero-panel hero-panel-game" aria-hidden="true">
-          <div class="small-brand">765 <span>GO!</span></div>
-          <div class="number-preview"><b>7</b><b>6</b><b>5</b><b>3</b><b>2</b><b>0</b><b>4</b><b>1</b><b>5</b><b>4</b><b>7</b><b>6</b><b>1</b><b>2</b><b>3</b><b>0</b></div>
-        </div>
-        <div class="hero-panel hero-panel-birds" aria-hidden="true">
-          <div class="mini-label">MOMENT BATTLE</div>
-          <svg viewBox="0 0 286 115" focusable="false"><path d="M17 84h251" stroke="#37465c" stroke-width="10" stroke-linecap="round"/><path d="M141 87l-17 19h34z" fill="#567bda" stroke="#37465c" stroke-width="2"/><g fill="#ffb93e" stroke="#35425d" stroke-width="2.8"><circle cx="65" cy="65" r="17"/><circle cx="100" cy="65" r="17"/><circle cx="216" cy="65" r="17"/></g><g fill="#24334b"><circle cx="69" cy="61" r="2.8"/><circle cx="104" cy="61" r="2.8"/><circle cx="220" cy="61" r="2.8"/></g><g fill="#fa6c47"><path d="M81 64l11 4-11 4z"/><path d="M116 64l11 4-11 4z"/><path d="M231 64l11 4-11 4z"/></g><path d="M22 20c9-12 22-11 29-1M236 14c14-12 27-5 29 6" stroke="#a8c9e8" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
-        </div>
-        <span class="orbit-badge" aria-hidden="true">PLAY<br>& LEARN</span>
-      </div>
-    </section>
-
-    <section class="apps-section" id="apps" aria-labelledby="apps-heading">
+    <section class="apps-section" id="apps" aria-labelledby="hero-title">
       <div class="shell">
-        <div class="section-kicker">OUR WEB APPS / 001—004</div>
-        <div class="section-header">
-          <div><h2 id="apps-heading">アプリを探す<span class="section-spark">✳</span></h2><p>気になるものから、自由にのぞいてみてください。</p></div>
-          <p class="app-count"><strong id="visible-count">04</strong><span>APPS</span></p>
-        </div>
+        <div class="section-header"><h1 id="hero-title">遊んで学ぶ、構造と数字。</h1></div>
         <div class="filter-row" role="group" aria-label="アプリの種類で絞り込み">
-          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true">すべて <small>4</small></button>
-          <button type="button" class="filter-button" data-filter="game" aria-pressed="false">ゲーム <small>2</small></button>
-          <button type="button" class="filter-button" data-filter="study" aria-pressed="false">学習ツール <small>2</small></button>
+          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>すべて</button>
+          <button type="button" class="filter-button" data-filter="game" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10c3 0 4 3 5 9 .4 3-2 4-4 2l-3-3H9l-3 3c-2 2-4.4 1-4-2 1-6 2-9 5-9Z"/><path d="M7 9v5m-2.5-2.5h5m6.5 0h.1m2 2h.1"/></svg>ゲーム</button>
+          <button type="button" class="filter-button" data-filter="study" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6C9 4 6 4 2 5v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/></svg>学習ツール</button>
         </div>
-
         <div class="app-grid" id="app-grid">
           <article class="app-card" data-category="game" data-app="moment-battle">
-            <div class="card-media media-moment"><img src="assets/moment.svg" alt="鳥が梁の上に並ぶモーメント対戦ゲームのイメージ" loading="lazy"><span class="media-index">01 / GAME</span></div>
-            <div class="card-content"><div class="card-tags"><span class="category-tag tag-orange">構造力学 × ゲーム</span><span class="status-tag" data-status="moment-battle">公開準備中</span></div><h3>MOMENT BATTLE</h3><p class="app-jp-title">梁モーメント対戦</p><p class="card-description">鳥を梁にのせて、モーメントで勝負！ 力が加わる位置によって変わる「曲げ」の感覚を、遊びながら体験するゲーム。</p><a class="card-link" href="apps/moment-battle/index.html" aria-label="梁モーメント対戦のページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+            <a class="app-tile" href="apps/moment-battle/index.html">
+              <div class="card-media media-moment"><img src="assets/moment.svg" alt=""></div>
+              <div class="card-content">
+                <h2>MOMENT BATTLE</h2>
+                <p>鳥を梁にのせてモーメント対戦</p>
+                <span class="tile-arrow" aria-hidden="true">→</span>
+                <span class="status-tag visually-hidden" data-status="moment-battle">公開中</span>
+              </div>
+            </a>
           </article>
           <article class="app-card" data-category="game" data-app="765">
-            <div class="card-media media-seven"><img src="assets/765.svg" alt="赤と青の数字が置かれた数字配置ゲーム765のイメージ" loading="lazy"><span class="media-index">02 / GAME</span></div>
-            <div class="card-content"><div class="card-tags"><span class="category-tag tag-blue">オリジナル思考ゲーム</span><span class="status-tag" data-status="765">公開準備中</span></div><h3>765</h3><p class="app-jp-title">数字配置ゲーム · Classic / Radical</p><p class="card-description">数字0〜7を配置して「積」を競うゲーム。Classicの基本対戦と、20ステージのHPストーリー・能力解放・4連ガチャを楽しめるRadicalから選べます。</p><a class="card-link" href="apps/765/index.html" aria-label="765のモード選択ページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+            <a class="app-tile" href="apps/765/index.html">
+              <div class="card-media media-seven"><img src="assets/765.svg" alt=""></div>
+              <div class="card-content">
+                <h2>765</h2>
+                <p>数字を並べて積を競う</p>
+                <span class="tile-arrow" aria-hidden="true">→</span>
+                <span class="status-tag visually-hidden" data-status="765">公開中</span>
+              </div>
+            </a>
           </article>
           <article class="app-card" data-category="study" data-app="nqm">
-            <div class="card-media media-nqm"><img src="assets/nqm.svg" alt="ラーメン構造の骨組と応力図のイメージ" loading="lazy"><span class="media-index">03 / TOOL</span></div>
-            <div class="card-content"><div class="card-tags"><span class="category-tag tag-green">構造力学 × 学習ツール</span><span class="status-tag" data-status="nqm">公開準備中</span></div><h3>NQM DIAGRAM</h3><p class="app-jp-title">ラーメンのN・Q・M図作成</p><p class="card-description">節点・部材・支持条件・荷重を設定して、軸力図N、せん断力図Q、曲げモーメント図Mを視覚的に確認するための学習ツール。</p><a class="card-link" href="apps/nqm/index.html" aria-label="NQM図作成ツールのページへ">アプリのページへ <span aria-hidden="true">↗</span></a></div>
+            <a class="app-tile" href="apps/nqm/index.html">
+              <div class="card-media media-nqm"><img src="assets/nqm.svg" alt=""></div>
+              <div class="card-content">
+                <h2>NQM DIAGRAM</h2>
+                <p>荷重を設定して応力図を描く</p>
+                <span class="tile-arrow" aria-hidden="true">→</span>
+                <span class="status-tag visually-hidden" data-status="nqm">公開中</span>
+              </div>
+            </a>
           </article>
           <article class="app-card" data-category="study" data-app="frame-quiz">
-            <div class="card-media media-nqm"><img src="assets/frame-quiz.svg" alt="ラーメン構造とN・Q・M図の4択クイズのイメージ" loading="lazy"><span class="media-index">04 / QUIZ</span></div>
-            <div class="card-content"><div class="card-tags"><span class="category-tag tag-green">構造力学 × クイズ</span><span class="status-tag" data-status="frame-quiz">公開中</span></div><h3>FRAME QUIZ</h3><p class="app-jp-title">ラーメン応力図の4択クイズ</p><p class="card-description">【3年生の構造力学演習に対応・2026年11月18日更新】片持ち・単純・3ピンの3種類の静定ラーメンについて、N・Q・M図を4択で学習できます。問題図を見ながら解答できます。</p><a class="card-link" href="apps/frame-quiz/index.html" aria-label="FRAME QUIZをプレイする">FRAME QUIZを始める <span aria-hidden="true">↗</span></a></div>
+            <a class="app-tile" href="apps/frame-quiz/index.html">
+              <div class="card-media media-nqm"><img src="assets/frame-quiz.svg" alt=""></div>
+              <div class="card-content">
+                <h2>FRAME QUIZ</h2>
+                <p>ラーメンの応力図を4択で解く</p>
+                <span class="tile-arrow" aria-hidden="true">→</span>
+                <span class="status-tag visually-hidden" data-status="frame-quiz">公開中</span>
+              </div>
+            </a>
           </article>
         </div>
-        <p class="list-note" id="app-list-status" aria-live="polite">現在4つのアプリを表示しています。</p>
+        <span id="visible-count" hidden>04</span>
+        <p id="app-list-status" class="visually-hidden" aria-live="polite">4つのアプリを表示しています。</p>
       </div>
     </section>
-
-    <section class="about-section shell" id="about" aria-labelledby="about-heading">
-      <div class="about-art" aria-hidden="true"><span class="about-big">?</span><span class="about-small small-one">!</span><span class="about-small small-two">✦</span><span class="about-ring"></span></div>
-      <div class="about-copy"><p class="section-kicker">ABOUT THIS LAB</p><h2 id="about-heading">「わかった！」のきっかけを、<br>もっと身近に。</h2><p>ここは、構造力学の学びや、数字を使った遊びから生まれたWebアプリを紹介する場所です。難しい式も、身近なゲームも、実際に触ってみることで違った発見があるかもしれません。</p><p>授業で使っても、友達と遊んでも。思い思いに試してみてください。</p><div class="about-chips"><span>STRUCTURAL MECHANICS</span><span>ORIGINAL GAMES</span><span>WEB APPS</span></div></div>
+    <section class="shell about-summary" id="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">このサイトについて</h2>
+      <p>構造力学の授業と数字遊びから生まれた、ブラウザで使えるアプリ集です。</p>
     </section>
-
-    <section class="footer-cta" aria-label="アプリ一覧へのご案内"><div class="shell footer-cta-inner"><div><span>LET'S EXPLORE!</span><h2>気になるアプリは<br>見つかりましたか？</h2></div><a class="button button-white" href="#apps">アプリ一覧に戻る <span aria-hidden="true">↗</span></a></div></section>
   </main>
-  <footer class="site-footer"><div class="shell footer-inner"><span class="footer-brand">STRUCTURE <b>&</b> PLAY</span><span>つくって、あそんで、学ぶ。</span><a href="#hero-title">ページの上へ ↑</a></div><div class="shell footer-bottom"><small>© <span id="copyright-year">2026</span> STRUCTURE & PLAY. All rights reserved.</small><small>各アプリは学習・娯楽目的の試作ソフトウェアです。</small></div></footer>
+  <footer class="site-footer"><div class="shell footer-inner"><span class="footer-brand">STRUCTURE <b>&</b> PLAY</span><a href="#hero-title">ページの上へ ↑</a></div><div class="shell footer-bottom"><small>© <span id="copyright-year">2026</span> STRUCTURE & PLAY. All rights reserved.</small><small>各アプリは学習・娯楽目的の試作ソフトウェアです。</small></div></footer>
 </body>
 </html>
