@@ -113,6 +113,8 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
  .workspace-answers .choice svg{display:block;width:100%;height:auto;aspect-ratio:var(--diagram-aspect,2);min-width:0;min-height:0;max-height:none;object-fit:contain;overflow:hidden}
 }
 
+.export-status{position:fixed;z-index:110;bottom:16px;left:50%;transform:translateX(-50%);max-width:calc(100vw - 24px);min-width:250px;text-align:center;padding:12px 16px;margin:0;border-radius:12px;border:1px solid #c8dcf0;background:#eef7ff;color:#235b86;font-size:12px;font-weight:750;box-shadow:0 8px 26px #123e6540}
+.export-status[hidden]{display:none!important}
 /* Post-answer feedback: comparison stays within the independently scrollable answer pane. */
 .answer-comparison{margin:13px 0 0;padding:12px;border:1px solid #ccdae6;background:#f8fbff;border-radius:12px;animation:review-reveal .32s ease-out}
 .answer-comparison h4{margin:0 0 10px;font-size:13px;color:#31516d}
@@ -162,9 +164,10 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   </section>
   <div class="quiz-workspace">
   <section class="board workspace-problem" aria-labelledby="problemTitle">
-    <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">ラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button><button id="saveAllImages" type="button" class="pill-button export">画像4枚を書き出す ⤓</button><button id="saveProblemImage" type="button" class="pill-button export">問題図</button><button id="saveNImage" type="button" class="pill-button export">N図4択</button><button id="saveQImage" type="button" class="pill-button export">Q図4択</button><button id="saveMImage" type="button" class="pill-button export">M図4択</button></div></div>
+    <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">ラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button><button id="saveAllImages" type="button" class="pill-button export">画像4枚をZIP保存 ⤓</button><button id="saveProblemImage" type="button" class="pill-button export">問題図</button><button id="saveNImage" type="button" class="pill-button export">N図4択</button><button id="saveQImage" type="button" class="pill-button export">Q図4択</button><button id="saveMImage" type="button" class="pill-button export">M図4択</button></div></div>
+    <p id="exportStatus" class="export-status" role="status" aria-live="polite" hidden></p>
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note" id="factNote">部材：A→B→C。応力図の方向と荷重位置を確認してください。</div></div></div>
-    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。一定値の部材は数値を1か所に集約し、変化がある部材では変化に必要な値を記載します。</p><p class="export-hint">「画像4枚を書き出す」で、問題図1枚と N図4択・Q図4択・M図4択の計4枚をPNG画像として保存できます。授業資料・課題・小テスト作成にも利用できます。</p>
+    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。一定値の部材は数値を1か所に集約し、変化がある部材では変化に必要な値を記載します。</p><p class="export-hint">「画像4枚をZIP保存」で問題図・N図4択・Q図4択・M図4択を一括保存。各ボタンからは個別にPNG画像を保存できます。</p>
   </section>
   <div class="workspace-answers" id="workspaceAnswers" tabindex="0" aria-label="N・Q・M図の選択肢。ここをスクロールして解答します。">
   <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">応力図内の記号・数値・単位を確認（全3問）</span></div>
@@ -1580,7 +1583,11 @@ function currentQuestionStem(){
  return safeFileStem(`${q}_${title}`);
 }
 function svgOuterWithPlacement(svgMarkup,x,y,w,h){
- return svgMarkup.replace(/<svg\b/i,`<svg x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" `);
+ // DOM内のSVGにはpreserveAspectRatio等が既存。重複属性はSVGのXML変換を失敗させる。
+ return svgMarkup.replace(/<svg\b[^>]*>/i,open=>{
+  const clean=open.replace(/\s+(?:x|y|width|height|preserveAspectRatio|style)\s*=\s*(["']).*?\1/gi,'');
+  return clean.replace(/>$/,` x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet">`);
+ });
 }
 function svgToPngBlob(svgMarkup,width,height){
  return new Promise((resolve,reject)=>{
@@ -1620,13 +1627,13 @@ function buildProblemExportSvg(){
  const support=(document.getElementById('supportDescription')?.textContent||'').trim();
  const load=(document.getElementById('loadDescription')?.textContent||'').trim();
  const note=(document.getElementById('factNote')?.textContent||'').trim();
- const body=svgOuterWithPlacement(figure.outerHTML,50,130,1100,560);
+ const body=svgOuterWithPlacement(figure.outerHTML,50,145,1100,550);
  return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
  <rect width="1200" height="760" fill="#ffffff"/>
  <text x="50" y="54" font-size="22" font-weight="800" fill="#26435c">${HTML(questionNo)}　${HTML(title)}</text>
  <text x="50" y="86" font-size="16" font-weight="700" fill="#4e6982">支持条件：${HTML(support)}</text>
- <text x="600" y="86" font-size="16" font-weight="700" fill="#4e6982">荷重条件：${HTML(load)}</text>
+ <text x="50" y="114" font-size="16" font-weight="700" fill="#4e6982">荷重条件：${HTML(load)}</text>
  <text x="50" y="730" font-size="14" fill="#6c8296">${HTML(note)}</text>
  ${body}
 </svg>`;
@@ -1641,8 +1648,8 @@ function buildChoiceExportSvg(type){
  const title=(document.getElementById('problemTitle')?.textContent||'ラーメン').trim();
  const load=(document.getElementById('loadDescription')?.textContent||'').trim();
  const support=(document.getElementById('supportDescription')?.textContent||'').trim();
- const W=1200,H=980,cardW=540,cardH=330;
- const positions=[[40,130],[620,130],[40,500],[620,500]];
+ const W=1200,H=1220,cardW=540,cardH=465;
+ const positions=[[40,180],[620,180],[40,680],[620,680]];
  const cards=choiceSvgs.map((svg,i)=>{
   const [x,y]=positions[i];
   return `
@@ -1653,31 +1660,87 @@ function buildChoiceExportSvg(type){
    </g>`;
   }).join('');
  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="980" viewBox="0 0 1200 980">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1220" viewBox="0 0 1200 1220">
  <rect width="1200" height="980" fill="#ffffff"/>
  <text x="40" y="50" font-size="22" font-weight="800" fill="#26435c">${HTML(questionNo)}　${HTML(title)}</text>
  <text x="40" y="82" font-size="18" font-weight="800" fill="#31516d">${HTML(labels[type])}</text>
- <text x="40" y="106" font-size="14" fill="#6c8296">支持条件：${HTML(support)}　／　荷重条件：${HTML(load)}</text>
+ <text x="40" y="114" font-size="14" fill="#6c8296">支持条件：${HTML(support)}</text>
+ <text x="40" y="141" font-size="14" fill="#6c8296">荷重条件：${HTML(load)}</text>
  ${cards}
 </svg>`;
 }
+function crc32Bytes(bytes){
+ let c=-1;
+ for(let i=0;i<bytes.length;i++){
+  c=(c^bytes[i])>>>0;
+  for(let j=0;j<8;j++)c=(c>>>1)^((c&1)?0xedb88320:0);
+ }
+ return (c^-1)>>>0;
+}
+// ZIP (無圧縮) をブラウザ内で作成。外部ライブラリやサーバーは不要。
+async function zipPngFiles(files){
+ const enc=new TextEncoder(),chunks=[],central=[];
+ let offset=0,centralSize=0;
+ for(const [name,blob] of files){
+  const filename=enc.encode(name),data=new Uint8Array(await blob.arrayBuffer());
+  const crc=crc32Bytes(data);
+  const local=new Uint8Array(30+filename.length),h=new DataView(local.buffer);
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);
+  h.setUint16(8,0,true);h.setUint32(14,crc,true);
+  h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);
+  h.setUint16(26,filename.length,true);local.set(filename,30);
+  chunks.push(local,data);
+  const dir=new Uint8Array(46+filename.length),d=new DataView(dir.buffer);
+  d.setUint32(0,0x02014b50,true);d.setUint16(4,20,true);d.setUint16(6,20,true);
+  d.setUint16(8,0x0800,true);d.setUint32(16,crc,true);
+  d.setUint32(20,data.length,true);d.setUint32(24,data.length,true);
+  d.setUint16(28,filename.length,true);d.setUint32(42,offset,true);
+  dir.set(filename,46);central.push(dir);centralSize+=dir.length;
+  offset+=local.length+data.length;
+ }
+ const eocd=new Uint8Array(22),end=new DataView(eocd.buffer);
+ end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);
+ end.setUint16(10,files.length,true);end.setUint32(12,centralSize,true);
+ end.setUint32(16,offset,true);
+ return new Blob([...chunks,...central,eocd],{type:'application/zip'});
+}
+let exportBusy=false;
+function exportProgress(message,failed=false){
+ const status=document.getElementById('exportStatus');
+ if(status){status.hidden=!message;status.textContent=message;status.style.color=failed?'#a23636':'#235b86';}
+}
 async function saveExport(kind){
- const stem=currentQuestionStem();
- let items=[];
- if(kind==='all')items=[['problem',buildProblemExportSvg(),1200,760],['N',buildChoiceExportSvg('N'),1200,980],['Q',buildChoiceExportSvg('Q'),1200,980],['M',buildChoiceExportSvg('M'),1200,980]];
- else if(kind==='problem')items=[['problem',buildProblemExportSvg(),1200,760]];
- else items=[[kind,buildChoiceExportSvg(kind),1200,980]];
- showStatus('画像を書き出しています…');
+ if(exportBusy)return;
+ exportBusy=true;
+ const buttons=[...document.querySelectorAll('.pill-button.export')];
+ buttons.forEach(b=>b.disabled=true);
+ exportProgress('PNG画像を生成しています…');
  try{
+  const stem=currentQuestionStem();
+  let items=[];
+  if(kind==='all')items=[['problem',buildProblemExportSvg(),1200,760],['N',buildChoiceExportSvg('N'),1200,1220],['Q',buildChoiceExportSvg('Q'),1200,1220],['M',buildChoiceExportSvg('M'),1200,1220]];
+  else if(kind==='problem')items=[['problem',buildProblemExportSvg(),1200,760]];
+  else items=[[kind,buildChoiceExportSvg(kind),1200,1220]];
+  const pngs=[];
   for(let i=0;i<items.length;i++){
    const [suffix,svg,w,h]=items[i];
-   const blob=await svgToPngBlob(svg,w,h);
-   downloadBlob(blob,`${stem}_${suffix}.png`);
-   if(i<items.length-1)await new Promise(r=>setTimeout(r,220));
+   exportProgress(`PNG画像を生成しています… ${i+1}/${items.length}`);
+   const png=await svgToPngBlob(svg,w,h);
+   pngs.push([`${stem}_${suffix}.png`,png]);
   }
-  showStatus(items.length===4?'問題図1枚とN・Q・M図4択の計4枚を書き出しました。ブラウザが複数ダウンロードを確認する場合は許可してください。':'画像を保存しました。');
+  if(kind==='all'){
+   const zip=await zipPngFiles(pngs);
+   downloadBlob(zip,`${stem}_4images.zip`);
+   exportProgress('4枚のPNG画像をZIPファイルで保存しました。ZIPを開くと4枚の画像があります。');
+  }else{
+   downloadBlob(pngs[0][1],pngs[0][0]);
+   exportProgress('PNG画像を保存しました。ダウンロードフォルダを確認してください。');
+  }
  }catch(err){
-  showStatus('画像保存に失敗しました：'+err.message);
+  exportProgress(`画像保存に失敗しました：${err.message}`,true);
+ }finally{
+  exportBusy=false;
+  buttons.forEach(b=>b.disabled=false);
  }
 }
 
