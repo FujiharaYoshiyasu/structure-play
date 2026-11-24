@@ -408,6 +408,28 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 #story-next{background:#ffb24b;color:#763c13;border:2px solid #d48f2c;font-size:14px}
 @media(max-width:650px){.bird-cage.has-special .cage-tokens{grid-template-columns:repeat(6,minmax(0,1fr))}.special-unit svg{height:24px!important}.special-unit .tiny-force{font-size:8px}.result-heading #result-winner{font-size:26px}}
 
+
+/* STORY preview-only reward screen and compact controls */
+.story-bonus{position:fixed;inset:0;z-index:185;display:grid;place-items:center;padding:15px;background:linear-gradient(155deg,#78cde9,#ddf7db);overflow:auto}
+.bonus-card{width:min(570px,95vw);display:grid;justify-items:center;gap:12px;padding:22px 20px 25px;border:5px solid #efc15e;border-radius:30px;background:linear-gradient(#fffdf3,#fff1c8);box-shadow:0 14px 0 #d6a64d,0 26px 55px #336f834b;text-align:center;color:#9c6019}
+.bonus-kicker{font-size:14px;font-weight:1000;letter-spacing:2px;color:#d07a28}
+.bonus-card h2{font-size:clamp(30px,6vw,47px);margin:0;font-weight:1000;color:#b66c23}
+.bonus-sparkles{font-size:28px;letter-spacing:15px;color:#f19b35}
+.bonus-bird-wrap{width:190px;height:170px;background:#fff8df;border:4px dashed #edc56c;border-radius:35px;display:grid;align-content:center;justify-items:center;gap:0}
+.bonus-bird{font-size:85px;line-height:1.1;animation:bonus-pop .5s cubic-bezier(.2,1.8,.4,1) both}
+.bonus-badge{font-size:25px;font-weight:1000;color:#ac681b}
+.bonus-compare{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;font-size:20px;font-weight:1000}
+.bonus-compare span{border:2px solid #eec874;border-radius:13px;background:#fffefa;padding:8px 11px}
+.bonus-compare strong{color:#e88d2b;font-size:25px}
+.bonus-hint{font-weight:1000;font-size:12px;color:#b47a38;letter-spacing:1px}
+.bonus-retry-button{cursor:pointer;border:3px solid #cf7f2a;border-radius:16px;background:#ff9739;color:white;font-size:20px;font-weight:1000;padding:13px 35px;box-shadow:0 5px 0 #b66e25}
+.bonus-retry-button:hover{filter:brightness(1.05)}
+@keyframes bonus-pop{from{opacity:.1;transform:scale(.35) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.result-top-actions{gap:12px}
+#rematch,#story-next{font-weight:1000;white-space:nowrap}
+#battle-streak{display:none!important}
+.quick-grid label:nth-child(2){display:none!important}
+@media(max-width:650px){.bonus-card{padding:15px 10px;gap:8px}.bonus-bird-wrap{width:130px;height:125px}.bonus-bird{font-size:58px}.bonus-badge{font-size:19px}.bonus-compare{font-size:15px;gap:6px}.bonus-compare span{padding:5px}.bonus-retry-button{font-size:16px;padding:11px 16px}.result-top-actions{gap:6px}#rematch,#story-next{font-size:12px;padding:9px}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -666,6 +688,24 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   </div>
   <button type="button" id="story-rule-start" class="story-start-button">START STAGE 01 →</button>
  </div>
+</div>
+<div id="story-bonus" class="story-bonus" role="dialog" aria-modal="true" aria-labelledby="story-bonus-title" hidden>
+  <div class="bonus-card">
+    <div class="bonus-sparkles" aria-hidden="true">✦ ✧ ✦</div>
+    <span class="bonus-kicker">NEW FRIEND!</span>
+    <h2 id="story-bonus-title">5N BIRD GET!</h2>
+    <div class="bonus-bird-wrap">
+      <div class="bonus-bird" aria-hidden="true">🐤</div>
+      <div class="bonus-badge">5N ×1</div>
+    </div>
+    <div class="bonus-compare">
+      <span>🐦 <b>10N ×5</b></span>
+      <strong>+</strong>
+      <span>🐤 <b>5N ×1</b></span>
+    </div>
+    <div class="bonus-hint">BLUE FIRST · 7m + 3m</div>
+    <button type="button" id="bonus-retry" class="bonus-retry-button">RETRY STAGE 02 →</button>
+  </div>
 </div>
 <div id="quick-settings" class="quick-settings" role="dialog" aria-modal="true" aria-label="Options" hidden>
  <div class="quick-card">
