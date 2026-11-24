@@ -685,7 +685,7 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
  position:fixed;top:max(9px,env(safe-area-inset-top));left:max(11px,env(safe-area-inset-left));
  z-index:1000;display:inline-flex;align-items:center;justify-content:flex-start;
  max-width:calc(100vw - 22px);min-height:30px;padding:5px 7px;
- font:800 12px/1.4 inherit;color:#276d63;text-decoration:none;
+ font-family:inherit;font-size:12px;font-weight:800;line-height:1.4;color:#276d63;text-decoration:none;
  border:0;border-radius:5px;background:#fffef3e8;box-shadow:none;
  white-space:nowrap;
 }
@@ -1409,7 +1409,7 @@ function saveStoryClear(){
  unlockModes();
 }
 function dismissAllModeOverlays(){
- for(const id of ['title-screen','mode-choice','versus-select','story-select','congrats-screen','story-rules','story-bonus','story-fat-bonus','swing-announcement'])$(id).hidden=true;
+ for(const id of ['title-screen','mode-choice','versus-select','story-select','congrats-screen','story-rules','story-bonus','story-fat-bonus','swing-announcement','quick-settings'])$(id).hidden=true;
 }
 function returnToModeMenu(){
  stopClock();clearHandoff();cancelBreak();clearDrag();
