@@ -670,6 +670,15 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
  .congrats-unlocks span{font-size:23px}
  .congrats-unlocks strong{font-size:12px}
 }
+
+/* A concise Japanese story before the original first-stage tutorial. */
+.story-prologue{padding:12px 15px;border-radius:15px;border:2px solid #9fcdb5;
+ background:linear-gradient(135deg,#f5fff6,#eff8df);text-align:left;color:#305e52;
+ display:grid;gap:6px}
+.story-prologue-caption{font-size:11px;letter-spacing:.5px;color:#469d73;font-weight:1000}
+.story-prologue p{margin:0;font-size:clamp(12px,2.1vw,14px);line-height:1.65;font-weight:700}
+.story-prologue p:last-child{color:#22816a;font-weight:1000}
+@media(max-width:650px){.story-prologue{padding:8px 10px;gap:4px}.story-prologue p{font-size:12px;line-height:1.5}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -987,6 +996,12 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
    <button id="story-rule-back" type="button" aria-label="Back to mode selection">← BACK</button>
   </div>
   <h2 id="story-rule-title">HOW TO PLAY</h2>
+  <section class="story-prologue" aria-label="物語のはじまり">
+   <div class="story-prologue-caption">ものがたり · はじまりの谷</div>
+   <p>ある谷に丸太とブランコがありました。あなたはこのブランコに上手に鳥を導いてあげましょう。</p>
+   <p>ただし、丸太は強度の限界に達すると壊れてしまうし、おまけに対戦相手も鳥を乗せてきます。</p>
+   <p>計算してうまく攻略しましょう！</p>
+  </section>
   <div class="story-rule-scene" role="img" aria-label="Two green cliffs with a wooden beam and one swing in the middle under a blue sky">
    <div class="story-rule-sun"></div>
    <div class="story-rule-cliff story-rule-left"></div>
