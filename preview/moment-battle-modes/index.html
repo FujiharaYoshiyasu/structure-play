@@ -467,6 +467,63 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 /* Multiple independently draggable swings (stage 04 and onwards) */
 #beam-svg .swing-drop-target{cursor:pointer;fill-opacity:.002}
 #beam-svg .swing-drop-target.drop-active{fill:#ffeaa3;fill-opacity:.21;stroke:#ea942b;stroke-width:4;stroke-dasharray:9 7}
+
+/* VERTICAL CARD DECK: horizontal 5N | 10N(x5 stacked) | 15N.
+ * Deliberately no 8N / 20N inventory until future stage specifications.
+ */
+.bird-cage{min-height:170px!important;padding:8px 7px!important}
+.bird-cage .cage-tokens.card-inventory,
+.bird-cage.has-special .cage-tokens.card-inventory,
+.bird-cage.has-fat .cage-tokens.card-inventory{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ grid-template-rows:1fr!important;
+ gap:6px!important;
+ min-height:125px;
+ align-items:start;
+}
+.cage-slot{position:relative;min-width:0;height:126px;display:flex;flex-direction:column;align-items:stretch;gap:3px}
+.slot-title{height:18px;text-align:center;font-size:12px;font-weight:1000;color:var(--bird-dark);letter-spacing:.2px}
+.slot-body{position:relative;min-width:0;height:91px;display:flex;justify-content:center}
+.cage-slot .cage-bird.bird-unit,
+.bird-cage.has-fat .cage-slot .cage-bird.bird-unit{
+ position:absolute;left:1px;right:1px;width:calc(100% - 2px);min-width:0;max-width:none;
+ height:65px!important;margin:0;padding:4px 1px;border-radius:12px;border-width:2px;
+ display:flex;align-items:center;justify-content:center;flex:none;
+}
+.cage-slot .cage-bird.bird-unit[hidden]{display:none!important}
+.cage-slot .cage-bird.bird-unit svg{height:42px!important;max-width:52px!important;width:90%!important}
+.cage-slot .cage-deck .deck-card{top:calc(var(--stack-index) * 6px);z-index:var(--stack-index);box-shadow:0 2px 3px #27505945;background:#fffdf4}
+.cage-slot .single-slot .special-unit,
+.cage-slot .single-slot .fat-unit{top:13px!important}
+.cage-slot .special-unit svg{transform:scale(.75)}
+.cage-slot .fat-unit svg{transform:scale(1.12)}
+.cage-slot .stack-count{position:absolute;bottom:-1px;right:0;left:0;text-align:center;font-weight:1000;font-size:12px;color:var(--bird-dark)}
+.cage-slot .slot-empty{position:absolute;top:26px;left:1px;right:1px;height:57px;border:2px dashed #adc5bc;border-radius:11px;background:#ffffff65;display:none;align-items:center;justify-content:center;font-weight:900;color:#86aca0;pointer-events:none}
+.cage-slot.is-empty .slot-empty{display:flex}
+.cage-slot:not(.is-empty) .slot-empty{display:none}
+.cage-row{min-height:178px!important}
+.cage-label small{font-size:11px}
+@media(max-width:650px){
+ .cage-row{min-height:135px!important}
+ .bird-cage{min-height:135px!important;padding:5px 3px!important}
+ .bird-cage .cage-tokens.card-inventory,
+ .bird-cage.has-special .cage-tokens.card-inventory,
+ .bird-cage.has-fat .cage-tokens.card-inventory{gap:2px!important;min-height:100px}
+ .cage-slot{height:105px;gap:2px}
+ .slot-title{font-size:10px;height:15px}
+ .slot-body{height:76px}
+ .cage-slot .cage-bird.bird-unit,
+ .bird-cage.has-fat .cage-slot .cage-bird.bird-unit{height:50px!important;border-radius:7px;padding:1px}
+ .cage-slot .cage-bird.bird-unit svg{height:36px!important;max-width:39px!important;width:98%!important}
+ .cage-slot .cage-deck .deck-card{top:calc(var(--stack-index) * 5px)}
+ .cage-slot .single-slot .special-unit,
+ .cage-slot .single-slot .fat-unit{top:10px!important}
+ .cage-slot .stack-count{font-size:10px;bottom:0}
+ .cage-slot .slot-empty{top:22px;height:43px}
+ .cage-label small{font-size:9px}
+}
+
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -807,28 +864,37 @@ function buildCages(){
  for(let player=0;player<2;player++){
   const card=$('cage-'+(player?'orange':'blue'));card.replaceChildren();
   const heading=document.createElement('div');heading.className='cage-label';
-  heading.innerHTML='<span>● '+labels[player]+' · 10N</span><small id="cage-count-'+player+'">5 LEFT</small>';
-  const row=document.createElement('div');row.className='cage-tokens';
-  for(let n=0;n<STORY_BIRDS;n++){
-   const b=document.createElement('button');b.type='button';b.className='cage-bird bird-unit';
-   b.dataset.player=String(player);b.dataset.force=String(WEIGHT);b.dataset.birdIndex=String(n);
-   b.setAttribute('aria-label',labels[player]+' bird '+(n+1)+' of '+STORY_BIRDS+', 10N. Drag to swing.');
-   b.innerHTML=cageSvg();
-   row.append(b);
-  }
-  {
-   const baby=document.createElement('button');baby.type='button';baby.className='cage-bird bird-unit special-unit';
-   baby.dataset.player=String(player);baby.dataset.force=String(SPECIAL_WEIGHT);baby.dataset.birdIndex='special';
-   baby.setAttribute('aria-label',labels[player]+' bonus bird, 5N, one use, drag to swing.');
-   baby.innerHTML=cageSvg()+'<span class="tiny-force">5N</span>';baby.hidden=true;
-   row.append(baby);
-  }
-  {
-   const fat=document.createElement('button');fat.type='button';fat.className='cage-bird bird-unit fat-unit';
-   fat.dataset.player=String(player);fat.dataset.force=String(FAT_WEIGHT);fat.dataset.birdIndex='fat';
-   fat.setAttribute('aria-label',labels[player]+' chubby bird, 15N, one use. Drag to center swing.');
-   fat.innerHTML=cageSvg()+'<span class="tiny-force">15N</span>';fat.hidden=true;
-   row.append(fat);
+  heading.innerHTML='<span>● '+labels[player]+'</span><small id="cage-count-'+player+'">5 LEFT</small>';
+  const row=document.createElement('div');row.className='cage-tokens card-inventory';
+  for(const force of [SPECIAL_WEIGHT,WEIGHT,FAT_WEIGHT]){
+   const slot=document.createElement('div');slot.className='cage-slot';
+   slot.dataset.slotForce=String(force);slot.dataset.slotPlayer=String(player);
+   const header=document.createElement('div');header.className='slot-title';
+   header.textContent=force+'N';
+   const contents=document.createElement('div');
+   contents.className=force===WEIGHT?'slot-body cage-deck':'slot-body single-slot';
+   const total=force===WEIGHT?STORY_BIRDS:1;
+   for(let n=0;n<total;n++){
+    const b=document.createElement('button');b.type='button';
+    b.className='cage-bird bird-unit'+(force===WEIGHT?' deck-card':force===SPECIAL_WEIGHT?' special-unit':' fat-unit');
+    b.dataset.player=String(player);b.dataset.force=String(force);
+    b.dataset.birdIndex=force===WEIGHT?String(n):force===SPECIAL_WEIGHT?'special':'fat';
+    b.style.setProperty('--stack-index',String(n));
+    b.setAttribute('aria-label',labels[player]+' '+force+'N bird'+(force===WEIGHT?' '+(n+1)+' of '+STORY_BIRDS:'')+'. Drag to swing.');
+    b.innerHTML=cageSvg();
+    b.hidden=force!==WEIGHT;
+    contents.append(b);
+   }
+   const empty=document.createElement('span');empty.className='slot-empty';
+   empty.textContent='—';empty.setAttribute('aria-hidden','true');
+   contents.append(empty);
+   slot.append(header,contents);
+   if(force===WEIGHT){
+    const badge=document.createElement('span');badge.className='stack-count';
+    badge.id='cage-stack-count-'+player;badge.textContent='×'+STORY_BIRDS;
+    slot.append(badge);
+   }
+   row.append(slot);
   }
   card.append(heading,row);
  }
@@ -909,7 +975,8 @@ function updateCages(){
   cage.classList.toggle('is-active',turn===player&&!cpuTurn()&&!handoffActive);
   cage.classList.toggle('has-special',bonusLeft(player));
   cage.classList.toggle('has-fat',fatLeft(player));
-  $('cage-count-'+player).textContent=remaining+' LEFT'+(bonusLeft(player)?' + 5N':'')+(fatLeft(player)?' + 15N':'');
+  $('cage-count-'+player).textContent=remaining+' LEFT';
+  $('cage-stack-count-'+player).textContent='×'+remaining;
  }
  document.querySelectorAll('.cage-bird').forEach(b=>{
   const player=Number(b.dataset.player),force=Number(b.dataset.force);
@@ -918,6 +985,10 @@ function updateCages(){
   b.hidden=!inStock;
   b.disabled=!inStock||!dragAllowed(player,force);
   b.classList.toggle('is-selected',inStock&&!b.disabled&&force===selectedWeight);
+ });
+ document.querySelectorAll('.cage-slot').forEach(slot=>{
+  const force=Number(slot.dataset.slotForce),player=Number(slot.dataset.slotPlayer);
+  slot.classList.toggle('is-empty',force===WEIGHT?remainingBirds(player)===0:force===SPECIAL_WEIGHT?!bonusLeft(player):!fatLeft(player));
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
  hint.innerHTML='<span class="hint-arrow">↓</span><strong>'+(turn?'ORANGE':'BLUE')+'<br>'+(history.length?'TURN':'FIRST')+'</strong><small>'+(cpuTurn()?'CPU…':'DRAG ↓')+'</small>';
