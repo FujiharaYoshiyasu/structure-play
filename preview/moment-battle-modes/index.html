@@ -2006,6 +2006,11 @@ function toResult(){
  if(mode!=='break'||!breakReady)return;
  cancelBreak();
  const resultWinner=1-(history.length-1)%2;
+ const earnedBackFive=gameRoute==='back'&&storyLevel===2&&resultWinner!==humanPlayer&&!backExtraFiveUnlocked&&!isDeveloperPreview;
+ if(earnedBackFive){
+  backExtraFiveUnlocked=true;
+  setStoredFlag(BACK_EXTRA_FIVE_KEY);
+ }
  if(resultWinner===humanPlayer)noteStageVictory();
  if(isCpu()&&!practice&&!committed){
   const winner=1-(history.length-1)%2;
@@ -2016,6 +2021,7 @@ function toResult(){
   saveStreaks();committed=true;
  }
  openScreen('result');buildResults();
+ if(earnedBackFive)showFiveReward(true);
  if(resultWinner===humanPlayer&&storyLevel===10&&['story','back'].includes(gameRoute)&&!isDeveloperPreview)
   showCongratulations(gameRoute);
 }
@@ -2085,15 +2091,34 @@ $('fracture-stage').addEventListener('click',toResult);
 $('result-prev').addEventListener('click',()=>selectResult(selectedStep-1));
 $('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
 
+function showFiveReward(backExtra=false){
+ const overlay=$('story-bonus');
+ $('story-bonus-title').textContent=backExtra?'5N BIRD +1!':'5N BIRD GET!';
+ overlay.querySelector('.bonus-badge').textContent=backExtra?'5N ×2':'5N ×1';
+ overlay.querySelector('.bonus-compare').innerHTML=backExtra?
+  '<span>🐦 <b>10N ×5</b></span><strong>+</strong><span>🐤 <b>5N ×2</b></span><strong>+</strong><span>🐦 <b>15N ×1</b></span>':
+  '<span>🐦 <b>10N ×5</b></span><strong>+</strong><span>🐤 <b>5N ×1</b></span>';
+ overlay.querySelector('.bonus-hint').textContent=backExtra?
+  '裏STORY · STAGE 02 · 青チームに5Nを1羽追加！':
+  'BLUE FIRST · 7m + 3m';
+ $('bonus-retry').textContent=backExtra?'5N ×2で再挑戦 →':'RETRY STAGE 02 →';
+ overlay.hidden=false;
+}
 $('rematch').addEventListener('click',()=>{
   if(mode!=='result')return;
   const lost=history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
-  if(gameRoute==='story'&&lost&&storyLevel===2&&!storyBonusUnlocked){$('story-bonus').hidden=false;return;}
+  if(gameRoute==='story'&&lost&&storyLevel===2&&!storyBonusUnlocked){showFiveReward(false);return;}
   if(gameRoute==='story'&&lost&&storyLevel===3&&!storyFatUnlocked){$('story-fat-bonus').hidden=false;return;}
   restart();
  });
 $('bonus-retry').addEventListener('click',()=>{
-  if(mode!=='result'||storyLevel!==2||storyBonusUnlocked)return;
+  if(mode!=='result'||storyLevel!==2)return;
+  if(gameRoute==='back'){
+   if(!backExtraFiveUnlocked)return;
+   $('story-bonus').hidden=true;
+   prepareGame();restart();return;
+  }
+  if(gameRoute!=='story'||storyBonusUnlocked)return;
   storyBonusUnlocked=true;setStoredFlag(STORY_BONUS_KEY);$('story-bonus').hidden=true;
   humanPlayer=0;stage=getStage('story2');limit=100;
   prepareGame();restart();
