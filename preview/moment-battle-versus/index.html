@@ -612,7 +612,7 @@ const names=['青チーム','橙チーム'];
 let mode='setup',stage=getStage('stage1'),stageChoice='stage1',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
 let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
 let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,committedSnapshot=null;
-const STREAK_KEY='moment-battle-v08-cpu-streak';
+const STREAK_KEY='moment-battle-versus-preview-streak';
 const storage=(()=>{try{return window.localStorage;}catch(e){return null;}})();
 function freshStreaks(){return {levels:Array.from({length:10},()=>({current:0,best:0,wins:0,losses:0}))};}
 function cleanStreaks(raw){const s=freshStreaks();if(Array.isArray(raw?.levels)){raw.levels.slice(0,10).forEach((rec,i)=>{for(const k of ['current','best','wins','losses'])if(Number.isSafeInteger(rec?.[k])&&rec[k]>=0)s.levels[i][k]=rec[k];s.levels[i].best=Math.max(s.levels[i].best,s.levels[i].current);});}return s;}
