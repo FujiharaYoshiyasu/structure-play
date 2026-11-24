@@ -1212,9 +1212,10 @@ function chooseCpuMove(){
  function actions(h){
   const player=h.length%2,choices=[],forces=[];
   if(remainingBirds(player,h)>0)forces.push(WEIGHT);
-  // CPU uses only 10N; strongest search must account for the human's 5N and 15N.
-  if(player===humanPlayer&&bonusLeft(player,h))forces.push(SPECIAL_WEIGHT);
-  if(player===humanPlayer&&fatLeft(player,h))forces.push(FAT_WEIGHT);
+  // BACK STORY: the strongest CPU also plays its own 5N and 15N from stage 01.
+  // Simulate each player's actual inventory so minimax can defend against specials.
+  if(bonusLeft(player,h))forces.push(SPECIAL_WEIGHT);
+  if(fatLeft(player,h))forces.push(FAT_WEIGHT);
   for(const p of forces)for(const x of pos()){
    const move={x,p,cpu:true},a=fromHistory([...h,move],stage,limit);
    choices.push({move,failed:a.failed,max:a.maxMoment});
@@ -1230,7 +1231,7 @@ function chooseCpuMove(){
   if(++visited>budget)return 0;
   const key=pos().map(x=>h.filter(m=>m.x===x).reduce((s,m)=>s+m.p/5,0)).join(',')
    +'|'+[0,1].map(p=>remainingBirds(p,h)).join(',')
-   +'|'+(bonusLeft(humanPlayer,h)?1:0)+(fatLeft(humanPlayer,h)?1:0)
+   +'|'+[0,1].map(p=>(bonusLeft(p,h)?1:0)+''+(fatLeft(p,h)?1:0)).join(',')
    +'|'+(h.length%2)+'|'+d;
   if(memo.has(key))return memo.get(key);
   const ok=actions(h).filter(a=>!a.failed);
@@ -1269,6 +1270,8 @@ const svg=(tag,attrs={},parent)=>{const e=document.createElementNS(ns,tag);Objec
 const label=(parent,x,y,text,attrs={})=>{const e=svg('text',{x,y,'text-anchor':'middle',fill:'#295e76','font-size':15,...attrs},parent);e.textContent=text;return e;};
 function openScreen(next){
  mode=next;
+ if(next==='setup')$('setup-screen').removeAttribute('inert');
+ else $('setup-screen').setAttribute('inert','');
  if(next==='result'){$('story-next').hidden=true;}
  for(const id of ['setup','battle','break','result'])$(`${id}-screen`).hidden=id!==next;
  $('header-stage').textContent=next==='setup'?'BEAM STRATEGY · CPU / 2P':`${stage.name} · ${fmt(span())} m · LIMIT ${fmt(limit)} N·m`;
@@ -1724,6 +1727,8 @@ function showBreak(data,loser){
 function toResult(){
  if(mode!=='break'||!breakReady)return;
  cancelBreak();
+ const resultWinner=1-(history.length-1)%2;
+ if(resultWinner===humanPlayer&&gameRoute==='story'&&storyLevel===10)saveStoryClear();
  if(isCpu()&&!practice&&!committed){
   const winner=1-(history.length-1)%2;
   committedSnapshot=cleanStreaks(streakStats);
@@ -1742,10 +1747,15 @@ function buildResults(){
  $('result-winner').textContent=winner===0?'BLUE WIN':'RED WIN';
  $('result-description').textContent='';
  $('result-description').hidden=true;
- const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
- const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||(storyLevel>=4&&storyLevel<10));
- $('story-next').hidden=!advance;
- $('story-next').textContent='NEXT STAGE →';
+ const storyRoute=gameRoute==='story'||gameRoute==='back';
+ const advance=storyRoute&&playerWon&&(gameRoute==='back'?storyLevel<10:
+   (storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||(storyLevel>=4&&storyLevel<10)));
+ const finished=storyRoute&&playerWon&&storyLevel===10;
+ $('story-next').hidden=!(advance||finished);
+ $('story-next').textContent=finished?'MODE SELECT →':'NEXT STAGE →';
+ $('result-mode-label').textContent=(gameRoute==='story'?'STORY':gameRoute==='back'?'裏STORY':gameRoute==='edit'?'EDIT':'VERSUS')+' · M EVOLUTION';
+ const notice=$('story-clear-notice');notice.hidden=!finished;
+ notice.textContent=gameRoute==='story'?'STORY CLEAR! EDIT と 裏STORY が解放されました！':'裏STORY CLEAR! おめでとう！';
  $('rematch').hidden=false;
  $('rematch').textContent='↻ RETRY';
  $('result-streak').hidden=true;
@@ -1797,8 +1807,8 @@ $('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
 $('rematch').addEventListener('click',()=>{
   if(mode!=='result')return;
   const lost=history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
-  if(lost&&storyLevel===2&&!storyBonusUnlocked){$('story-bonus').hidden=false;return;}
-  if(lost&&storyLevel===3&&!storyFatUnlocked){$('story-fat-bonus').hidden=false;return;}
+  if(gameRoute==='story'&&lost&&storyLevel===2&&!storyBonusUnlocked){$('story-bonus').hidden=false;return;}
+  if(gameRoute==='story'&&lost&&storyLevel===3&&!storyFatUnlocked){$('story-fat-bonus').hidden=false;return;}
   restart();
  });
 $('bonus-retry').addEventListener('click',()=>{
@@ -1848,20 +1858,25 @@ $('swing-announce-go').addEventListener('click',()=>{
 });
 $('story-next').addEventListener('click',()=>{
  if(mode!=='result'||history.length===0)return;
+ if(gameRoute!=='story'&&gameRoute!=='back')return;
  const winner=1-(history.length-1)%2,won=winner===humanPlayer;
- if(storyLevel===1&&won){
-   storyLevel=2;cpuLevel=10;humanPlayer=0;storyBonusUnlocked=false;
- }else if(storyLevel===2&&won&&storyBonusUnlocked){
-   storyLevel=3;cpuLevel=10;humanPlayer=0;storyFatUnlocked=false;
- }else if(storyLevel===3&&won&&storyFatUnlocked){
-   storyLevel=4;cpuLevel=10;humanPlayer=0;
- }else if(storyLevel>=4&&storyLevel<10&&won){
-   storyLevel+=1;cpuLevel=10;humanPlayer=0;
+ if(!won)return;
+ if(storyLevel===10){returnToModeMenu();return;}
+ if(gameRoute==='back'){
+  storyLevel+=1;
+ }else if(storyLevel===1){
+  storyLevel=2;storyBonusUnlocked=false;
+ }else if(storyLevel===2&&storyBonusUnlocked){
+  storyLevel=3;storyFatUnlocked=false;
+ }else if(storyLevel===3&&storyFatUnlocked){
+  storyLevel=4;
+ }else if(storyLevel>=4&&storyLevel<10){
+  storyLevel+=1;
  }else return;
- stage=getStage(stageId());limit=stageLimit();prepareGame();
+ cpuLevel=10;humanPlayer=0;stage=getStage(stageId());limit=stageLimit();prepareGame();
  if(storyLevel===4||storyLevel===9){showSwingAnnouncement();}else{restart();}
 });
-$('story-home').addEventListener('click',()=>{stopClock();clearHandoff();cancelBreak();clearDrag();$('mode-choice').hidden=false;openScreen('setup');});
+$('story-home').addEventListener('click',returnToModeMenu);
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
     if(mode==='battle'||mode==='result'){e.preventDefault();undo();}
