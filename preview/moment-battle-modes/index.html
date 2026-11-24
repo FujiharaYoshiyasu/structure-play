@@ -758,6 +758,13 @@ function buildCages(){
    baby.innerHTML=cageSvg()+'<span class="tiny-force">5N</span>';baby.hidden=true;
    row.append(baby);
   }
+  {
+   const fat=document.createElement('button');fat.type='button';fat.className='cage-bird bird-unit fat-unit';
+   fat.dataset.player=String(player);fat.dataset.force=String(FAT_WEIGHT);fat.dataset.birdIndex='fat';
+   fat.setAttribute('aria-label',labels[player]+' chubby bird, 15N, one use. Drag to center swing.');
+   fat.innerHTML=cageSvg()+'<span class="tiny-force">15N</span>';fat.hidden=true;
+   row.append(fat);
+  }
   card.append(heading,row);
  }
 }
@@ -824,11 +831,13 @@ function updateCages(){
   const cage=$('cage-'+(player?'orange':'blue'));
   cage.classList.toggle('is-active',turn===player&&!cpuTurn()&&!handoffActive);
   cage.classList.toggle('has-special',bonusLeft(player));
-  $('cage-count-'+player).textContent=remaining+' LEFT'+(bonusLeft(player)?' + 5N':'');
+  cage.classList.toggle('has-fat',fatLeft(player));
+  $('cage-count-'+player).textContent=remaining+' LEFT'+(bonusLeft(player)?' + 5N':'')+(fatLeft(player)?' + 15N':'');
  }
  document.querySelectorAll('.cage-bird').forEach(b=>{
   const player=Number(b.dataset.player),force=Number(b.dataset.force);
-  const inStock=force===WEIGHT?Number(b.dataset.birdIndex)<remainingBirds(player):bonusLeft(player);
+  const inStock=force===WEIGHT?Number(b.dataset.birdIndex)<remainingBirds(player)
+   :force===SPECIAL_WEIGHT?bonusLeft(player):force===FAT_WEIGHT?fatLeft(player):false;
   b.hidden=!inStock;
   b.disabled=!inStock||!dragAllowed(player,force);
   b.classList.toggle('is-selected',inStock&&!b.disabled&&force===selectedWeight);
