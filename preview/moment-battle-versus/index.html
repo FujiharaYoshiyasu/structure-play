@@ -310,6 +310,10 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 /* Minimal labels in the classic versus preview */
 .screen-heading p,.setup-beam>.setup-hint,.setup-rules>.setup-hint{display:none}
 .play-panel{gap:7px}.versus-cages{min-height:88px}
+
+/* Compact result headlines on the review-only versus page */
+.result-heading #result-winner{font-weight:1000;font-size:clamp(24px,3vw,40px)}
+.result-heading #result-description{display:none}
 </style>
 <title>MOMENT BATTLE | VERSUS DRAG PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -406,7 +410,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     </section>
 
     <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
-      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
+      <div class="result-heading"><div><span class="eyebrow">VERSUS · M EVOLUTION</span><h2><span id="result-winner">WIN: BLUE</span></h2><p id="result-description" hidden></p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
       <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
       <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
       <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
@@ -1139,12 +1143,12 @@ function resultSteps(){return resultTimeline(history,stage,limit);}
 function buildResults(){
  const steps=resultSteps(),last=steps.at(-1);
  if(!last)return;
- $('result-winner').textContent=`— ${names[1-last.player]} の勝利！`;
- $('result-description').textContent=`${names[last.player]}が${hookName(last.move.x)}に${last.move.p} Nを載せ、最大 ${fmt(last.analysis.maxMoment)} N·mで梁が破壊されました。`;
+ $('result-winner').textContent=1-last.player?'ORANGE WIN':'BLUE WIN';
+ $('result-description').textContent='';$('result-description').hidden=true;
  const streakBox=$('result-streak');streakBox.hidden=!isCpu();
  if(isCpu()){
   const record=currentRecord(),won=1-last.player===humanPlayer;
-  streakBox.textContent=practice?'練習対戦（Undo使用）· 記録対象外 · Lv'+cpuLevel+' 現在'+record.current+'連勝 / 最高'+record.best+'連勝':(won?'CPUに勝利！':'CPUに敗北！')+' · Lv'+cpuLevel+' 現在'+record.current+'連勝 / 最高'+record.best+'連勝';
+  streakBox.textContent='CPU Lv'+cpuLevel+' · WIN ×'+record.current+' / BEST ×'+record.best+(practice?' · PRACTICE':'');
  }
  const box=$('result-timeline');box.replaceChildren();
  steps.forEach((step,i)=>{
@@ -1167,11 +1171,11 @@ function selectResult(n){
  const steps=resultSteps();if(!steps.length)return;
  selectedStep=Math.max(0,Math.min(n,steps.length-1));
  const s=steps[selectedStep],prev=selectedStep>0?steps[selectedStep-1]:null;
- $('result-step-label').textContent=`${s.turn}手目 · ${names[s.player]} · ${hookName(s.move.x)}に${s.move.p} N`;
- $('result-step-m').textContent=`最大M ${fmt(s.analysis.maxMoment)} N·m`;
+ $('result-step-label').textContent=`TURN ${s.turn} · ${s.player?'ORANGE':'BLUE'} · ${hookName(s.move.x)} +${s.move.p}N`;
+ $('result-step-m').textContent=`MAX M ${fmt(s.analysis.maxMoment)} N·m`;
  $('result-step-m').style.color=s.player?'#dd6727':'#176cc4';
- $('result-step-detail').textContent=`${s.move.auto?'時間切れによる自動配置。':''}前の手 ${fmt(s.previousMax)} → 今回 ${fmt(s.analysis.maxMoment)} N·m（+${fmt(s.analysis.maxMoment-s.previousMax)}）。${s.analysis.failed?'この手で梁が破壊されました。':''}`;
- $('result-progress').textContent=`${s.turn} / ${steps.length} 手`;
+ $('result-step-detail').textContent=`M: ${fmt(s.previousMax)} → ${fmt(s.analysis.maxMoment)} N·m`;
+ $('result-progress').textContent=`${s.turn} / ${steps.length}`;
  $('result-prev').disabled=selectedStep===0;$('result-next').disabled=selectedStep===steps.length-1;
  drawPlot($('result-plot-svg'),s.analysis,prev?.analysis,s.player);
  document.querySelectorAll('.result-turn-button').forEach((b,i)=>{
