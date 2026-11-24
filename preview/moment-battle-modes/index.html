@@ -1399,6 +1399,10 @@ function beginRoute(route,level=1){
   $('match-mode').value='local';$('cpu-level').value='10';
   openScreen('setup');return;
  }
+ if(['story','back'].includes(route)&&(level===4||level===9)){
+  stopClock();clearHandoff();cancelBreak();
+  matchMode='cpu';prepareGame();showSwingAnnouncement();return;
+ }
  start();
 }
 function buildVersusStageSelect(){
@@ -2121,6 +2125,12 @@ document.addEventListener('keydown',e=>{
 });
 buildSetup();buildCages();setupDrag();initQuick();buildVersusStageSelect();stageChoice='center';
 unlockModes();
+$('title-enter').addEventListener('click',()=>{
+ dismissAllModeOverlays();
+ $('mode-choice').hidden=false;unlockModes();
+});
+$('congrats-title-back').addEventListener('click',returnToTitle);
+$('story-select-back').addEventListener('click',returnToModeMenu);
 $('versus-choice').addEventListener('click',()=>{
  dismissAllModeOverlays();
  $('versus-select').hidden=false;
@@ -2131,23 +2141,14 @@ $('versus-back').addEventListener('click',()=>{
 });
 $('backstory-choice').addEventListener('click',()=>{
  if(!storyCleared)return;
- beginRoute('back',1);
+ openStoryStageSelect('back');
 });
 $('edit-choice').addEventListener('click',()=>{
  if(!storyCleared)return;
  beginRoute('edit',1);
 });
-$('story-choice').addEventListener('click',()=>{
- gameRoute='story';isDeveloperPreview=false;
- $('swing-announcement').hidden=true;
- $('story-bonus').hidden=true;$('story-fat-bonus').hidden=true;
- storyLevel=1;storyBonusUnlocked=false;storyFatUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='10';$('human-side').value='0';
- $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
- $('mode-choice').hidden=true;$('story-rules').hidden=false;
-});
-$('story-rule-back').addEventListener('click',()=>{
- $('story-rules').hidden=true;$('mode-choice').hidden=false;
-});
+$('story-choice').addEventListener('click',()=>openStoryStageSelect('story'));
+$('story-rule-back').addEventListener('click',()=>openStoryStageSelect('story'));
 $('story-rule-start').addEventListener('click',()=>{
  $('story-rules').hidden=true;start();
 });
@@ -2166,10 +2167,7 @@ if(['6','7','8','9','10'].includes(devStage)){
  $('no-time-limit').checked=false;
  $('turn-seconds').value='30';
  $('limit-input').value='100';
- $('mode-choice').hidden=true;
- $('story-rules').hidden=true;
- $('story-bonus').hidden=true;
- $('story-fat-bonus').hidden=true;
+ dismissAllModeOverlays();
  start();
  $('header-stage').textContent='DEV TEST · STAGE '+String(storyLevel).padStart(2,'0')+' · '+stage.intervals.join('m / ')+'m';
 }else{
