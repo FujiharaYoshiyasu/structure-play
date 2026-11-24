@@ -1730,7 +1730,28 @@ $('story-rule-back').addEventListener('click',()=>{
 $('story-rule-start').addEventListener('click',()=>{
  $('story-rules').hidden=true;start();
 });
-openScreen('setup');
+// Preview-only deep link for development/testing. Does not change story progress.
+const devStage=new URLSearchParams(window.location.search).get('devStage');
+if(devStage==='6'){
+ storyLevel=6;
+ storyBonusUnlocked=true;
+ storyFatUnlocked=true;
+ stage=getStage('story6');
+ $('match-mode').value='cpu';
+ $('cpu-level').value='10';
+ $('human-side').value='0';
+ $('no-time-limit').checked=false;
+ $('turn-seconds').value='30';
+ $('limit-input').value='100';
+ $('mode-choice').hidden=true;
+ $('story-rules').hidden=true;
+ $('story-bonus').hidden=true;
+ $('story-fat-bonus').hidden=true;
+ start();
+ $('header-stage').textContent='DEV TEST · STAGE 06 · 3m / 5m / 2m';
+}else{
+ openScreen('setup');
+}
 })();
 
 </script>
