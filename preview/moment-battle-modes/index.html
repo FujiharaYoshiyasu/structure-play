@@ -840,7 +840,7 @@ function inSwing(x,y){
 }
 function showDragGhost(x,y,player,force){
  const ghost=$('bird-drag-ghost');ghost.hidden=false;
- ghost.textContent=(player?'🟠':'🔵')+' '+(force===5?'🐤':force===15?'🐧':'🐦')+' '+force+'N';
+ ghost.textContent=(player?'🟠':'🔵')+' '+(force===5?'🐤':'🐦')+' '+force+'N';
  ghost.style.left=x+'px';ghost.style.top=y+'px';
 }
 function clearDrag(){
