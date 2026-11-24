@@ -396,6 +396,18 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 #bonus0,#bonus1{font-size:10px}
 @media(max-width:650px){.story-rule-card{gap:8px;padding:11px;border-width:3px}.story-rule-scene{height:95px}.story-rule-cliff{top:53px}.story-rule-bridge{top:53px}.story-rule-swing{top:63px;height:30px}.story-rules-lines>div{padding:7px;font-size:12px}.story-reward{padding:6px}.story-start-button{font-size:15px;padding:9px}.cage-row{grid-template-columns:minmax(0,1fr) 55px minmax(0,1fr);gap:4px;min-height:93px}.bird-cage{padding:4px 3px;min-height:90px}.cage-label{font-size:10px}.cage-label small{font-size:9px}.cage-tokens{gap:1px}.cage-bird.bird-unit{height:44px;padding:0;border-radius:6px;border-width:1px}.cage-bird.bird-unit svg{height:30px;max-width:31px}}
 
+
+/* Stage 02 5N ally: one genuinely smaller bird joins the BLUE inventory */
+.bird-cage.has-special .cage-tokens{grid-template-columns:repeat(6,minmax(0,1fr))}
+.bird-cage.has-special .cage-label small{font-size:10px}
+.special-unit{position:relative;background:#fff1ba!important;border-color:#dfad47!important}
+.special-unit svg{height:30px!important;width:85%!important;transform:scale(.77);transform-origin:center bottom}
+.special-unit .tiny-force{display:block;position:absolute;bottom:1px;left:0;right:0;font-size:10px;font-weight:1000;line-height:1;color:#9a5b21}
+.result-heading #result-winner{font-size:clamp(24px,3vw,40px);font-weight:1000}
+.result-heading #result-description{display:none}
+#story-next{background:#ffb24b;color:#763c13;border:2px solid #d48f2c;font-size:14px}
+@media(max-width:650px){.bird-cage.has-special .cage-tokens{grid-template-columns:repeat(6,minmax(0,1fr))}.special-unit svg{height:24px!important}.special-unit .tiny-force{font-size:8px}.result-heading #result-winner{font-size:26px}}
+
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -490,7 +502,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     </section>
 
     <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
-      <div class="result-heading"><div><span class="eyebrow">MATCH RESULT / BENDING MOMENT REVIEW</span><h2>対戦リザルト <span id="result-winner"></span></h2><p id="result-description"></p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button type="button" id="story-next" class="primary-button" hidden>STAGE 02 →</button><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
+      <div class="result-heading"><div><span class="eyebrow">STORY · M EVOLUTION</span><h2><span id="result-winner">BLUE WIN</span></h2><p id="result-description" hidden></p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button type="button" id="story-next" class="primary-button" hidden>STAGE 02 →</button><button id="result-undo" type="button">↶ 最後の1手を戻す</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
       <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
       <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
       <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
@@ -522,6 +534,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   const STAGES=Object.freeze({
     center:createStage([5,5],{id:'center',name:'STAGE 01',title:'CENTER SWING'}),
     story2:createStage([7,3],{id:'story2',name:'STAGE 02',title:'OFFSET SWING'}),
+    story3:createStage([1,9],{id:'story3',name:'STAGE 03',title:'EDGE SWING'}),
     stage1:createStage([1,2,3,4],{id:'stage1',name:'STAGE 01',title:'基本の梁'}),
     stage2:createStage([2,4,1,3],{id:'stage2',name:'STAGE 02',title:'変則フック配置'})
   });
@@ -676,8 +689,12 @@ const {STAGES,getStage,createStage,WEIGHT,SPECIAL_WEIGHT,LIMIT,fromHistory,previ
 
 function cageSvg(){return '<svg viewBox="0 0 64 63" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 39L2 29L7 51L18 48" fill="var(--bird-dark)"/><ellipse cx="31" cy="34" rx="22" ry="20" fill="var(--bird-color)" stroke="#31535e" stroke-width="2.2"/><ellipse cx="25" cy="41" rx="13" ry="8" fill="var(--bird-wing)"/><path d="M23 17l2-9 6 9 5-10 2 11" fill="var(--bird-dark)"/><circle cx="42" cy="28" r="6" fill="white"/><circle cx="44" cy="27" r="2.8" fill="#253d4b"/><path d="M50 33l13 5-13 6" fill="#ffd252" stroke="#9e7d34" stroke-width="2"/><path d="M25 52l-3 6m16-5v5" stroke="#946032" stroke-width="3" stroke-linecap="round"/></svg>';}
 const STORY_BIRDS = 5;
-function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2===player?1:0),0);}
+function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2===player&&move.p===WEIGHT?1:0),0);}
 function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
+function hasBonus(player){return storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer;}
+function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);}
+function stageLimit(level=storyLevel){return level===3?80:100;}
+function stageId(level=storyLevel){return level===1?'center':level===2?'story2':'story3';}
 function buildCages(){
  const labels=['BLUE','ORANGE'];
  for(let player=0;player<2;player++){
@@ -692,13 +709,20 @@ function buildCages(){
    b.innerHTML=cageSvg();
    row.append(b);
   }
+  if(player===0){
+   const baby=document.createElement('button');baby.type='button';baby.className='cage-bird bird-unit special-unit';
+   baby.dataset.player='0';baby.dataset.force=String(SPECIAL_WEIGHT);baby.dataset.birdIndex='special';
+   baby.setAttribute('aria-label','Blue bonus bird, 5N, one use, drag to swing.');
+   baby.innerHTML=cageSvg()+'<span class="tiny-force">5N</span>';baby.hidden=true;
+   row.append(baby);
+  }
   card.append(heading,row);
  }
 }
 let pointerDrag=null;
 function dragAllowed(player,force){
- return mode==='battle'&&!handoffActive&&!cpuTurn()
-   &&player===history.length%2&&force===WEIGHT&&remainingBirds(player)>0;
+ return mode==='battle'&&!handoffActive&&!cpuTurn()&&player===history.length%2&&
+  (force===WEIGHT?remainingBirds(player)>0:(force===SPECIAL_WEIGHT?bonusLeft(player):false));
 }
 function inSwing(x,y){
  const target=$('swing-drop');if(!target)return false;
@@ -755,16 +779,17 @@ function updateCages(){
  const turn=history.length%2;
  for(let player=0;player<2;player++){
   const remaining=remainingBirds(player);
-  $('cage-'+(player?'orange':'blue')).classList.toggle('is-active',turn===player&&!cpuTurn()&&!handoffActive);
-  $('cage-count-'+player).textContent=remaining+' LEFT';
+  const cage=$('cage-'+(player?'orange':'blue'));
+  cage.classList.toggle('is-active',turn===player&&!cpuTurn()&&!handoffActive);
+  cage.classList.toggle('has-special',bonusLeft(player));
+  $('cage-count-'+player).textContent=remaining+' LEFT'+(bonusLeft(player)?' + 5N':'');
  }
  document.querySelectorAll('.cage-bird').forEach(b=>{
-  const player=Number(b.dataset.player);
-  const remaining=remainingBirds(player);
-  const inStock=Number(b.dataset.birdIndex)<remaining;
+  const player=Number(b.dataset.player),force=Number(b.dataset.force);
+  const inStock=force===WEIGHT?Number(b.dataset.birdIndex)<remainingBirds(player):bonusLeft(player);
   b.hidden=!inStock;
-  b.disabled=!inStock||!dragAllowed(player,WEIGHT);
-  b.classList.toggle('is-selected',inStock&&!b.disabled);
+  b.disabled=!inStock||!dragAllowed(player,force);
+  b.classList.toggle('is-selected',inStock&&!b.disabled&&force===selectedWeight);
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
  hint.innerHTML='<span class="hint-arrow">↓</span><strong>'+(turn?'ORANGE':'BLUE')+'<br>'+(history.length?'TURN':'FIRST')+'</strong><small>'+(cpuTurn()?'CPU…':'DRAG ↓')+'</small>';
@@ -782,13 +807,13 @@ function closeQuick(){
  if(mode==='battle'){render();beginClock();}
 }
 function applyQuick(){
- const m=Number($('quick-limit').value),lv=Number($('quick-level').value);
+ const m=stageLimit(),lv=Number($('quick-level').value);
  const opponent=$('quick-mode').value,secs=$('quick-time').value;
  if(!Number.isFinite(m)||m<1||m>10000){$('quick-limit').focus();return;}
  if(!['local','cpu'].includes(opponent)||!Number.isInteger(lv)||lv<1||lv>10)return;
- limit=m;turnSeconds=secs==='none'?null:Number(secs);
+ limit=stageLimit();turnSeconds=secs==='none'?null:Number(secs);
  matchMode='cpu';cpuLevel=lv;humanPlayer=0;
- $('quick-settings').hidden=true;limit=100;prepareGame();restart();
+ $('quick-settings').hidden=true;limit=stageLimit();prepareGame();restart();
 }
 function initQuick(){
  const lvl=$('quick-level');
@@ -803,7 +828,7 @@ function initQuick(){
 const {undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove}=MomentGameState;
 const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
 const names=['青チーム','橙チーム'];
-let storyLevel=1;
+let storyLevel=1,storyBonusUnlocked=false;
 let mode='setup',stage=getStage('center'),stageChoice='center',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
 let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
 let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,committedSnapshot=null;
@@ -949,7 +974,7 @@ function updateSetup(){
 function start(){
  let config;try{config=readSetup();}catch(err){updateSetup();return;}
  stopClock();clearHandoff();
- stage=getStage(storyLevel===2?'story2':'center');limit=100;turnSeconds=config.turnSeconds;
+ stage=getStage(stageId());limit=stageLimit();turnSeconds=config.turnSeconds;
  matchMode=config.matchMode;cpuLevel=config.cpuLevel;humanPlayer=config.humanPlayer;
  history.length=0;selectedWeight=WEIGHT;showMoments=false;practice=false;committed=false;committedSnapshot=null;
  prepareGame();openScreen('battle');render();beginClock();
@@ -962,7 +987,7 @@ function prepareGame(){
    out.append(b);
  });
  $('span-label').textContent=stage.intervals.join('m + ')+'m · 1 SWING';
- $('battle-stage-info').textContent=`STAGE 0${storyLevel} · ${stage.intervals.join('m + ')}m · ${storyLevel===2?'CPU FIRST · ':''}LIMIT ${fmt(limit)} N·m`;
+ $('battle-stage-info').textContent=`STAGE 0${storyLevel} · ${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
  for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'YOU':'CPU Lv'+cpuLevel):'PLAYER 0'+(i+1);
  $('battle-streak').hidden=!isCpu();
  $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
@@ -1141,7 +1166,7 @@ function render(){
  $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'ORANGE':'BLUE')+' · DRAG BIRD ↓';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
-   $(`bonus${i}`).textContent='10N · '+remainingBirds(i)+' LEFT';
+   $(`bonus${i}`).textContent='10N ×'+remainingBirds(i)+(bonusLeft(i)?' + 5N ×1':'');
  }
  if(selectedWeight===SPECIAL_WEIGHT&&used)selectedWeight=WEIGHT;
  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
@@ -1181,14 +1206,16 @@ function render(){
 function place(index){
  if(mode!=='battle'||handoffActive||cpuTurn())return;
  const x=pos()[index],player=history.length%2;
- if(x===undefined)return;
- if(selectedWeight===SPECIAL_WEIGHT&&specialUsed(history,player,stage))return;
+ if(x===undefined||!dragAllowed(player,selectedWeight))return;
  applyMove({x,p:selectedWeight});
 }
 function applyMove(move){
  if(mode!=='battle')return;
  const player=history.length%2;
- if(move.p!==WEIGHT||!pos().includes(move.x)||remainingBirds(player)<=0)return;
+ if(!pos().includes(move.x))return;
+ if(move.p===WEIGHT&&remainingBirds(player)<=0)return;
+ if(move.p===SPECIAL_WEIGHT&&!bonusLeft(player))return;
+ if(move.p!==WEIGHT&&move.p!==SPECIAL_WEIGHT)return;
  stopClock();clearHandoff();
  history.push(move);selectedWeight=WEIGHT;
  const data=fromHistory(history,stage,limit);
@@ -1331,18 +1358,19 @@ function resultSteps(){return resultTimeline(history,stage,limit);}
 function buildResults(){
  const steps=resultSteps(),last=steps.at(-1);
  if(!last)return;
- $('result-winner').textContent=`— ${names[1-last.player]} の勝利！`;
- const playerWon=1-last.player===humanPlayer;
- const advance=storyLevel===1&&playerWon;
+ const winner=1-last.player,playerWon=winner===humanPlayer;
+ $('result-winner').textContent=winner===0?'BLUE WIN':'ORANGE WIN';
+ $('result-description').textContent='';
+ $('result-description').hidden=true;
+ const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
+ const advance=(storyLevel===1&&playerWon)||firstLoss||(storyLevel===2&&storyBonusUnlocked&&playerWon);
  $('story-next').hidden=!advance;
- $('story-next').textContent='STAGE 02 → 7m + 3m';
- $('rematch').textContent=playerWon&&storyLevel===2?'STORY CLEAR · REPLAY':'TRY AGAIN ↻';
- $('result-description').textContent=`${names[last.player]}が${hookName(last.move.x)}に${last.move.p} Nを載せ、最大 ${fmt(last.analysis.maxMoment)} N·mで梁が破壊されました。`;
- const streakBox=$('result-streak');streakBox.hidden=!isCpu();
- if(isCpu()){
-  const record=currentRecord(),won=1-last.player===humanPlayer;
-  streakBox.textContent=practice?'練習対戦（Undo使用）· 記録対象外 · Lv'+cpuLevel+' 現在'+record.current+'連勝 / 最高'+record.best+'連勝':(won?'CPUに勝利！':'CPUに敗北！')+' · Lv'+cpuLevel+' 現在'+record.current+'連勝 / 最高'+record.best+'連勝';
- }
+ $('story-next').textContent=storyLevel===1?'STAGE 02 → 7m + 3m'
+   :firstLoss?'GET 🐤 5N ×1 → RETRY':'STAGE 03 → 1m + 9m';
+ $('rematch').hidden=firstLoss;
+ $('rematch').textContent=storyLevel===3&&playerWon?'STORY CLEAR · REPLAY':'TRY AGAIN ↻';
+ $('result-undo').hidden=firstLoss;
+ $('result-streak').hidden=true;
  const box=$('result-timeline');box.replaceChildren();
  steps.forEach((step,i)=>{
    const b=document.createElement('button');b.type='button';b.className='result-turn-button';
@@ -1364,11 +1392,11 @@ function selectResult(n){
  const steps=resultSteps();if(!steps.length)return;
  selectedStep=Math.max(0,Math.min(n,steps.length-1));
  const s=steps[selectedStep],prev=selectedStep>0?steps[selectedStep-1]:null;
- $('result-step-label').textContent=`${s.turn}手目 · ${names[s.player]} · ${hookName(s.move.x)}に${s.move.p} N`;
- $('result-step-m').textContent=`最大M ${fmt(s.analysis.maxMoment)} N·m`;
+ $('result-step-label').textContent=`TURN ${s.turn} · ${s.player?'ORANGE':'BLUE'} · ${s.move.p}N`;
+ $('result-step-m').textContent=`MAX M ${fmt(s.analysis.maxMoment)} N·m`;
  $('result-step-m').style.color=s.player?'#dd6727':'#176cc4';
- $('result-step-detail').textContent=`${s.move.auto?'時間切れによる自動配置。':''}前の手 ${fmt(s.previousMax)} → 今回 ${fmt(s.analysis.maxMoment)} N·m（+${fmt(s.analysis.maxMoment-s.previousMax)}）。${s.analysis.failed?'この手で梁が破壊されました。':''}`;
- $('result-progress').textContent=`${s.turn} / ${steps.length} 手`;
+ $('result-step-detail').textContent=`M: ${fmt(s.previousMax)} → ${fmt(s.analysis.maxMoment)} N·m`;
+ $('result-progress').textContent=`${s.turn} / ${steps.length}`;
  $('result-prev').disabled=selectedStep===0;$('result-next').disabled=selectedStep===steps.length-1;
  drawPlot($('result-plot-svg'),s.analysis,prev?.analysis,s.player);
  document.querySelectorAll('.result-turn-button').forEach((b,i)=>{
@@ -1390,8 +1418,16 @@ $('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
 $('result-undo').addEventListener('click',undo);
 $('rematch').addEventListener('click',restart);
 $('story-next').addEventListener('click',()=>{
- if(mode!=='result'||storyLevel!==1||history.length===0||1-((history.length-1)%2)!==humanPlayer)return;
- storyLevel=2;cpuLevel=3;humanPlayer=1;stage=getStage('story2');prepareGame();restart();
+ if(mode!=='result'||history.length===0)return;
+ const winner=1-(history.length-1)%2,won=winner===humanPlayer;
+ if(storyLevel===1&&won){
+   storyLevel=2;cpuLevel=3;humanPlayer=0;storyBonusUnlocked=false;
+ }else if(storyLevel===2&&!won&&!storyBonusUnlocked){
+   storyBonusUnlocked=true;
+ }else if(storyLevel===2&&won&&storyBonusUnlocked){
+   storyLevel=3;cpuLevel=4;humanPlayer=0;
+ }else return;
+ stage=getStage(stageId());limit=stageLimit();prepareGame();restart();
 });
 $('story-home').addEventListener('click',()=>{stopClock();clearHandoff();cancelBreak();clearDrag();$('mode-choice').hidden=false;openScreen('setup');});
 document.addEventListener('keydown',e=>{
@@ -1404,7 +1440,7 @@ document.addEventListener('keydown',e=>{
 });
 buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
 $('story-choice').addEventListener('click',()=>{
- storyLevel=1;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
+ storyLevel=1;storyBonusUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
  $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
  $('mode-choice').hidden=true;$('story-rules').hidden=false;
 });
