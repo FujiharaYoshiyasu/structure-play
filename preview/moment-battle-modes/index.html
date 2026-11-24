@@ -680,34 +680,32 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .story-prologue p:last-child{color:#22816a;font-weight:1000}
 @media(max-width:650px){.story-prologue{padding:8px 10px;gap:4px}.story-prologue p{font-size:12px;line-height:1.5}}
 
-/* Keep the site return action visible above every game screen and modal. */
+/* Compact hierarchy-aware return link, intentionally not a button-shaped badge. */
 .site-home-link{
- position:fixed;top:max(9px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left));
- z-index:1000;display:inline-flex;align-items:center;justify-content:center;
- max-width:calc(100vw - 20px);min-height:34px;
- border:2px solid #78b99f;border-radius:999px;padding:6px 13px;
- color:#25695b;background:#fffef1;box-shadow:0 3px 0 #79bba5;
- font-size:12px;font-weight:900;line-height:1.35;text-decoration:none;
- white-space:nowrap;transition:background .15s,transform .15s;
+ position:fixed;top:max(9px,env(safe-area-inset-top));left:max(11px,env(safe-area-inset-left));
+ z-index:1000;display:inline-flex;align-items:center;justify-content:flex-start;
+ max-width:calc(100vw - 22px);min-height:30px;padding:5px 7px;
+ font:800 12px/1.4 inherit;color:#276d63;text-decoration:none;
+ border:0;border-radius:5px;background:#fffef3e8;box-shadow:none;
+ white-space:nowrap;
 }
-.site-home-link:hover{background:#e8fff1;transform:translateY(-1px)}
-.site-home-link:focus-visible{outline:3px solid #225e9b;outline-offset:3px}
-@media(min-width:761px){
- .masthead{padding-left:246px!important}
-}
+.site-home-link:hover{text-decoration:underline;color:#164e48;background:#f1ffef}
+.site-home-link:focus-visible{outline:2px solid #2f7b83;outline-offset:2px}
+@media(min-width:761px){.masthead{padding-left:209px!important}}
 @media(max-width:760px){
- .site-home-link{top:max(7px,env(safe-area-inset-top));left:max(7px,env(safe-area-inset-left));font-size:10px;padding:5px 9px;min-height:28px}
- /* Reserve the top-left of the narrow game header for the always-visible return link. */
+ .site-home-link{top:max(7px,env(safe-area-inset-top));left:max(7px,env(safe-area-inset-left));min-height:27px;font-size:11px;padding:4px 6px}
  .masthead{justify-content:flex-end}
  .masthead .brandmark,.masthead .brand-text{display:none}
- .masthead .tag{max-width:calc(100vw - 224px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .masthead .tag{max-width:calc(100vw - 190px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
+/* One consistent navigation in overlays; remove redundant left-side BACK buttons. */
+#story-select-back,#versus-back,#story-rule-back{visibility:hidden;pointer-events:none}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
 </head>
 <body data-turn-theme="blue">
-<a id="site-home-link" class="site-home-link" href="../../" aria-label="ストラクチャーアンドプレイに戻る">← ストラクチャーアンドプレイに戻る</a>
+<a id="site-home-link" class="site-home-link" href="../../" aria-label="Structure & Play のホームページに戻る">← Structure & Play</a>
 <div class="app-shell">
   <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">BIRD BRIDGE / STORY</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">UI PREVIEW · NOT LIVE</span></header>
 
@@ -2162,8 +2160,32 @@ document.addEventListener('keydown',e=>{
   if(mode==='result'&&e.key==='ArrowLeft')selectResult(selectedStep-1);
   if(mode==='result'&&e.key==='ArrowRight')selectResult(selectedStep+1);
 });
+
+function updateSiteNavigation(){
+ const isTopLevel=!$('title-screen').hidden||!$('mode-choice').hidden;
+ const link=$('site-home-link');
+ link.textContent=isTopLevel?'← Structure & Play':'← メニューに戻る';
+ link.setAttribute('aria-label',isTopLevel?'Structure & Play のホームページに戻る':'ゲームのモードメニューに戻る');
+ if(isTopLevel)link.removeAttribute('role');
+ else link.setAttribute('role','button');
+}
+function installSiteNavigation(){
+ const link=$('site-home-link');
+ link.addEventListener('click',ev=>{
+  if($('title-screen').hidden&&$('mode-choice').hidden){
+   ev.preventDefault();
+   returnToModeMenu();
+  }
+ });
+ const observer=new MutationObserver(updateSiteNavigation);
+ for(const id of ['title-screen','mode-choice'])
+  observer.observe($(id),{attributes:true,attributeFilter:['hidden']});
+ updateSiteNavigation();
+}
+
 buildSetup();buildCages();setupDrag();initQuick();buildVersusStageSelect();stageChoice='center';
 unlockModes();
+installSiteNavigation();
 $('title-enter').addEventListener('click',()=>{
  dismissAllModeOverlays();
  $('mode-choice').hidden=false;unlockModes();
