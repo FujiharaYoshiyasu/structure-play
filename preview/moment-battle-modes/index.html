@@ -463,6 +463,10 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
  .chubby-bird{height:88px;width:100px}
  .fat-bonus-card .bonus-bird-wrap{height:135px}
 }
+
+/* Multiple independently draggable swings (stage 04 and onwards) */
+#beam-svg .swing-drop-target{cursor:pointer;fill-opacity:.002}
+#beam-svg .swing-drop-target.drop-active{fill:#ffeaa3;fill-opacity:.21;stroke:#ea942b;stroke-width:4;stroke-dasharray:9 7}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -834,10 +838,15 @@ function dragAllowed(player,force){
  return mode==='battle'&&!handoffActive&&!cpuTurn()&&player===history.length%2&&
   (force===WEIGHT?remainingBirds(player)>0:force===SPECIAL_WEIGHT?bonusLeft(player):force===FAT_WEIGHT?fatLeft(player):false);
 }
-function inSwing(x,y){
- const target=$('swing-drop');if(!target)return false;
- const r=target.getBoundingClientRect(),pad=12;
- return x>=r.left-pad&&x<=r.right+pad&&y>=r.top-pad&&y<=r.bottom+pad;
+function swingIndexAt(x,y){
+ // Each hook gets a separate pointer target in STAGE 04.
+ const targets=[...document.querySelectorAll('#beam-svg [data-drop-hook]')];
+ for(const target of targets){
+  const r=target.getBoundingClientRect(),pad=10;
+  if(x>=r.left-pad&&x<=r.right+pad&&y>=r.top-pad&&y<=r.bottom+pad)
+    return Number(target.dataset.dropHook);
+ }
+ return -1;
 }
 function showDragGhost(x,y,player,force){
  const ghost=$('bird-drag-ghost');ghost.hidden=false;
@@ -846,6 +855,7 @@ function showDragGhost(x,y,player,force){
 }
 function clearDrag(){
  pointerDrag=null;$('bird-drag-ghost').hidden=true;$('drop-scene').classList.remove('drop-over');
+ document.querySelectorAll('#beam-svg [data-drop-hook]').forEach(z=>z.classList.remove('drop-active'));
 }
 function setupDrag(){
  $('cage-row').addEventListener('pointerdown',ev=>{
@@ -862,13 +872,15 @@ function setupDrag(){
  document.addEventListener('pointermove',ev=>{
   if(!pointerDrag||ev.pointerId!==pointerDrag.id)return;
   showDragGhost(ev.clientX,ev.clientY,pointerDrag.player,pointerDrag.force);
-  $('drop-scene').classList.toggle('drop-over',inSwing(ev.clientX,ev.clientY));
+  const target=swingIndexAt(ev.clientX,ev.clientY);
+  $('drop-scene').classList.toggle('drop-over',target>=0);
+  document.querySelectorAll('#beam-svg [data-drop-hook]').forEach(z=>z.classList.toggle('drop-active',Number(z.dataset.dropHook)===target));
  });
  document.addEventListener('pointerup',ev=>{
   if(!pointerDrag||ev.pointerId!==pointerDrag.id)return;
-  const {player,force}=pointerDrag,hit=inSwing(ev.clientX,ev.clientY);
+  const {player,force}=pointerDrag,target=swingIndexAt(ev.clientX,ev.clientY);
   clearDrag();
-  if(hit&&dragAllowed(player,force))applyMove({x:pos()[0],p:force});
+  if(target>=0&&dragAllowed(player,force))applyMove({x:pos()[target],p:force});
   else if(mode==='battle')render();
  });
  document.addEventListener('pointercancel',clearDrag);
@@ -878,11 +890,15 @@ function setupDrag(){
   selectedWeight=Number(b.dataset.force);render();
  });
  $('beam-svg').addEventListener('click',ev=>{
-  if(ev.target?.id!=='swing-drop'||mode!=='battle'||handoffActive||cpuTurn())return;
-  place(0);
+  const target=ev.target.closest?.('[data-drop-hook]');
+  if(!target||mode!=='battle'||handoffActive||cpuTurn())return;
+  place(Number(target.dataset.dropHook));
  });
  $('beam-svg').addEventListener('keydown',ev=>{
-  if(ev.target?.id==='swing-drop'&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();place(0);}
+  const target=ev.target.closest?.('[data-drop-hook]');
+  if(target&&(ev.key==='Enter'||ev.key===' ')){
+    ev.preventDefault();place(Number(target.dataset.dropHook));
+  }
  });
 }
 function updateCages(){
@@ -1236,11 +1252,16 @@ function drawBeam(data){
   const rightGutter=i<pos().length-1?X(pos()[i+1])-X(p):999;
   drawSwing(root,X(p),y+17,199,moves,i,Math.min(leftGutter,rightGutter)<80);
  });
- const centerX=X(pos()[0]);
- const drop=svg('rect',{x:centerX-96,y:115,width:192,height:151,rx:25,fill:'#fff','fill-opacity':.002,'pointer-events':'all'},root);
- drop.id='swing-drop';drop.setAttribute('role','button');drop.setAttribute('tabindex','0');drop.setAttribute('aria-label','Center swing. Drop or tap here to place selected bird.');
- label(root,centerX,292,'↓ DROP HERE',{'font-size':18,'font-weight':1000,fill:'#175a6a',stroke:'#fff','stroke-width':4,'paint-order':'stroke','pointer-events':'none'});
- root.setAttribute('aria-label',`STAGE ${storyLevel}, LEFT ${fmt(pos()[0])}m, RIGHT ${fmt(span()-pos()[0])}m, ${history.length} BIRDS`);
+ pos().forEach((hook,i)=>{
+  const x=X(hook),w=pos().length>1?144:192;
+  const drop=svg('rect',{x:x-w/2,y:115,width:w,height:151,rx:21,fill:'#fff','fill-opacity':.002,'pointer-events':'all',class:'swing-drop-target'},root);
+  drop.dataset.dropHook=String(i);
+  drop.setAttribute('role','button');
+  drop.setAttribute('tabindex','0');
+  drop.setAttribute('aria-label','Swing '+(i+1)+' at '+fmt(hook)+' metres. Drop or tap to place a bird.');
+  label(root,x,292,pos().length>1?'↓ HOOK '+(i+1):'↓ DROP HERE',{'font-size':pos().length>1?16:18,'font-weight':1000,fill:'#175a6a',stroke:'#fff','stroke-width':4,'paint-order':'stroke','pointer-events':'none'});
+ });
+ root.setAttribute('aria-label',`STAGE ${storyLevel}, ${pos().length} SWINGS, ${history.length} BIRDS`);
 }
 function plotCoords(data,width,height,margin=60){
  const max=Math.max(limit*1.15,data.maxMoment*1.15,1);
