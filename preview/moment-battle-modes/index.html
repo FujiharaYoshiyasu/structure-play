@@ -962,7 +962,7 @@ function prepareGame(){
    out.append(b);
  });
  $('span-label').textContent=stage.intervals.join('m + ')+'m · 1 SWING';
- $('battle-stage-info').textContent=`STAGE 0${storyLevel} · ${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
+ $('battle-stage-info').textContent=`STAGE 0${storyLevel} · ${stage.intervals.join('m + ')}m · ${storyLevel===2?'CPU FIRST · ':''}LIMIT ${fmt(limit)} N·m`;
  for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'YOU':'CPU Lv'+cpuLevel):'PLAYER 0'+(i+1);
  $('battle-streak').hidden=!isCpu();
  $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
@@ -1391,7 +1391,7 @@ $('result-undo').addEventListener('click',undo);
 $('rematch').addEventListener('click',restart);
 $('story-next').addEventListener('click',()=>{
  if(mode!=='result'||storyLevel!==1||history.length===0||1-((history.length-1)%2)!==humanPlayer)return;
- storyLevel=2;cpuLevel=3;stage=getStage('story2');prepareGame();restart();
+ storyLevel=2;cpuLevel=3;humanPlayer=1;stage=getStage('story2');prepareGame();restart();
 });
 $('story-home').addEventListener('click',()=>{stopClock();clearHandoff();cancelBreak();clearDrag();$('mode-choice').hidden=false;openScreen('setup');});
 document.addEventListener('keydown',e=>{
