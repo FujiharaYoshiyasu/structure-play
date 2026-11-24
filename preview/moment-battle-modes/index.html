@@ -576,8 +576,8 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   'use strict';
   const WEIGHT=10,SPECIAL_WEIGHT=5,FAT_WEIGHT=15,LIMIT=100,EPS=1e-8;
   function createStage(intervals,meta={}){
-    if(!Array.isArray(intervals)||![2,4].includes(intervals.length)||intervals.some(v=>typeof v!=='number'||!Number.isFinite(v)||v<=0)){
-      throw new TypeError('2 or 4 positive finite beam intervals are required');
+    if(!Array.isArray(intervals)||![2,3,4].includes(intervals.length)||intervals.some(v=>typeof v!=='number'||!Number.isFinite(v)||v<=0)){
+      throw new TypeError('2, 3 or 4 positive finite beam intervals are required');
     }
     const span=intervals.reduce((a,b)=>a+b,0);
     if(span<1||span>100)throw new RangeError('beam length must be between 1 and 100 metres');
@@ -590,6 +590,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     center:createStage([5,5],{id:'center',name:'STAGE 01',title:'CENTER SWING'}),
     story2:createStage([7,3],{id:'story2',name:'STAGE 02',title:'OFFSET SWING'}),
     story3:createStage([8,2],{id:'story3',name:'STAGE 03',title:'EDGE SWING'}),
+    story4:createStage([3,4,3],{id:'story4',name:'STAGE 04',title:'DOUBLE SWING'}),
     stage1:createStage([1,2,3,4],{id:'stage1',name:'STAGE 01',title:'基本の梁'}),
     stage2:createStage([2,4,1,3],{id:'stage2',name:'STAGE 02',title:'変則フック配置'})
   });
@@ -688,7 +689,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     <div class="mode-sky"><div class="mode-sun"></div><span class="mode-cloud cloud-a"></span><span class="mode-cloud cloud-b"></span><div class="mode-ground"></div><span class="mode-bird bird-b">🐦</span><span class="mode-bird bird-o">🐤</span></div>
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
     <div class="mode-grid">
-      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 02 → 03</span><span class="mode-arrow">PLAY →</span></button>
+      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 02 → 03 → 04</span><span class="mode-arrow">PLAY →</span></button>
       <a class="mode-card mode-versus" href="../moment-battle-versus/"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">CLASSIC · 3 HOOKS</span><span class="mode-arrow">PLAY →</span></a>
     </div>
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
@@ -794,9 +795,9 @@ function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2=
 function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
 function hasBonus(player){return storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer;}
 function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);}
-function fatLeft(player,turns=history){return storyFatUnlocked&&storyLevel===3&&player===humanPlayer&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
+function fatLeft(player,turns=history){return storyFatUnlocked&&storyLevel>=3&&player===humanPlayer&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
 function stageLimit(){return 100;}
-function stageId(level=storyLevel){return level===1?'center':level===2?'story2':'story3';}
+function stageId(level=storyLevel){return level===1?'center':level===2?'story2':level===3?'story3':'story4';}
 function buildCages(){
  const labels=['BLUE','ORANGE'];
  for(let player=0;player<2;player++){
@@ -918,18 +919,18 @@ function closeQuick(){
  if(mode==='battle'){render();beginClock();}
 }
 function applyQuick(){
- const m=stageLimit(),lv=Number($('quick-level').value);
+ const m=stageLimit();
  const opponent=$('quick-mode').value,secs=$('quick-time').value;
  if(!Number.isFinite(m)||m<1||m>10000){$('quick-limit').focus();return;}
- if(!['local','cpu'].includes(opponent)||!Number.isInteger(lv)||lv<1||lv>10)return;
+ if(!['local','cpu'].includes(opponent))return;
  limit=stageLimit();turnSeconds=secs==='none'?null:Number(secs);
- matchMode='cpu';cpuLevel=lv;humanPlayer=0;
+ matchMode='cpu';cpuLevel=10;humanPlayer=0;
  $('quick-settings').hidden=true;limit=stageLimit();prepareGame();restart();
 }
 function initQuick(){
  const lvl=$('quick-level');
  for(let i=1;i<=10;i++){const option=document.createElement('option');option.value=String(i);option.textContent='Lv '+i;lvl.append(option);}
- lvl.value=String(cpuLevel);
+ lvl.value='10';
  for(const id of ['quick-close','quick-cancel'])$(id).addEventListener('click',closeQuick);
  $('quick-apply').addEventListener('click',applyQuick);
  $('quick-settings').addEventListener('click',ev=>{if(ev.target===$('quick-settings'))closeQuick();});
@@ -1086,7 +1087,7 @@ function start(){
  let config;try{config=readSetup();}catch(err){updateSetup();return;}
  stopClock();clearHandoff();
  stage=getStage(stageId());limit=stageLimit();turnSeconds=config.turnSeconds;
- matchMode=config.matchMode;cpuLevel=config.cpuLevel;humanPlayer=config.humanPlayer;
+ matchMode='cpu';cpuLevel=10;humanPlayer=0;
  history.length=0;selectedWeight=WEIGHT;showMoments=false;practice=false;committed=false;committedSnapshot=null;
  prepareGame();openScreen('battle');render();beginClock();
 }
@@ -1097,7 +1098,7 @@ function prepareGame(){
    b.innerHTML=`<span class="hook-pos">HOOK ${String(i+1).padStart(2,'0')}</span><strong>HOOK ${i+1}</strong><span class="hook-sub"></span><span class="hook-result"></span>`;
    out.append(b);
  });
- $('span-label').textContent=stage.intervals.join('m + ')+'m · 1 SWING';
+ $('span-label').textContent=stage.intervals.join('m + ')+'m · '+pos().length+' SWING'+(pos().length>1?'S':'');
  $('battle-stage-info').textContent=`STAGE 0${storyLevel} · ${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
  for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'YOU':'CPU'):'PLAYER 0'+(i+1);
  $('battle-streak').hidden=true;
@@ -1475,7 +1476,7 @@ function buildResults(){
  $('result-description').textContent='';
  $('result-description').hidden=true;
  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
- const advance=(storyLevel===1&&playerWon)||(storyLevel===2&&storyBonusUnlocked&&playerWon);
+ const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked));
  $('story-next').hidden=!advance;
  $('story-next').textContent='NEXT STAGE →';
  $('rematch').hidden=false;
@@ -1551,9 +1552,11 @@ $('bonus-retry').addEventListener('click',()=>{
  if(mode!=='result'||history.length===0)return;
  const winner=1-(history.length-1)%2,won=winner===humanPlayer;
  if(storyLevel===1&&won){
-   storyLevel=2;cpuLevel=3;humanPlayer=0;storyBonusUnlocked=false;
+   storyLevel=2;cpuLevel=10;humanPlayer=0;storyBonusUnlocked=false;
  }else if(storyLevel===2&&won&&storyBonusUnlocked){
-   storyLevel=3;cpuLevel=4;humanPlayer=0;storyFatUnlocked=false;
+   storyLevel=3;cpuLevel=10;humanPlayer=0;storyFatUnlocked=false;
+ }else if(storyLevel===3&&won&&storyFatUnlocked){
+   storyLevel=4;cpuLevel=10;humanPlayer=0;
  }else return;
  stage=getStage(stageId());limit=stageLimit();prepareGame();restart();
 });
@@ -1569,7 +1572,7 @@ document.addEventListener('keydown',e=>{
 buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
 $('story-choice').addEventListener('click',()=>{
  $('story-bonus').hidden=true;$('story-fat-bonus').hidden=true;
- storyLevel=1;storyBonusUnlocked=false;storyFatUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
+ storyLevel=1;storyBonusUnlocked=false;storyFatUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='10';$('human-side').value='0';
  $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
  $('mode-choice').hidden=true;$('story-rules').hidden=false;
 });
