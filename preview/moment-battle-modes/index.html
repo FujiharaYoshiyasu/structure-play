@@ -563,6 +563,19 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .drag-hint.orange-turn{color:#a52c43!important;background:#ffebef!important;border-color:#e99baa!important}
 .turn-popup[data-player="orange"] .turn-popup-card{background:#fff0f2!important;border-color:#e94d62!important;box-shadow:0 16px 0 #b72e44,0 26px 48px #692b4066!important;color:#ad3049!important}
 .bird-cage.orange-cage{--bird-color:#e94355;--bird-dark:#ac3041;--bird-wing:#ffd0d7;background:#ffedf0}
+
+/* STORY progression: full-screen new-swing announcement, separate from reward screens */
+.swing-announcement{position:fixed;inset:0;z-index:210;display:grid;place-items:center;padding:14px;background:linear-gradient(150deg,#9cddf8 0%,#d9f7d8 70%,#fff4ca 100%);overflow:auto}
+.swing-announcement-card{color:#32675c;width:min(625px,100%);max-height:94dvh;overflow:auto;display:grid;justify-items:center;gap:11px;padding:22px 25px 25px;border-radius:28px;border:5px solid #68bc9a;background:#fffdf1;box-shadow:0 12px 0 #55a587,0 23px 45px #407d8450;text-align:center}
+.swing-announce-kicker{font-size:12px;font-weight:1000;letter-spacing:1.6px;color:#489b83}
+.swing-announce-icons{font-size:24px;letter-spacing:14px;color:#eeb04f;line-height:1}
+.swing-announcement-card h2{font-size:clamp(23px,4.6vw,34px);font-weight:1000;line-height:1.3;margin:0;color:#257d76}
+.swing-announce-visual{width:100%;background:#d4f4fc;border-radius:16px;border:3px solid #8bd6bd;overflow:hidden}
+.swing-announce-visual svg{display:block;width:100%;height:auto;max-height:165px}
+.swing-announce-spans{font-size:clamp(16px,3vw,22px);font-weight:1000;color:#317b74}
+.swing-announce-note{font-size:14px;margin:0;color:#4c8578;font-weight:800}
+.swing-announce-go{background:#fb9b3d;border:3px solid #c98335;border-radius:15px;box-shadow:0 5px 0 #b97531;color:white;font-size:17px;font-weight:1000;padding:12px 26px;cursor:pointer;width:100%}
+@media(max-width:650px){.swing-announcement-card{padding:14px 12px 17px;gap:8px;border-width:3px}.swing-announce-icons{font-size:17px}.swing-announce-note{font-size:12px}.swing-announce-go{font-size:15px;padding:10px}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -873,6 +886,19 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
    <div class="bonus-compare"><span>🐦 <b>10N ×5</b></span><strong>+</strong><span>🐤 <b>5N ×1</b></span><strong>+</strong><span>🐦 <b>15N ×1</b></span></div>
    <div class="bonus-hint">BLUE FIRST · 8m + 2m · LIMIT 100 N·m</div>
    <button type="button" id="fat-retry" class="bonus-retry-button">RETRY STAGE 03 →</button>
+ </div>
+</div>
+<div id="swing-announcement" class="swing-announcement" role="dialog" aria-modal="true" aria-labelledby="swing-announce-title" hidden>
+ <div class="swing-announcement-card">
+  <span class="swing-announce-kicker" id="swing-announce-kicker">NEW CHALLENGE · STAGE 04</span>
+  <div class="swing-announce-icons" aria-hidden="true">✦ ✦ ✦</div>
+  <h2 id="swing-announce-title">ブランコが2つになりました！</h2>
+  <div class="swing-announce-visual">
+   <svg id="swing-announce-svg" viewBox="0 0 620 190" role="img" aria-label="追加されたブランコの配置"></svg>
+  </div>
+  <div id="swing-announce-spans" class="swing-announce-spans">3m + 4m + 3m</div>
+  <p class="swing-announce-note">好きなブランコを選んで鳥を置こう！</p>
+  <button id="swing-announce-go" type="button" class="swing-announce-go">STAGE 04 を始める →</button>
  </div>
 </div>
 <div id="quick-settings" class="quick-settings" role="dialog" aria-modal="true" aria-label="Options" hidden>
@@ -1698,7 +1724,38 @@ $('bonus-retry').addEventListener('click',()=>{
   humanPlayer=0;stage=getStage('story3');limit=100;
   prepareGame();restart();
  });
- $('story-next').addEventListener('click',()=>{
+ function showSwingAnnouncement(){
+ const count=stage.hooks.length;
+ if(count!==2&&count!==3)return;
+ $('swing-announce-kicker').textContent='NEW CHALLENGE · STAGE '+String(storyLevel).padStart(2,'0');
+ $('swing-announce-title').textContent='ブランコが'+count+'つになりました！';
+ $('swing-announce-spans').textContent=stage.intervals.join('m + ')+'m';
+ $('swing-announce-go').textContent='STAGE '+String(storyLevel).padStart(2,'0')+' を始める →';
+ const root=$('swing-announce-svg');root.replaceChildren();
+ svg('rect',{x:0,y:0,width:620,height:190,rx:15,fill:'#d4f4fc'},root);
+ svg('circle',{cx:545,cy:33,r:22,fill:'#ffdb6c'},root);
+ const X=x=>50+520*x/stage.span;
+ svg('rect',{x:X(0),y:77,width:X(stage.span)-X(0),height:13,rx:5,fill:'#b57b46',stroke:'#83532d','stroke-width':3},root);
+ for(const support of [0,stage.span]){
+  const x=X(support);svg('path',{d:'M'+(x-13)+' 101 L'+x+' 86 L'+(x+13)+' 101 Z',fill:'#5ead96'},root);
+ }
+ stage.hooks.forEach((hook,i)=>{
+  const x=X(hook);
+  svg('line',{x1:x-14,y1:89,x2:x-14,y2:146,stroke:'#946135','stroke-width':3},root);
+  svg('line',{x1:x+14,y1:89,x2:x+14,y2:146,stroke:'#946135','stroke-width':3},root);
+  svg('rect',{x:x-25,y:143,width:50,height:9,rx:4,fill:'#bf874d'},root);
+  svg('circle',{cx:x,cy:125,r:11,fill:i%2?'#e7495c':'#3796e1',stroke:'#ffffff','stroke-width':3},root);
+  label(root,x,172,'SWING '+(i+1),{'font-size':15,'font-weight':950,fill:'#246c76'});
+ });
+ root.setAttribute('aria-label','ブランコが'+count+'か所。位置は左端から'+stage.hooks.join('mと')+'m');
+ $('swing-announcement').hidden=false;
+}
+$('swing-announce-go').addEventListener('click',()=>{
+ if($('swing-announcement').hidden)return;
+ $('swing-announcement').hidden=true;
+ restart();
+});
+$('story-next').addEventListener('click',()=>{
  if(mode!=='result'||history.length===0)return;
  const winner=1-(history.length-1)%2,won=winner===humanPlayer;
  if(storyLevel===1&&won){
@@ -1724,6 +1781,7 @@ document.addEventListener('keydown',e=>{
 });
 buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
 $('story-choice').addEventListener('click',()=>{
+ $('swing-announcement').hidden=true;
  $('story-bonus').hidden=true;$('story-fat-bonus').hidden=true;
  storyLevel=1;storyBonusUnlocked=false;storyFatUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='10';$('human-side').value='0';
  $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
