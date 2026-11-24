@@ -551,6 +551,18 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 .bird-cage .cage-slot{max-width:120px;width:100%;margin-inline:auto}
 .bird-cage .cage-slot[hidden]{display:none!important}
 
+
+/* Red opponent team in STORY. Keep legacy 'orange' CSS selectors/IDs as internal identifiers. */
+body[data-turn-theme="orange"]{background:linear-gradient(160deg,#ffe4e8 0%,#d7f5ff 53%,#fff3f5 100%)!important}
+.player-orange.active{background:#ffdee3!important;border-color:#e94a5b!important;box-shadow:0 4px 0 #eaa0ac!important}
+.player-orange strong{color:#b82e41!important}
+.history-list .orange,.result-turn-meta span.orange{color:#be3046!important}
+body[data-turn-theme="orange"] .turn-center{background:#ffe3e8!important;border-color:#df6375!important;box-shadow:0 4px 0 #e9a3ab!important}
+body[data-turn-theme="orange"] .play-panel,body[data-turn-theme="orange"] .beam-stage{border-color:#e26d80!important}
+body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe5e9!important;border-color:#e57b8d!important}
+.drag-hint.orange-turn{color:#a52c43!important;background:#ffebef!important;border-color:#e99baa!important}
+.turn-popup[data-player="orange"] .turn-popup-card{background:#fff0f2!important;border-color:#e94d62!important;box-shadow:0 16px 0 #b72e44,0 26px 48px #692b4066!important;color:#ad3049!important}
+.bird-cage.orange-cage{--bird-color:#e94355;--bird-dark:#ac3041;--bird-wing:#ffd0d7;background:#ffedf0}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -1513,7 +1525,7 @@ function showHandoff(initial=false,automatic=false){
  const player=history.length%2;
  const popup=$('turn-popup');
  popup.hidden=false;popup.dataset.player=player===0?'blue':'orange';
- $('popup-bird').textContent=player===0?'🐦':'🐤';
+ $('popup-bird').textContent=player===0?'🐦':'🔴';
  $('popup-kicker').textContent=initial?'READY?':'NEXT TURN!';
  $('popup-title').textContent=player?'RED TURN!':'BLUE TURN!';
  $('popup-subtitle').textContent=cpuTurn()?'CPU THINKING':automatic?'TIME OUT · AUTO +10N':'YOUR MOVE';
