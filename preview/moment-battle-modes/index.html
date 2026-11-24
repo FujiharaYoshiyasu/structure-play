@@ -430,6 +430,39 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 #battle-streak{display:none!important}
 .quick-grid label:nth-child(2){display:none!important}
 @media(max-width:650px){.bonus-card{padding:15px 10px;gap:8px}.bonus-bird-wrap{width:130px;height:125px}.bonus-bird{font-size:58px}.bonus-badge{font-size:19px}.bonus-compare{font-size:15px;gap:6px}.bonus-compare span{padding:5px}.bonus-retry-button{font-size:16px;padding:11px 16px}.result-top-actions{gap:6px}#rematch,#story-next{font-size:12px;padding:9px}}
+
+/* Larger round 15N bird joins the blue basket after stage 03's first loss. */
+.bird-cage.has-fat .cage-tokens{grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:minmax(36px,auto)}
+.bird-cage.has-fat .special-unit{grid-column:2;grid-row:2}
+.bird-cage.has-fat .fat-unit{grid-column:4;grid-row:2}
+.bird-cage.has-fat{min-height:137px}
+.bird-cage.has-fat .cage-bird{height:47px}
+.fat-unit{position:relative;background:#ddecff!important;border-color:#5d9dd1!important;box-shadow:0 2px 0 #468ab8!important}
+.fat-unit svg{transform:scale(1.22);height:32px!important;max-width:42px!important;transform-origin:center center}
+.fat-unit .tiny-force{position:absolute;bottom:0;right:0;left:0;font-size:10px;font-weight:1000;color:#2e75ad;line-height:1}
+.fat-bonus-screen{background:linear-gradient(155deg,#8fd2f8,#ccebf8,#def8d9)}
+.fat-bonus-card{border-color:#74b8ee;background:linear-gradient(#fffdf3,#d8eefe);box-shadow:0 14px 0 #4a98c7,0 24px 55px #37648150}
+.fat-bonus-card .bonus-kicker{color:#327cbe}
+.fat-bonus-card h2{color:#2670aa}
+.fat-bonus-card .bonus-badge{color:#276eab}
+.fat-bonus-card .bonus-bird-wrap{border-color:#75c4f2;background:#f0faff}
+.chubby-bird{height:125px;width:145px;animation:bonus-pop .6s cubic-bezier(.2,1.7,.4,1) both}
+.chubby-bird svg{height:100%;width:100%}
+.fat-bonus-card .bonus-compare{font-size:16px;gap:6px}
+.fat-bonus-card .bonus-compare span{border-color:#9dcced;padding:7px}
+.fat-bonus-card .bonus-retry-button{background:#319ad3;border-color:#2675b6;box-shadow:0 5px 0 #226caa}
+.fat-bonus-card .bonus-hint{color:#357eaf}
+@media(max-width:650px){
+ .bird-cage.has-fat{min-height:112px}
+ .bird-cage.has-fat .cage-tokens{grid-auto-rows:minmax(27px,auto)}
+ .bird-cage.has-fat .cage-bird{height:30px}
+ .bird-cage.has-fat .fat-unit svg{height:22px!important}
+ .fat-unit .tiny-force{font-size:8px}
+ .fat-bonus-card .bonus-compare{font-size:12px}
+ .fat-bonus-card .bonus-compare span{padding:4px}
+ .chubby-bird{height:88px;width:100px}
+ .fat-bonus-card .bonus-bird-wrap{height:135px}
+}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -707,6 +740,33 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     <div class="bonus-hint">BLUE FIRST · 7m + 3m</div>
     <button type="button" id="bonus-retry" class="bonus-retry-button">RETRY STAGE 02 →</button>
   </div>
+</div>
+<div id="story-fat-bonus" class="story-bonus fat-bonus-screen" role="dialog" aria-modal="true" aria-labelledby="fat-bonus-title" hidden>
+ <div class="bonus-card fat-bonus-card">
+   <div class="bonus-sparkles" aria-hidden="true">✦ ✦ ✦</div>
+   <span class="bonus-kicker">NEW FRIEND!</span>
+   <h2 id="fat-bonus-title">15N BIRD GET!</h2>
+   <div class="bonus-bird-wrap fat-bird-stage">
+     <div class="chubby-bird" aria-hidden="true">
+       <svg viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg">
+         <path d="M39 85 L13 67 L22 111 L42 112" fill="#1e75c4" stroke="#245886" stroke-width="3"/>
+         <ellipse cx="77" cy="83" rx="62" ry="55" fill="#3ca3f5" stroke="#226ca5" stroke-width="5"/>
+         <ellipse cx="76" cy="111" rx="43" ry="22" fill="#d6f1ff"/>
+         <ellipse cx="44" cy="87" rx="16" ry="24" fill="#2377c6" transform="rotate(22 44 87)"/>
+         <path d="M65 29 L60 8 L80 28 L86 4 L94 34" fill="#267ac8"/>
+         <circle cx="102" cy="65" r="15" fill="#fff"/>
+         <circle cx="107" cy="64" r="7" fill="#20394c"/>
+         <path d="M127 77 L158 85 L127 94Z" fill="#ffcd42" stroke="#c59128" stroke-width="3"/>
+         <circle cx="108" cy="91" r="7" fill="#fb9ab4" opacity=".9"/>
+         <path d="M65 136 V146 M88 136 V146" stroke="#9f702f" stroke-width="5" stroke-linecap="round"/>
+       </svg>
+     </div>
+     <div class="bonus-badge">15N ×1</div>
+   </div>
+   <div class="bonus-compare"><span>🐦 <b>10N ×5</b></span><strong>+</strong><span>🐤 <b>5N ×1</b></span><strong>+</strong><span>🐦 <b>15N ×1</b></span></div>
+   <div class="bonus-hint">BLUE FIRST · 8m + 2m · LIMIT 100 N·m</div>
+   <button type="button" id="fat-retry" class="bonus-retry-button">RETRY STAGE 03 →</button>
+ </div>
 </div>
 <div id="quick-settings" class="quick-settings" role="dialog" aria-modal="true" aria-label="Options" hidden>
  <div class="quick-card">
@@ -1468,8 +1528,9 @@ $('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
 
 $('rematch').addEventListener('click',()=>{
   if(mode!=='result')return;
-  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
-  if(firstLoss){$('story-bonus').hidden=false;return;}
+  const lost=history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
+  if(lost&&storyLevel===2&&!storyBonusUnlocked){$('story-bonus').hidden=false;return;}
+  if(lost&&storyLevel===3&&!storyFatUnlocked){$('story-fat-bonus').hidden=false;return;}
   restart();
  });
 $('bonus-retry').addEventListener('click',()=>{
@@ -1478,13 +1539,21 @@ $('bonus-retry').addEventListener('click',()=>{
   humanPlayer=0;stage=getStage('story2');limit=100;
   prepareGame();restart();
  });
+ $('fat-retry').addEventListener('click',()=>{
+  if(mode!=='result'||storyLevel!==3||storyFatUnlocked)return;
+  const lost=history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
+  if(!lost)return;
+  storyFatUnlocked=true;$('story-fat-bonus').hidden=true;
+  humanPlayer=0;stage=getStage('story3');limit=100;
+  prepareGame();restart();
+ });
  $('story-next').addEventListener('click',()=>{
  if(mode!=='result'||history.length===0)return;
  const winner=1-(history.length-1)%2,won=winner===humanPlayer;
  if(storyLevel===1&&won){
    storyLevel=2;cpuLevel=3;humanPlayer=0;storyBonusUnlocked=false;
  }else if(storyLevel===2&&won&&storyBonusUnlocked){
-   storyLevel=3;cpuLevel=4;humanPlayer=1;
+   storyLevel=3;cpuLevel=4;humanPlayer=0;storyFatUnlocked=false;
  }else return;
  stage=getStage(stageId());limit=stageLimit();prepareGame();restart();
 });
@@ -1499,8 +1568,8 @@ document.addEventListener('keydown',e=>{
 });
 buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
 $('story-choice').addEventListener('click',()=>{
- $('story-bonus').hidden=true;
- storyLevel=1;storyBonusUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
+ $('story-bonus').hidden=true;$('story-fat-bonus').hidden=true;
+ storyLevel=1;storyBonusUnlocked=false;storyFatUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
  $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
  $('mode-choice').hidden=true;$('story-rules').hidden=false;
 });
