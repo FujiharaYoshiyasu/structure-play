@@ -306,6 +306,10 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 #beam-svg .hook-drop.drag-hover{fill:#fff5a4;fill-opacity:.25;stroke:#f0a531;stroke-width:3;stroke-dasharray:7 7}
 @media(max-width:850px){.versus-cages{grid-template-columns:1fr 75px 1fr;gap:5px;min-height:80px}.versus-cage{padding:4px 6px}.versus-guide{font-size:11px}.versus-guide small{font-size:9px}.versus-bird svg{height:32px}.versus-bird{padding:2px}.versus-bird strong{font-size:11px}}
 @media(max-width:600px){.versus-cages{grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr)}.versus-cage-head{font-size:10px}.versus-guide{font-size:10px}.versus-cage-items{gap:3px}.versus-bird{min-width:0}.versus-bird svg{height:28px;width:30px}}
+
+/* Minimal labels in the classic versus preview */
+.screen-heading p,.setup-beam>.setup-hint,.setup-rules>.setup-hint{display:none}
+.play-panel{gap:7px}.versus-cages{min-height:88px}
 </style>
 <title>MOMENT BATTLE | VERSUS DRAG PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -316,80 +320,80 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 
   <main class="screens">
     <section id="setup-screen" class="screen setup-screen" aria-label="ゲーム設定画面">
-      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>ゲーム設定</h2><p>鳥たちのブランコを選んで、橋を守りながら対戦しよう！</p></div><span class="section-tag">CPU CHALLENGE · 2P</span></div>
+      <div class="screen-heading"><div><span class="eyebrow">01 / MATCH SETUP</span><h2>SETUP</h2></div><span class="section-tag">CPU CHALLENGE · 2P</span></div>
       <div class="setup-layout">
-        <section class="panel setup-beam"><div class="panel-head"><div><span class="eyebrow">BEAM LAYOUT</span><h3>梁の配置を選ぶ</h3></div></div>
+        <section class="panel setup-beam"><div class="panel-head"><div><span class="eyebrow">BEAM LAYOUT</span><h3>STAGE</h3></div></div>
           <div id="stage-options" class="stage-options" role="group" aria-label="ステージ選択"></div>
-          <div class="custom-head"><strong>区間寸法のカスタマイズ</strong><span>左支点 → フック1 → フック2 → フック3 → 右支点</span></div>
+          <div class="custom-head"><strong>SPAN / 4 SEGMENTS</strong><span>A → 1 → 2 → 3 → B</span></div>
           <div class="interval-grid" id="interval-inputs"></div>
-          <p class="setup-hint">4区間はすべて正の数（m）。合計が梁の長さになります。</p>
-<div class="cpu-controls" aria-label="対戦モードの設定"><strong>CPU対戦・連勝チャレンジ</strong>
+          
+<div class="cpu-controls" aria-label="対戦モードの設定"><strong>MODE</strong>
 <div class="cpu-controls-grid">
-<label>対戦相手<select id="match-mode"><option value="cpu">CPUと対戦</option><option value="local">2人対戦</option></select></label>
-<label id="cpu-level-wrap">CPUの強さ<select id="cpu-level"></select></label>
-<label id="human-side-wrap">あなたのチーム<select id="human-side"><option value="0">青（先手）</option><option value="1">橙（後手）</option></select></label>
+<label>OPPONENT<select id="match-mode"><option value="cpu">VS CPU</option><option value="local">2 PLAYERS</option></select></label>
+<label id="cpu-level-wrap">CPU LEVEL<select id="cpu-level"></select></label>
+<label id="human-side-wrap">YOUR TEAM<select id="human-side"><option value="0">BLUE / 1ST</option><option value="1">ORANGE / 2ND</option></select></label>
 </div><div id="setup-streak" class="streak-chip" aria-live="polite"></div></div>
         </section>
-        <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>勝敗の条件</h3>
-          <label class="limit-input-label" for="limit-input">限界曲げモーメント <strong>N·m</strong></label>
+        <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>M LIMIT</h3>
+          <label class="limit-input-label" for="limit-input">MAX M <strong>N·m</strong></label>
           <input id="limit-input" type="number" min="1" max="10000" step="1" inputmode="decimal" value="100" required>
-          <p class="setup-hint">最大曲げモーメントがこの数値以上になった手番のプレイヤーが負けです。</p>
+          
           <div class="time-setting">
-            <div class="time-heading"><label for="turn-seconds">1手の制限時間</label><output id="turn-seconds-value" for="turn-seconds">30秒</output></div>
+            <div class="time-heading"><label for="turn-seconds">TIME / TURN</label><output id="turn-seconds-value" for="turn-seconds">30秒</output></div>
             <input type="range" id="turn-seconds" min="10" max="60" step="5" value="30" aria-label="1手の制限時間 10秒から60秒">
-            <div class="range-labels"><span>10秒</span><span>60秒</span></div>
-            <label class="no-time-label"><input type="checkbox" id="no-time-limit"><span>制限時間なし</span></label>
-            <p class="setup-hint">時間切れになると、その手番の10Nの鳥がランダムなブランコに自動で止まります。5Nの使用権は消費しません。</p>
+            <div class="range-labels"><span>10s</span><span>60s</span></div>
+            <label class="no-time-label"><input type="checkbox" id="no-time-limit"><span>∞ NO LIMIT</span></label>
+            <p class="setup-hint">TIME OUT → RANDOM +10N</p>
           </div>
-          <div class="rules-chips"><span>通常 <b>10 N</b></span><span>各チーム1回だけ <b>5 N</b></span><span>初期はM非表示</span></div>
-          <p class="beam-preview-title">ステージの寸法プレビュー</p>
+          <div class="rules-chips"><span>🐦 <b>10N</b></span><span>🐤 <b>5N ×1</b></span><span>M HIDDEN</span></div>
+          <p class="beam-preview-title">SPAN PREVIEW</p>
           <div id="setup-preview" class="setup-preview" role="img" aria-label="梁の寸法プレビュー"></div>
           <p class="error-text" id="setup-error" role="alert" hidden></p>
-          <button type="button" id="start-game" class="primary-button">対戦スタート <span>→</span></button>
+          <button type="button" id="start-game" class="primary-button">PLAY <span>→</span></button>
         </section>
       </div>
-      <p class="setup-footnote">両端単純支持／自重・せん断破壊・たわみ破壊を無視した学習用モデルです。</p>
+      <p class="setup-footnote">SIMPLY SUPPORTED · EDUCATIONAL MODEL</p>
     </section>
 
     <section id="battle-screen" class="screen battle-screen" aria-label="ゲーム対戦画面" hidden>
       <div class="battle-topline">
-        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● 青チーム</strong><small id="bonus0">5N · 残り1回</small><small id="role0" class="cpu-role"></small></div>
+        <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● BLUE</strong><small id="bonus0">5N · 残り1回</small><small id="role0" class="cpu-role"></small></div>
         <div class="turn-center"><span id="turn-indicator">● BLUE TURN</span><strong id="turn-label">青チームの手番</strong><div class="turn-clock" id="turn-clock" aria-live="off"><span class="clock-icon" aria-hidden="true">◷</span><strong id="turn-timer">30</strong><span id="timer-unit">秒</span></div></div>
-        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● 橙チーム</strong><small id="bonus1">5N · 残り1回</small><small id="role1" class="cpu-role"></small></div>
+        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● ORANGE</strong><small id="bonus1">5N · 残り1回</small><small id="role1" class="cpu-role"></small></div>
       </div>
       <div class="battle-toolbar">
         <a class="mode-back-link" href="../moment-battle-modes/" aria-label="Back to game mode selection">⌂ MODE</a><span class="stage-info" id="battle-stage-info">STAGE 01 · 1 / 2 / 3 / 4 m</span>
-        <div class="toolbar-actions"><span id="battle-streak" class="battle-streak" hidden></span><button type="button" id="undo" disabled>↶ 1手戻る</button><button type="button" id="back-setup">⚙ 設定</button><button type="button" id="restart">↻ 最初から</button></div>
+        <div class="toolbar-actions"><span id="battle-streak" class="battle-streak" hidden></span><button type="button" id="undo" disabled>↶ UNDO</button><button type="button" id="back-setup">⚙ SETUP</button><button type="button" id="restart">↻ RESET</button></div>
       </div>
       <div class="battle-columns">
         <section class="panel play-panel">
-          <div class="panel-head"><div><span class="eyebrow">BEAM SIMULATOR</span><h3>鳥をとまらせる場所を選ぼう</h3></div><span class="small-tag" id="span-label">L = 10 m</span></div>
+          <div class="panel-head"><div><span class="eyebrow">BEAM SIMULATOR</span><h3>DRAG BIRD → SWING</h3></div><span class="small-tag" id="span-label">L = 10 m</span></div>
           <div class="versus-cages" id="versus-cages">
   <div class="versus-cage versus-blue" id="versus-blue"></div>
   <div class="versus-guide" id="versus-guide">BLUE FIRST<br><small>DRAG ↓</small></div>
   <div class="versus-cage versus-orange" id="versus-orange"></div>
  </div>
  <div class="beam-stage"><svg id="beam-svg" viewBox="0 0 900 298" role="img" aria-label="梁の載荷図"></svg></div>
-          <div class="load-picker"><div class="load-picker-title"><span class="eyebrow">SELECT LOAD</span><strong>鳥を選ぼう</strong></div>
+          <div class="load-picker" hidden><div class="load-picker-title"><span class="eyebrow">SELECT LOAD</span><strong>LOAD</strong></div>
           <div class="load-options"><button type="button" id="weight10" data-weight="10" aria-pressed="true" class="load-option active">🐦 10 N <small>約1kgの鳥</small></button><button type="button" id="weight5" data-weight="5" aria-pressed="false" class="load-option special">🐤 5 N <small id="weight5-status">各自1回</small></button></div></div>
           <div class="hook-actions" id="hook-buttons" aria-label="フック選択"></div>
-          <p class="action-note" id="turn-help">鳥を選んでブランコをクリック！ 何羽でもとまれます。</p>
+          <p class="action-note" id="turn-help">DRAG BIRD → SWING</p>
         </section>
         <aside class="battle-side">
-          <section class="panel limit-panel"><div class="limit-heading"><span class="eyebrow">MOMENT / CRITICAL</span><button id="toggle-moment" type="button" class="visibility-toggle" aria-pressed="false">◎ Mを表示</button></div>
+          <section class="panel limit-panel"><div class="limit-heading"><span class="eyebrow">MOMENT / CRITICAL</span><button id="toggle-moment" type="button" class="visibility-toggle" aria-pressed="false">◉ SHOW M</button></div>
             <div class="metric"><span id="max-moment">???</span><small id="limit-unit">/ 100 N·m</small></div>
             <div class="gauge"><div id="gauge-fill"></div></div>
             <div class="limit-label"><span id="percent-label">現在値は非表示</span><span id="critical-label">限界 100 N·m</span></div>
             <p class="risk-text" id="risk-text">数字を隠して対戦中。表示ボタンでいつでも確認できます。</p>
           </section>
-          <section class="panel plot-panel" id="plot-panel" hidden><div class="panel-head"><div><span class="eyebrow">BENDING MOMENT</span><h3>曲げモーメント図</h3></div><span class="small-tag">N·m</span></div><svg id="plot-svg" viewBox="0 0 900 285" role="img"></svg></section>
-          <section class="panel stats-panel" id="stats-panel" hidden><span class="eyebrow">STRUCTURAL DATA</span><div class="stats-grid"><span>左支点反力</span><b id="ra">0 N</b><span>右支点反力</span><b id="rb">0 N</b><span>総荷重</span><b id="total">0 N</b><span>最大M位置</span><b id="max-pos">—</b></div></section>
-          <section class="panel history-panel"><div class="panel-head"><div><span class="eyebrow">TURN HISTORY</span><h3>載荷履歴</h3></div><span class="small-tag" id="turn-count">0 手</span></div><ol id="history-list" class="history-list"><li>まだおもりはありません。</li></ol></section>
+          <section class="panel plot-panel" id="plot-panel" hidden><div class="panel-head"><div><span class="eyebrow">BENDING MOMENT</span><h3>M DIAGRAM</h3></div><span class="small-tag">N·m</span></div><svg id="plot-svg" viewBox="0 0 900 285" role="img"></svg></section>
+          <section class="panel stats-panel" id="stats-panel" hidden><span class="eyebrow">STRUCTURAL DATA</span><div class="stats-grid"><span>R(A)</span><b id="ra">0 N</b><span>R(B)</span><b id="rb">0 N</b><span>Σ P</span><b id="total">0 N</b><span>M @</span><b id="max-pos">—</b></div></section>
+          <section class="panel history-panel"><div class="panel-head"><div><span class="eyebrow">TURN HISTORY</span><h3>TURN LOG</h3></div><span class="small-tag" id="turn-count">0 手</span></div><ol id="history-list" class="history-list"><li>—</li></ol></section>
         </aside>
       </div>
       <div id="versus-drag-ghost" hidden aria-hidden="true">🐦 10N</div>
       <div id="turn-popup" class="turn-popup" role="dialog" aria-modal="true" aria-labelledby="popup-title" hidden>
-        <div class="turn-popup-card" id="turn-popup-card"><span class="popup-kicker" id="popup-kicker">READY?</span><div class="popup-bird" id="popup-bird" aria-hidden="true">🐦</div><h2 id="popup-title">青チームの番！</h2><p id="popup-subtitle">鳥を止まらせよう！</p><button type="button" id="popup-continue" class="primary-button">この手番を開始！ →</button></div>
+        <div class="turn-popup-card" id="turn-popup-card"><span class="popup-kicker" id="popup-kicker">READY?</span><div class="popup-bird" id="popup-bird" aria-hidden="true">🐦</div><h2 id="popup-title">BLUE TURN!</h2><p id="popup-subtitle">YOUR MOVE</p><button type="button" id="popup-continue" class="primary-button">GO →</button></div>
       </div>
     </section>
 
@@ -626,7 +630,7 @@ function currentRecord(){return streakStats.levels[cpuLevel-1];}
 function refreshStreak(){const active=$('match-mode').value==='cpu';
  for(const id of ['cpu-level-wrap','human-side-wrap','setup-streak'])$(id).hidden=!active;
  const lvl=Number($('cpu-level').value)||5,rec=streakStats.levels[lvl-1];
- $('setup-streak').textContent='Lv'+lvl+' · 現在'+rec.current+'連勝 / 最高'+rec.best+'連勝';}
+ $('setup-streak').textContent='Lv'+lvl+' · 現在'+rec.current+' / BEST '+rec.best;}
 function chooseCpuMove(){
  const depth=[0,0,1,2,3,4,5,7,10,16][cpuLevel-1];
  const randomness=[1,.75,.5,.32,.2,.12,.07,.04,.015,0][cpuLevel-1];
@@ -690,14 +694,14 @@ function openScreen(next){
 }
 function buildSetup(){
  const lvl=$('cpu-level');
- for(let i=1;i<=10;i++){const o=document.createElement('option');o.value=String(i);o.textContent='Lv '+i+(i===1?' · やさしい':i===10?' · 名人':'');lvl.append(o);}
+ for(let i=1;i<=10;i++){const o=document.createElement('option');o.value=String(i);o.textContent='Lv '+i+(i===1?' · EASY':i===10?' · MASTER':'');lvl.append(o);}
  lvl.value='5';
  for(const id of ['match-mode','cpu-level','human-side'])$(id).addEventListener('change',refreshStreak);
  refreshStreak();
  const slider=$('turn-seconds'),noLimit=$('no-time-limit');
  function refreshTimeSetting(){
    slider.disabled=noLimit.checked;
-   $('turn-seconds-value').textContent=noLimit.checked?'無制限':`${slider.value}秒`;
+   $('turn-seconds-value').textContent=noLimit.checked?'∞':`${slider.value}s`;
  }
  slider.addEventListener('input',refreshTimeSetting);
  noLimit.addEventListener('change',refreshTimeSetting);
@@ -706,16 +710,16 @@ function buildSetup(){
  Object.values(STAGES).forEach(s=>{
    const b=document.createElement('button');b.type='button';b.className='stage-card';b.dataset.stage=s.id;
    const code=document.createElement('span');code.className='eyebrow';code.textContent=s.name;
-   const title=document.createElement('strong');title.textContent=s.title;
+   const title=document.createElement('strong');title.textContent=s.name;
    const bar=document.createElement('div');bar.className='stage-segments';
    s.intervals.forEach(n=>{const e=document.createElement('span');e.style.flex=String(n);e.textContent=`${n}m`;bar.appendChild(e);});
-   const sub=document.createElement('small');sub.textContent=`全長 ${fmt(s.span)}m · 3フック`;
+   const sub=document.createElement('small');sub.textContent=`${fmt(s.span)}m · 3 HOOKS`;
    b.append(code,title,bar,sub);
    b.addEventListener('click',()=>{stageChoice=s.id;fillIntervals(s.intervals);updateSetup();});options.append(b);
  });
  const inputs=$('interval-inputs');inputs.replaceChildren();
  for(let i=0;i<4;i++){
-   const field=document.createElement('label');field.className='interval-field';field.textContent=`区間 ${i+1} (m)`;
+   const field=document.createElement('label');field.className='interval-field';field.textContent=`L${i+1} (m)`;
    const input=document.createElement('input');input.type='number';input.min='.1';input.max='100';input.step='.1';input.id=`interval-${i}`;input.required=true;
    input.addEventListener('input',()=>{stageChoice='custom';updateSetup();});field.append(input);inputs.append(field);
  }
@@ -761,12 +765,12 @@ function prepareGame(){
  const out=$('hook-buttons');out.replaceChildren();
  pos().forEach((x,i)=>{
    const b=document.createElement('button');b.type='button';b.className='hook-button';b.dataset.hook=String(i);
-   b.innerHTML=`<span class="hook-pos">HOOK ${String(i+1).padStart(2,'0')}</span><strong>フック ${i+1}</strong><span class="hook-sub"></span><span class="hook-result"></span>`;
+   b.innerHTML=`<span class="hook-pos">HOOK ${String(i+1).padStart(2,'0')}</span><strong>HOOK ${i+1}</strong><span class="hook-sub"></span><span class="hook-result"></span>`;
    out.append(b);
  });
  $('span-label').textContent=`L = ${fmt(span())} m`;
- $('battle-stage-info').textContent=`${stage.name} · ${segments(stage)} · LIMIT ${fmt(limit)} N·m · ${turnSeconds===null?'時間無制限':`${turnSeconds}秒/手`}`;
- for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'あなた':'CPU Lv'+cpuLevel):'PLAYER 0'+(i+1);
+ $('battle-stage-info').textContent=`${stage.name} · ${segments(stage)} · LIMIT ${fmt(limit)} N·m · ${turnSeconds===null?'∞':`${turnSeconds}s`}`;
+ for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'YOU':'CPU Lv'+cpuLevel):'PLAYER 0'+(i+1);
  $('battle-streak').hidden=!isCpu();
  $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
 }
@@ -939,14 +943,14 @@ function render(){
  document.body.dataset.turnTheme=turn?'orange':'blue';
  document.body.dataset.moments=showMoments?'shown':'hidden';
  $('turn-indicator').textContent=turn?'● ORANGE TURN':'● BLUE TURN';
- $('turn-label').textContent=`${names[turn]}の手番`;
+ $('turn-label').textContent=turn?'ORANGE TURN':'BLUE TURN';
  $('undo').disabled=!history.length;
  $('battle-streak').hidden=!isCpu();
- $('battle-streak').textContent='CPU Lv'+cpuLevel+' · '+currentRecord().current+'連勝'+(practice?' · 練習中':'');
- $('turn-help').textContent=cpuTurn()?'CPU Lv'+cpuLevel+' が考えています…':'鳥を選んでブランコをクリック！ 何羽でもとまれます。';
+ $('battle-streak').textContent='CPU Lv'+cpuLevel+' · '+'WIN ×'+currentRecord().current+(practice?' · PRACTICE':'');
+ $('turn-help').textContent=cpuTurn()?'CPU Lv'+cpuLevel+' が考えています…':'DRAG BIRD → SWING';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
-   $(`bonus${i}`).textContent=specialUsed(history,i,stage)?'5N · 使用済み':'5N · 残り1回';
+   $(`bonus${i}`).textContent=specialUsed(history,i,stage)?'5N · USED':'5N · 1 LEFT';
  }
  if(selectedWeight===SPECIAL_WEIGHT&&used)selectedWeight=WEIGHT;
  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
@@ -954,32 +958,32 @@ function render(){
    b.classList.toggle('active',selectedWeight===force);
    b.setAttribute('aria-pressed',String(selectedWeight===force));
  }
- $('weight5-status').textContent=used?'使用済み':'各自1回';
- $('toggle-moment').textContent=showMoments?'◉ Mを隠す':'◎ Mを表示';
+ $('weight5-status').textContent=used?'USED':'1 USE';
+ $('toggle-moment').textContent=showMoments?'◉ HIDE M':'◉ SHOW M';
  $('toggle-moment').setAttribute('aria-pressed',String(showMoments));
  $('plot-panel').hidden=!showMoments;$('stats-panel').hidden=!showMoments;
  $('max-moment').textContent=showMoments?fmt(data.maxMoment):'???';
  $('gauge-fill').style.width=showMoments?`${Math.min(100,data.maxMoment/limit*100)}%`:'0%';
- $('percent-label').textContent=showMoments?`${fmt(data.maxMoment/limit*100)}% 到達`:'現在値は非表示';
- $('critical-label').textContent=showMoments?`余裕 ${fmt(Math.max(0,limit-data.maxMoment))} N·m`:`限界 ${fmt(limit)} N·m`;
- $('risk-text').textContent=showMoments?'集中荷重を重ね合わせてM図を計算します。':'M図・予測値・履歴のM値を隠して対戦中です。';
+ $('percent-label').textContent=showMoments?`${fmt(data.maxMoment/limit*100)}%`:'HIDDEN';
+ $('critical-label').textContent=showMoments?`MARGIN ${fmt(Math.max(0,limit-data.maxMoment))} N·m`:`LIMIT ${fmt(limit)} N·m`;
+ $('risk-text').textContent=showMoments?'M VISIBLE':'M HIDDEN';
  $('ra').textContent=`${fmt(data.RA)} N`;$('rb').textContent=`${fmt(data.RB)} N`;
  $('total').textContent=`${fmt(data.totalLoad)} N`;$('max-pos').textContent=data.maxMoment?hookName(data.maxPosition):'—';
  pos().forEach((x,i)=>{
    const b=$('hook-buttons').children[i];b.disabled=cpuTurn();const next=showMoments?previewHistory(history,x,selectedWeight,stage,limit):null;
    const applied=loadsAt(x).reduce((n,m)=>n+m.p,0);
-   b.querySelector('.hook-sub').textContent=`現在 ${fmt(applied)} N · ${selectedWeight} Nを追加`;
-   b.querySelector('.hook-result').textContent=next?`次の最大M ${fmt(next.maxMoment)}`:'予測Mは非表示';
+   b.querySelector('.hook-sub').textContent=`${fmt(applied)} N / +${selectedWeight} N`;
+   b.querySelector('.hook-result').textContent=next?`NEXT M ${fmt(next.maxMoment)}`:'M HIDDEN';
    b.querySelector('.hook-result').classList.toggle('danger',Boolean(next?.failed));
    b.setAttribute('aria-label',`${hookName(x)}に${selectedWeight} Nを追加${next?`、追加後の最大Mは${fmt(next.maxMoment)} N·m`:''}`);
  });
- const list=$('history-list');list.replaceChildren();$('turn-count').textContent=`${history.length} 手`;
- if(!history.length){const li=document.createElement('li');li.textContent='まだおもりはありません。';list.append(li);}
+ const list=$('history-list');list.replaceChildren();$('turn-count').textContent=`${history.length} TURNS`;
+ if(!history.length){const li=document.createElement('li');li.textContent='—';list.append(li);}
  history.map((move,i)=>({move,i})).reverse().forEach(({move,i})=>{
    const li=document.createElement('li'),a=document.createElement('span'),b=document.createElement('b');
-   a.className=i%2?'orange':'blue';a.textContent=`${i+1}手 · ${names[i%2]}`;
+   a.className=i%2?'orange':'blue';a.textContent=`${i+1} · ${i%2?'ORANGE':'BLUE'}`;
    const m=showMoments?` · M=${fmt(fromHistory(history.slice(0,i+1),stage,limit).maxMoment)}`:'';
-   b.textContent=`${hookName(move.x)} / ${move.p}N${move.auto?' (時間切れ自動)':''}${m}`;li.append(a,b);list.append(li);
+   b.textContent=`${hookName(move.x)} / ${move.p}N${move.auto?' (AUTO)':''}${m}`;li.append(a,b);list.append(li);
  });
  drawBeam(data);vsRender();if(showMoments)drawPlot($('plot-svg'),data);
 }
@@ -1047,9 +1051,9 @@ function showHandoff(initial=false,automatic=false){
  popup.hidden=false;popup.dataset.player=player===0?'blue':'orange';
  $('popup-bird').textContent=player===0?'🐦':'🐤';
  $('popup-kicker').textContent=initial?'READY?':'NEXT TURN!';
- $('popup-title').textContent=`${names[player]}の番！`;
- $('popup-subtitle').textContent=cpuTurn()?'CPU Lv'+cpuLevel+' が次の鳥を考えます！':automatic?'時間切れ！ 10Nの鳥が自動でとまりました。':initial?'さあ、鳥をとまらせよう！':'次の鳥をとまらせよう！';
- $('popup-continue').textContent=initial?'対戦スタート！ →':'この手番を開始！ →';
+ $('popup-title').textContent=player?'ORANGE TURN!':'BLUE TURN!';
+ $('popup-subtitle').textContent=cpuTurn()?'CPU THINKING':automatic?'TIME OUT · AUTO +10N':'YOUR MOVE';
+ $('popup-continue').textContent=initial?'PLAY →':'GO →';
  updateClock(turnSeconds===null?0:turnSeconds*1000);
  // Short playful overlay: it can also be dismissed immediately by clicking.
  handoffTimeout=setTimeout(dismissHandoff,1500);
