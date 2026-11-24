@@ -882,7 +882,8 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     return history.map((e,i)=>{
       const m=typeof e==='number'?{x:e,p:WEIGHT}:e;
       if(!m||!hooks.includes(m.x)||![WEIGHT,SPECIAL_WEIGHT,FAT_WEIGHT].includes(m.p))throw new TypeError('invalid move: 5N, 10N or 15N only');
-      if(m.p===SPECIAL_WEIGHT&&++bonus[i%2]>1)throw new RangeError('5N is once per player');
+      // Physics accepts two 5N cards; actual inventory limits are enforced by each game mode.
+      if(m.p===SPECIAL_WEIGHT&&++bonus[i%2]>2)throw new RangeError('5N is limited to two per player');
       if(m.p===FAT_WEIGHT&&++fat[i%2]>1)throw new RangeError('15N is once per player');
       return {x:m.x,p:m.p};
     });
