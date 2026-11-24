@@ -1050,9 +1050,12 @@ function chooseCpuMove(){
  const depth=[0,0,1,2,3,4,5,7,10,16][cpuLevel-1];
  const randomness=[1,.75,.5,.32,.2,.12,.07,.04,.015,0][cpuLevel-1];
  function actions(h){
-  const choices=[];
-  if(remainingBirds(h.length%2,h)<=0)return choices;
-  for(const p of [WEIGHT])for(const x of pos()){
+  const player=h.length%2,choices=[],forces=[];
+  if(remainingBirds(player,h)>0)forces.push(WEIGHT);
+  // CPU uses only 10N; strongest search must account for the human's 5N and 15N.
+  if(player===humanPlayer&&bonusLeft(player,h))forces.push(SPECIAL_WEIGHT);
+  if(player===humanPlayer&&fatLeft(player,h))forces.push(FAT_WEIGHT);
+  for(const p of forces)for(const x of pos()){
    const move={x,p,cpu:true},a=fromHistory([...h,move],stage,limit);
    choices.push({move,failed:a.failed,max:a.maxMoment});
   }
@@ -1065,7 +1068,10 @@ function chooseCpuMove(){
  const memo=new Map();
  function evaluate(h,d){
   if(++visited>budget)return 0;
-  const key=pos().map(x=>h.filter(m=>m.x===x).reduce((s,m)=>s+m.p/5,0)).join(',')+'|'+(+specialUsed(h,0,stage))+(+specialUsed(h,1,stage))+'|'+(h.length%2)+'|'+d;
+  const key=pos().map(x=>h.filter(m=>m.x===x).reduce((s,m)=>s+m.p/5,0)).join(',')
+   +'|'+[0,1].map(p=>remainingBirds(p,h)).join(',')
+   +'|'+(bonusLeft(humanPlayer,h)?1:0)+(fatLeft(humanPlayer,h)?1:0)
+   +'|'+(h.length%2)+'|'+d;
   if(memo.has(key))return memo.get(key);
   const ok=actions(h).filter(a=>!a.failed);
   if(!ok.length)return -1000-d;
@@ -1366,7 +1372,7 @@ function render(){
  $('turn-label').textContent=turn?'ORANGE TURN':'BLUE TURN';
  $('undo').disabled=!history.length;
  $('battle-streak').hidden=true;
- $('battle-streak').textContent='CPU Lv'+cpuLevel+' · '+'WIN ×'+currentRecord().current+(practice?' · PRACTICE':'');
+ $('battle-streak').textContent='';
  $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'ORANGE':'BLUE')+' · DRAG BIRD ↓';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
