@@ -541,7 +541,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   else root.BeamPhysics=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
-  const WEIGHT=10,SPECIAL_WEIGHT=5,LIMIT=100,EPS=1e-8;
+  const WEIGHT=10,SPECIAL_WEIGHT=5,FAT_WEIGHT=15,LIMIT=100,EPS=1e-8;
   function createStage(intervals,meta={}){
     if(!Array.isArray(intervals)||![2,4].includes(intervals.length)||intervals.some(v=>typeof v!=='number'||!Number.isFinite(v)||v<=0)){
       throw new TypeError('2 or 4 positive finite beam intervals are required');
@@ -595,11 +595,12 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   function normalizeHistory(history,stage=DEFAULT_STAGE){
     const {hooks}=getStage(stage);
     if(!Array.isArray(history))throw new TypeError('history must be an array');
-    const bonus=[0,0];
+    const bonus=[0,0],fat=[0,0];
     return history.map((e,i)=>{
       const m=typeof e==='number'?{x:e,p:WEIGHT}:e;
-      if(!m||!hooks.includes(m.x)||![WEIGHT,SPECIAL_WEIGHT].includes(m.p))throw new TypeError('invalid move: 10N or 5N only');
+      if(!m||!hooks.includes(m.x)||![WEIGHT,SPECIAL_WEIGHT,FAT_WEIGHT].includes(m.p))throw new TypeError('invalid move: 5N, 10N or 15N only');
       if(m.p===SPECIAL_WEIGHT&&++bonus[i%2]>1)throw new RangeError('5N is once per player');
+      if(m.p===FAT_WEIGHT&&++fat[i%2]>1)throw new RangeError('15N is once per player');
       return {x:m.x,p:m.p};
     });
   }
@@ -613,7 +614,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     const n=counts.slice(),i=getStage(stage).hooks.indexOf(x);
     if(i<0)throw new RangeError('not a hook');n[i]++;return analyze(n,stage,limit);
   }
-  return Object.freeze({WEIGHT,SPECIAL_WEIGHT,LIMIT,STAGES,DEFAULT_STAGE,SPAN:10,HOOKS:STAGES.stage1.hooks,
+  return Object.freeze({WEIGHT,SPECIAL_WEIGHT,FAT_WEIGHT,LIMIT,STAGES,DEFAULT_STAGE,SPAN:10,HOOKS:STAGES.stage1.hooks,
     createStage,getStage,analyzeLoads,analyze,normalizeHistory,fromHistory,previewHistory,preview,specialUsed});
 });
 
@@ -725,7 +726,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 <script>
 (function(){
 'use strict';
-const {STAGES,getStage,createStage,WEIGHT,SPECIAL_WEIGHT,LIMIT,fromHistory,previewHistory,specialUsed}=BeamPhysics;
+const {STAGES,getStage,createStage,WEIGHT,SPECIAL_WEIGHT,FAT_WEIGHT,LIMIT,fromHistory,previewHistory,specialUsed}=BeamPhysics;
 
 function cageSvg(){return '<svg viewBox="0 0 64 63" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 39L2 29L7 51L18 48" fill="var(--bird-dark)"/><ellipse cx="31" cy="34" rx="22" ry="20" fill="var(--bird-color)" stroke="#31535e" stroke-width="2.2"/><ellipse cx="25" cy="41" rx="13" ry="8" fill="var(--bird-wing)"/><path d="M23 17l2-9 6 9 5-10 2 11" fill="var(--bird-dark)"/><circle cx="42" cy="28" r="6" fill="white"/><circle cx="44" cy="27" r="2.8" fill="#253d4b"/><path d="M50 33l13 5-13 6" fill="#ffd252" stroke="#9e7d34" stroke-width="2"/><path d="M25 52l-3 6m16-5v5" stroke="#946032" stroke-width="3" stroke-linecap="round"/></svg>';}
 const STORY_BIRDS = 5;
@@ -733,6 +734,7 @@ function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2=
 function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
 function hasBonus(player){return storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer;}
 function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);}
+function fatLeft(player,turns=history){return storyFatUnlocked&&storyLevel===3&&player===humanPlayer&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
 function stageLimit(){return 100;}
 function stageId(level=storyLevel){return level===1?'center':level===2?'story2':'story3';}
 function buildCages(){
@@ -762,7 +764,7 @@ function buildCages(){
 let pointerDrag=null;
 function dragAllowed(player,force){
  return mode==='battle'&&!handoffActive&&!cpuTurn()&&player===history.length%2&&
-  (force===WEIGHT?remainingBirds(player)>0:(force===SPECIAL_WEIGHT?bonusLeft(player):false));
+  (force===WEIGHT?remainingBirds(player)>0:force===SPECIAL_WEIGHT?bonusLeft(player):force===FAT_WEIGHT?fatLeft(player):false);
 }
 function inSwing(x,y){
  const target=$('swing-drop');if(!target)return false;
@@ -771,7 +773,7 @@ function inSwing(x,y){
 }
 function showDragGhost(x,y,player,force){
  const ghost=$('bird-drag-ghost');ghost.hidden=false;
- ghost.textContent=(player?'🟠':'🔵')+' '+(force===5?'🐤':'🐦')+' '+force+'N';
+ ghost.textContent=(player?'🟠':'🔵')+' '+(force===5?'🐤':force===15?'🐧':'🐦')+' '+force+'N';
  ghost.style.left=x+'px';ghost.style.top=y+'px';
 }
 function clearDrag(){
@@ -868,7 +870,7 @@ function initQuick(){
 const {undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove}=MomentGameState;
 const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
 const names=['青チーム','橙チーム'];
-let storyLevel=1,storyBonusUnlocked=false;
+let storyLevel=1,storyBonusUnlocked=false,storyFatUnlocked=false;
 let mode='setup',stage=getStage('center'),stageChoice='center',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
 let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
 let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,committedSnapshot=null;
@@ -1081,14 +1083,14 @@ function scenery(root,h,beamY,left=82,right=822){
  });
 }
 function drawBird(parent,x,y,player,force,scale=1,classes=''){
- const small=force===SPECIAL_WEIGHT;
- const k=scale*(small?.74:1);
+ const small=force===SPECIAL_WEIGHT,fat=force===FAT_WEIGHT;
+ const k=scale*(small?.74:fat?1.18:1);
  const g=svg('g',{class:classes,transform:`translate(${x} ${y}) scale(${k})`},parent);
  const base=player===0?'#2584ec':'#ff8a31';
  const dark=player===0?'#1558a9':'#c45a20';
  const belly=player===0?'#bfe7ff':'#ffe3ba';
- svg('ellipse',{cx:0,cy:2,rx:18,ry:17,fill:base,stroke:'#34384b','stroke-width':2},g);
- svg('ellipse',{cx:1,cy:10,rx:12,ry:7,fill:belly},g);
+ svg('ellipse',{cx:0,cy:2,rx:fat?22:18,ry:fat?20:17,fill:base,stroke:'#34384b','stroke-width':2},g);
+ svg('ellipse',{cx:1,cy:10,rx:fat?15:12,ry:fat?9:7,fill:belly},g);
  svg('path',{d:'M-9 -13 Q-13 -27 -3 -21 M1 -13 Q-1 -28 8 -23',fill:'none',stroke:dark,'stroke-width':4,'stroke-linecap':'round'},g);
  svg('path',{d:'M-12 0 Q-26 -1 -20 11 Q-9 14 -7 4',fill:dark,stroke:dark,'stroke-width':1},g);
  svg('circle',{cx:8,cy:-4,r:5.1,fill:'white'},g);
@@ -1255,7 +1257,8 @@ function applyMove(move){
  if(!pos().includes(move.x))return;
  if(move.p===WEIGHT&&remainingBirds(player)<=0)return;
  if(move.p===SPECIAL_WEIGHT&&!bonusLeft(player))return;
- if(move.p!==WEIGHT&&move.p!==SPECIAL_WEIGHT)return;
+ if(move.p===FAT_WEIGHT&&!fatLeft(player))return;
+ if(![WEIGHT,SPECIAL_WEIGHT,FAT_WEIGHT].includes(move.p))return;
  stopClock();clearHandoff();
  history.push(move);selectedWeight=WEIGHT;
  const data=fromHistory(history,stage,limit);
