@@ -700,6 +700,11 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 }
 /* One consistent navigation in overlays; remove redundant left-side BACK buttons. */
 #story-select-back,#versus-back,#story-rule-back{visibility:hidden;pointer-events:none}
+
+/* Backstory STAGE 02: reveal a second physical 5N card after the first loss. */
+.cage-slot .single-slot .special-unit{top:calc(10px + var(--stack-index) * 9px)!important}
+.cage-slot .single-slot .special-unit:not([hidden]):last-of-type{z-index:2}
+@media(max-width:650px){.cage-slot .single-slot .special-unit{top:calc(7px + var(--stack-index) * 7px)!important}}
 </style>
 <title>MOMENT BATTLE | 鳥と曲げモーメントのゲーム</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -1129,7 +1134,13 @@ const STORY_BIRDS = 5;
 function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2===player&&move.p===WEIGHT?1:0),0);}
 function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
 function hasBonus(player){return gameRoute==='versus'||gameRoute==='edit'||gameRoute==='back'||(storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer);}
-function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);}
+function bonusAllowance(player){
+ return !hasBonus(player)?0:1+Number(gameRoute==='back'&&storyLevel>=2&&player===humanPlayer&&backExtraFiveUnlocked);
+}
+function bonusRemaining(player,turns=history){
+ return Math.max(0,bonusAllowance(player)-turns.reduce((n,m,i)=>n+(i%2===player&&m.p===SPECIAL_WEIGHT?1:0),0));
+}
+function bonusLeft(player,turns=history){return bonusRemaining(player,turns)>0;}
 function hasFat(player){return gameRoute==='versus'||gameRoute==='edit'||gameRoute==='back'||(storyFatUnlocked&&storyLevel>=3&&player===humanPlayer);}
 function fatLeft(player,turns=history){return hasFat(player)&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
 function stageLimit(){return 100;}
@@ -1148,14 +1159,14 @@ function buildCages(){
    header.textContent=force+'N';
    const contents=document.createElement('div');
    contents.className=force===WEIGHT?'slot-body cage-deck':'slot-body single-slot';
-   const total=force===WEIGHT?STORY_BIRDS:1;
+   const total=force===WEIGHT?STORY_BIRDS:force===SPECIAL_WEIGHT?2:1;
    for(let n=0;n<total;n++){
     const b=document.createElement('button');b.type='button';
     b.className='cage-bird bird-unit'+(force===WEIGHT?' deck-card':force===SPECIAL_WEIGHT?' special-unit':' fat-unit');
     b.dataset.player=String(player);b.dataset.force=String(force);
-    b.dataset.birdIndex=force===WEIGHT?String(n):force===SPECIAL_WEIGHT?'special':'fat';
+    b.dataset.birdIndex=force===WEIGHT||force===SPECIAL_WEIGHT?String(n):'fat';
     b.style.setProperty('--stack-index',String(n));
-    b.setAttribute('aria-label',labels[player]+' '+force+'N bird'+(force===WEIGHT?' '+(n+1)+' of '+STORY_BIRDS:'')+'. Drag to swing.');
+    b.setAttribute('aria-label',labels[player]+' '+force+'N bird'+(force===WEIGHT?' '+(n+1)+' of '+STORY_BIRDS:force===SPECIAL_WEIGHT?' '+(n+1)+' of '+total:'')+'. Drag to swing.');
     b.innerHTML=cageSvg();
     b.hidden=force!==WEIGHT;
     contents.append(b);
@@ -1260,7 +1271,7 @@ function updateCages(){
  document.querySelectorAll('.cage-bird').forEach(b=>{
   const player=Number(b.dataset.player),force=Number(b.dataset.force);
   const inStock=force===WEIGHT?Number(b.dataset.birdIndex)<remainingBirds(player)
-   :force===SPECIAL_WEIGHT?bonusLeft(player):force===FAT_WEIGHT?fatLeft(player):false;
+   :force===SPECIAL_WEIGHT?Number(b.dataset.birdIndex)<bonusRemaining(player):force===FAT_WEIGHT?fatLeft(player):false;
   b.hidden=!inStock;
   b.disabled=!inStock||!dragAllowed(player,force);
   b.classList.toggle('is-selected',inStock&&!b.disabled&&force===selectedWeight);
@@ -1269,6 +1280,7 @@ function updateCages(){
   const force=Number(slot.dataset.slotForce),player=Number(slot.dataset.slotPlayer);
   // Hide the whole category before acquisition; no empty preview or spoiler.
   slot.hidden=force===SPECIAL_WEIGHT?!hasBonus(player):force===FAT_WEIGHT?!hasFat(player):false;
+  if(force===SPECIAL_WEIGHT)slot.querySelector('.slot-title').textContent='5N ×'+bonusRemaining(player);
   slot.classList.toggle('is-empty',force===WEIGHT?remainingBirds(player)===0:force===SPECIAL_WEIGHT?!bonusLeft(player):!fatLeft(player));
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
@@ -1321,6 +1333,7 @@ const storage=(()=>{try{return window.localStorage;}catch(e){return null;}})();
 const STORY_CLEAR_KEY='moment-battle-story-ten-stage-clear-v1';
 const STORY_PROGRESS_KEY='moment-battle-story-highest-v1';
 const BACK_PROGRESS_KEY='moment-battle-backstory-highest-v1';
+const BACK_EXTRA_FIVE_KEY='moment-battle-backstory-stage2-extra-5n-v1';
 const STORY_BONUS_KEY='moment-battle-story-5N-earned-v1';
 const STORY_FAT_KEY='moment-battle-story-15N-earned-v1';
 function storedFlag(key){try{return storage?.getItem(key)==='1';}catch(e){return false;}}
@@ -1335,6 +1348,7 @@ function saveLevel(key,level){try{storage?.setItem(key,String(Math.min(10,Math.m
 storyCleared=storedFlag(STORY_CLEAR_KEY);
 let storyHighest=storyCleared?10:storedLevel(STORY_PROGRESS_KEY);
 let backHighest=storedLevel(BACK_PROGRESS_KEY);
+let backExtraFiveUnlocked=storedFlag(BACK_EXTRA_FIVE_KEY);
 if(storyHighest===10&&!storyCleared){storyCleared=true;setStoredFlag(STORY_CLEAR_KEY);}
 function highestCleared(route){return route==='back'?backHighest:storyHighest;}
 function noteStageVictory(){
@@ -1493,12 +1507,12 @@ function chooseCpuMove(){
   if(++visited>budget)return 0;
   const key=pos().map(x=>h.filter(m=>m.x===x).reduce((s,m)=>s+m.p/5,0)).join(',')
    +'|'+[0,1].map(p=>remainingBirds(p,h)).join(',')
-   +'|'+[0,1].map(p=>(bonusLeft(p,h)?1:0)+''+(fatLeft(p,h)?1:0)).join(',')
+   +'|'+[0,1].map(p=>bonusRemaining(p,h)+':'+Number(fatLeft(p,h))).join(',')
    +'|'+(h.length%2)+'|'+d;
   if(memo.has(key))return memo.get(key);
   const ok=actions(h).filter(a=>!a.failed);
   if(!ok.length)return -1000-d;
-  if(d<=0)return Math.min(8,ok.length)*5+(specialUsed(h,h.length%2,stage)?-5:5);
+  if(d<=0)return Math.min(8,ok.length)*5+(bonusRemaining(h.length%2,h)>0?5:-5);
   ok.sort((a,b)=>b.max-a.max||b.move.p-a.move.p);
   let best=-Infinity;
   for(const a of ok){
@@ -1801,7 +1815,7 @@ function drawPlot(el,data,previous=null,player=null){
 }
 function render(){
  if(mode!=='battle')return;
- const data=fromHistory(history,stage,limit),turn=history.length%2,used=specialUsed(history,turn,stage);
+ const data=fromHistory(history,stage,limit),turn=history.length%2,remaining5=bonusRemaining(turn);
  document.body.dataset.turnTheme=turn?'orange':'blue';
  document.body.dataset.moments=showMoments?'shown':'hidden';
  $('turn-indicator').textContent=turn?'● RED TURN':'● BLUE TURN';
@@ -1812,15 +1826,15 @@ function render(){
  $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'RED':'BLUE')+' · DRAG BIRD ↓';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
-   $(`bonus${i}`).textContent='10N ×'+remainingBirds(i)+(bonusLeft(i)?' + 5N ×1':'');
+   $(`bonus${i}`).textContent='10N ×'+remainingBirds(i)+(bonusLeft(i)?' + 5N ×'+bonusRemaining(i):'');
  }
- if(selectedWeight===SPECIAL_WEIGHT&&used)selectedWeight=WEIGHT;
+ if(selectedWeight===SPECIAL_WEIGHT&&remaining5===0)selectedWeight=WEIGHT;
  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
-   const b=$(`weight${force}`);b.disabled=cpuTurn()||(force===SPECIAL_WEIGHT&&used);
+   const b=$(`weight${force}`);b.disabled=cpuTurn()||(force===SPECIAL_WEIGHT&&remaining5===0);
    b.classList.toggle('active',selectedWeight===force);
    b.setAttribute('aria-pressed',String(selectedWeight===force));
  }
- $('weight5-status').textContent=used?'USED':'1 USE';
+ $('weight5-status').textContent=remaining5>0?remaining5+' LEFT':'USED';
  $('toggle-moment').textContent=showMoments?'◉ HIDE M':'◉ SHOW M';
  $('toggle-moment').setAttribute('aria-pressed',String(showMoments));
  $('plot-panel').hidden=!showMoments;$('stats-panel').hidden=!showMoments;
@@ -1992,6 +2006,11 @@ function toResult(){
  if(mode!=='break'||!breakReady)return;
  cancelBreak();
  const resultWinner=1-(history.length-1)%2;
+ const earnedBackFive=gameRoute==='back'&&storyLevel===2&&resultWinner!==humanPlayer&&!backExtraFiveUnlocked&&!isDeveloperPreview;
+ if(earnedBackFive){
+  backExtraFiveUnlocked=true;
+  setStoredFlag(BACK_EXTRA_FIVE_KEY);
+ }
  if(resultWinner===humanPlayer)noteStageVictory();
  if(isCpu()&&!practice&&!committed){
   const winner=1-(history.length-1)%2;
@@ -2002,6 +2021,7 @@ function toResult(){
   saveStreaks();committed=true;
  }
  openScreen('result');buildResults();
+ if(earnedBackFive)showFiveReward(true);
  if(resultWinner===humanPlayer&&storyLevel===10&&['story','back'].includes(gameRoute)&&!isDeveloperPreview)
   showCongratulations(gameRoute);
 }
@@ -2071,15 +2091,34 @@ $('fracture-stage').addEventListener('click',toResult);
 $('result-prev').addEventListener('click',()=>selectResult(selectedStep-1));
 $('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
 
+function showFiveReward(backExtra=false){
+ const overlay=$('story-bonus');
+ $('story-bonus-title').textContent=backExtra?'5N BIRD +1!':'5N BIRD GET!';
+ overlay.querySelector('.bonus-badge').textContent=backExtra?'5N ×2':'5N ×1';
+ overlay.querySelector('.bonus-compare').innerHTML=backExtra?
+  '<span>🐦 <b>10N ×5</b></span><strong>+</strong><span>🐤 <b>5N ×2</b></span><strong>+</strong><span>🐦 <b>15N ×1</b></span>':
+  '<span>🐦 <b>10N ×5</b></span><strong>+</strong><span>🐤 <b>5N ×1</b></span>';
+ overlay.querySelector('.bonus-hint').textContent=backExtra?
+  '裏STORY · STAGE 02 · 青チームに5Nを1羽追加！':
+  'BLUE FIRST · 7m + 3m';
+ $('bonus-retry').textContent=backExtra?'5N ×2で再挑戦 →':'RETRY STAGE 02 →';
+ overlay.hidden=false;
+}
 $('rematch').addEventListener('click',()=>{
   if(mode!=='result')return;
   const lost=history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
-  if(gameRoute==='story'&&lost&&storyLevel===2&&!storyBonusUnlocked){$('story-bonus').hidden=false;return;}
+  if(gameRoute==='story'&&lost&&storyLevel===2&&!storyBonusUnlocked){showFiveReward(false);return;}
   if(gameRoute==='story'&&lost&&storyLevel===3&&!storyFatUnlocked){$('story-fat-bonus').hidden=false;return;}
   restart();
  });
 $('bonus-retry').addEventListener('click',()=>{
-  if(mode!=='result'||storyLevel!==2||storyBonusUnlocked)return;
+  if(mode!=='result'||storyLevel!==2)return;
+  if(gameRoute==='back'){
+   if(!backExtraFiveUnlocked)return;
+   $('story-bonus').hidden=true;
+   prepareGame();restart();return;
+  }
+  if(gameRoute!=='story'||storyBonusUnlocked)return;
   storyBonusUnlocked=true;setStoredFlag(STORY_BONUS_KEY);$('story-bonus').hidden=true;
   humanPlayer=0;stage=getStage('story2');limit=100;
   prepareGame();restart();
