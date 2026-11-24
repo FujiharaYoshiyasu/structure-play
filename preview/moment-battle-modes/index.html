@@ -695,6 +695,8 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     story6:createStage([3,5,2],{id:'story6',name:'STAGE 06',title:'ASYMMETRIC DOUBLE SWING'}),
     story7:createStage([4,5,1],{id:'story7',name:'STAGE 07',title:'OFFSET DOUBLE SWING'}),
     story8:createStage([5,2,3],{id:'story8',name:'STAGE 08',title:'CLOSE DOUBLE SWING'}),
+    story9:createStage([1,2,3,4],{id:'story9',name:'STAGE 09',title:'TRIPLE SWING'}),
+    story10:createStage([2,3,4,1],{id:'story10',name:'STAGE 10',title:'OFFSET TRIPLE SWING'}),
     stage1:createStage([1,2,3,4],{id:'stage1',name:'STAGE 01',title:'基本の梁'}),
     stage2:createStage([2,4,1,3],{id:'stage2',name:'STAGE 02',title:'変則フック配置'})
   });
@@ -793,7 +795,7 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     <div class="mode-sky"><div class="mode-sun"></div><span class="mode-cloud cloud-a"></span><span class="mode-cloud cloud-b"></span><div class="mode-ground"></div><span class="mode-bird bird-b">🐦</span><span class="mode-bird bird-o">🐤</span></div>
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
     <div class="mode-grid">
-      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 08</span><span class="mode-arrow">PLAY →</span></button>
+      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 10</span><span class="mode-arrow">PLAY →</span></button>
       <a class="mode-card mode-versus" href="../moment-battle-versus/"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">CLASSIC · 3 HOOKS</span><span class="mode-arrow">PLAY →</span></a>
     </div>
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
@@ -1624,7 +1626,7 @@ function buildResults(){
  $('result-description').textContent='';
  $('result-description').hidden=true;
  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
- const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||(storyLevel>=4&&storyLevel<8));
+ const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||(storyLevel>=4&&storyLevel<10));
  $('story-next').hidden=!advance;
  $('story-next').textContent='NEXT STAGE →';
  $('rematch').hidden=false;
@@ -1705,12 +1707,11 @@ $('bonus-retry').addEventListener('click',()=>{
    storyLevel=3;cpuLevel=10;humanPlayer=0;storyFatUnlocked=false;
  }else if(storyLevel===3&&won&&storyFatUnlocked){
    storyLevel=4;cpuLevel=10;humanPlayer=0;
- }else if(storyLevel===4&&won){
-   storyLevel=5;cpuLevel=10;humanPlayer=0;
- }else if(storyLevel>=4&&storyLevel<8&&won){
+ }else if(storyLevel>=4&&storyLevel<10&&won){
    storyLevel+=1;cpuLevel=10;humanPlayer=0;
  }else return;
- stage=getStage(stageId());limit=stageLimit();prepareGame();restart();
+ stage=getStage(stageId());limit=stageLimit();prepareGame();
+ if(storyLevel===4||storyLevel===9){showSwingAnnouncement();}else{restart();}
 });
 $('story-home').addEventListener('click',()=>{stopClock();clearHandoff();cancelBreak();clearDrag();$('mode-choice').hidden=false;openScreen('setup');});
 document.addEventListener('keydown',e=>{
@@ -1736,8 +1737,8 @@ $('story-rule-start').addEventListener('click',()=>{
 });
 // Preview-only deep link for development/testing. Does not change story progress.
 const devStage=new URLSearchParams(window.location.search).get('devStage');
-// Review-only direct entries: stages 6, 7, 8; not linked from the public site.
-if(['6','7','8'].includes(devStage)){
+// Review-only direct entries: stages 6-10; not linked from the public site.
+if(['6','7','8','9','10'].includes(devStage)){
  storyLevel=Number(devStage);
  storyBonusUnlocked=true;
  storyFatUnlocked=true;
