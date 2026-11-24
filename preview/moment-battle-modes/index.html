@@ -1282,7 +1282,79 @@ let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,comm
 const STREAK_KEY='moment-battle-story-preview-streak';
 const storage=(()=>{try{return window.localStorage;}catch(e){return null;}})();
 const STORY_CLEAR_KEY='moment-battle-story-ten-stage-clear-v1';
-try{storyCleared=storage?.getItem(STORY_CLEAR_KEY)==='1';}catch(e){storyCleared=false;}
+const STORY_PROGRESS_KEY='moment-battle-story-highest-v1';
+const BACK_PROGRESS_KEY='moment-battle-backstory-highest-v1';
+const STORY_BONUS_KEY='moment-battle-story-5N-earned-v1';
+const STORY_FAT_KEY='moment-battle-story-15N-earned-v1';
+function storedFlag(key){try{return storage?.getItem(key)==='1';}catch(e){return false;}}
+function setStoredFlag(key){try{storage?.setItem(key,'1');}catch(e){}}
+function storedLevel(key){
+ try{
+  const value=Number(storage?.getItem(key));
+  return Number.isInteger(value)?Math.min(10,Math.max(0,value)):0;
+ }catch(e){return 0;}
+}
+function saveLevel(key,level){try{storage?.setItem(key,String(Math.min(10,Math.max(0,level))));}catch(e){}}
+storyCleared=storedFlag(STORY_CLEAR_KEY);
+let storyHighest=storyCleared?10:storedLevel(STORY_PROGRESS_KEY);
+let backHighest=storedLevel(BACK_PROGRESS_KEY);
+if(storyHighest===10&&!storyCleared){storyCleared=true;setStoredFlag(STORY_CLEAR_KEY);}
+function highestCleared(route){return route==='back'?backHighest:storyHighest;}
+function noteStageVictory(){
+ if(isDeveloperPreview||!['story','back'].includes(gameRoute))return;
+ if(gameRoute==='story'){
+  if(storyLevel>storyHighest){
+   storyHighest=storyLevel;saveLevel(STORY_PROGRESS_KEY,storyHighest);
+  }
+  if(storyHighest===10)saveStoryClear();
+ }else if(storyLevel>backHighest){
+  backHighest=storyLevel;saveLevel(BACK_PROGRESS_KEY,backHighest);
+ }
+}
+function restoreStoryBirds(){
+ storyBonusUnlocked=storyHighest>=2||storedFlag(STORY_BONUS_KEY);
+ storyFatUnlocked=storyHighest>=3||storedFlag(STORY_FAT_KEY);
+}
+function startStoryLevel(route,level){
+ if(route==='back'&&!storyCleared)return;
+ if(!['story','back'].includes(route)||!Number.isInteger(level))return;
+ if(level<1||level>Math.min(10,highestCleared(route)+1))return;
+ isDeveloperPreview=false;
+ beginRoute(route,level);
+}
+function openStoryStageSelect(route){
+ if(route==='back'&&!storyCleared)return;
+ const grid=$('story-stage-grid');
+ grid.replaceChildren();
+ const highest=highestCleared(route),available=Math.min(10,highest+1);
+ $('story-select-title').textContent=route==='back'?'裏STORY · STAGE SELECT':'STORY · STAGE SELECT';
+ $('story-select-subtitle').textContent=route==='back'?'HARD MODE · CPU HAS 5N + 15N':'STORY · PROGRESS';
+ $('story-select-progress').textContent=highest===10?'全10ステージクリア！ 好きなステージに挑戦できます。':
+  highest+' / 10 CLEAR · 次はSTAGE '+String(available).padStart(2,'0');
+ for(let level=1;level<=10;level++){
+  const st=getStage(stageId(level)),button=document.createElement('button');
+  const cleared=level<=highest,next=level===highest+1;
+  button.type='button';button.className='story-stage-card '+(cleared?'is-clear':next?'is-next':'is-locked');
+  button.disabled=level>available;
+  const strong=document.createElement('strong');
+  strong.textContent='STAGE '+String(level).padStart(2,'0');
+  const lengths=document.createElement('small');lengths.textContent=st.intervals.join(' + ')+'m';
+  const state=document.createElement('span');state.textContent=cleared?'✓ CLEAR':next?'▶ NEXT':'🔒 LOCKED';
+  button.append(strong,lengths,state);
+  button.setAttribute('aria-label',strong.textContent+', '+lengths.textContent+', '+state.textContent);
+  if(!button.disabled)button.addEventListener('click',()=>startStoryLevel(route,level));
+  grid.append(button);
+ }
+ dismissAllModeOverlays();$('story-select').hidden=false;
+}
+function showCongratulations(route){
+ const isNormal=route==='story';
+ $('congrats-kicker').textContent=isNormal?'STORY COMPLETE · 10 / 10':'裏STORY COMPLETE · 10 / 10';
+ $('congrats-title').textContent='CONGRATULATIONS!';
+ $('congrats-message').textContent=isNormal?'全10ステージクリア！ おめでとうございます！':'裏STORY 全10ステージ制覇！';
+ $('congrats-unlocks').hidden=!isNormal;
+ $('congrats-screen').hidden=false;
+}
 function unlockModes(){
  if(!storyCleared)return;
  for(const id of ['backstory-choice','edit-choice'])$(id).disabled=false;
@@ -1296,18 +1368,25 @@ function saveStoryClear(){
  unlockModes();
 }
 function dismissAllModeOverlays(){
- for(const id of ['mode-choice','versus-select','story-rules','story-bonus','story-fat-bonus','swing-announcement'])$(id).hidden=true;
+ for(const id of ['title-screen','mode-choice','versus-select','story-select','congrats-screen','story-rules','story-bonus','story-fat-bonus','swing-announcement'])$(id).hidden=true;
 }
 function returnToModeMenu(){
  stopClock();clearHandoff();cancelBreak();clearDrag();
  dismissAllModeOverlays();openScreen('setup');
  $('mode-choice').hidden=false;unlockModes();
 }
+function returnToTitle(){
+ stopClock();clearHandoff();cancelBreak();clearDrag();
+ dismissAllModeOverlays();openScreen('setup');
+ $('title-screen').hidden=false;unlockModes();
+}
 function beginRoute(route,level=1){
+ if(['story','back'].includes(route)&&(level<1||level>highestCleared(route)+1))return;
+ if((route==='back'||route==='edit')&&!storyCleared)return;
  gameRoute=route;storyLevel=level;cpuLevel=10;humanPlayer=0;
  storyBonusUnlocked=route==='back'||route==='versus'||route==='edit';
  storyFatUnlocked=route==='back'||route==='versus'||route==='edit';
- if(route==='story'){storyBonusUnlocked=false;storyFatUnlocked=false;}
+ if(route==='story')restoreStoryBirds();
  stage=getStage(stageId());limit=100;turnSeconds=30;
  dismissAllModeOverlays();
  if(route==='edit'){
