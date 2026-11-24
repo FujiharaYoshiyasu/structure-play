@@ -941,7 +941,7 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     <div class="mode-sky"><div class="mode-sun"></div><span class="mode-cloud cloud-a"></span><span class="mode-cloud cloud-b"></span><div class="mode-ground"></div><span class="mode-bird bird-b">🐦</span><span class="mode-bird bird-o">🐤</span></div>
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
     <div class="mode-grid">
-      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 10</span><span class="mode-arrow">PLAY →</span></button>
+      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 10</span><span class="mode-arrow">SELECT →</span></button>
       <button type="button" id="versus-choice" class="mode-card mode-versus"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">10 STAGES · 2 PLAYERS</span><span class="mode-arrow">SELECT →</span></button>
       <button type="button" id="backstory-choice" class="mode-card mode-backstory" disabled><span class="mode-icon">🌙</span><span class="mode-name">裏STORY</span><span class="mode-detail">STAGE 01 → 10 · CPU SPECIAL BIRDS</span><span class="mode-arrow" id="backstory-lock">🔒 STORY CLEAR</span></button>
       <button type="button" id="edit-choice" class="mode-card mode-edit" disabled><span class="mode-icon">🛠️</span><span class="mode-name">EDIT</span><span class="mode-detail">FREE BEAM / RULE SETTINGS</span><span class="mode-arrow" id="edit-lock">🔒 STORY CLEAR</span></button>
@@ -1362,7 +1362,7 @@ function showCongratulations(route){
 function unlockModes(){
  if(!storyCleared)return;
  for(const id of ['backstory-choice','edit-choice'])$(id).disabled=false;
- $('backstory-lock').textContent='PLAY →';
+ $('backstory-lock').textContent='SELECT →';
  $('edit-lock').textContent='OPEN →';
 }
 function saveStoryClear(){
@@ -2154,8 +2154,13 @@ $('story-rule-start').addEventListener('click',()=>{
 });
 // Preview-only deep link for development/testing. Does not change story progress.
 const devStage=new URLSearchParams(window.location.search).get('devStage');
-// Review-only direct entries: stages 6-10; not linked from the public site.
-if(['6','7','8','9','10'].includes(devStage)){
+const devScreen=new URLSearchParams(window.location.search).get('devScreen');
+// Design-only shortcut to inspect the victory presentation, without altering progress.
+if(devScreen==='congrats'){
+ isDeveloperPreview=true;dismissAllModeOverlays();openScreen('setup');
+ showCongratulations('story');
+ $('congrats-kicker').textContent='DESIGN PREVIEW · STORY COMPLETE';
+}else if(['6','7','8','9','10'].includes(devStage)){
  gameRoute='story';isDeveloperPreview=true;
  storyLevel=Number(devStage);
  storyBonusUnlocked=true;
