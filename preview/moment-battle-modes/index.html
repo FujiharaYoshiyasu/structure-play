@@ -301,7 +301,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 .cage-row{display:grid;grid-template-columns:minmax(0,1fr) 98px minmax(0,1fr);gap:10px;flex:none;min-height:124px}
 .bird-cage{position:relative;overflow:hidden;min-width:0;border:3px solid #b3d5d1;border-radius:18px;padding:7px 10px 9px;display:flex;flex-direction:column;gap:6px;transition:background .2s,border-color .2s,box-shadow .2s}
 .bird-cage.blue-cage{--bird-color:#2584ec;--bird-dark:#115cae;--bird-wing:#bfe5ff;background:#e5f3ff}
-.bird-cage.orange-cage{--bird-color:#fa8a31;--bird-dark:#b45d1b;--bird-wing:#ffe4b4;background:#fff0dc}
+.bird-cage.orange-cage{--bird-color:#e94355;--bird-dark:#ac3041;--bird-wing:#ffd0d7;background:#ffedf0}
 .cage-label{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;font-weight:1000;font-size:14px;letter-spacing:1px;color:var(--bird-dark)}
 .cage-label small{font-size:10px;opacity:.8}
 .cage-tokens{display:flex;align-items:center;justify-content:center;gap:9px;position:relative;z-index:2;flex:1}
@@ -572,7 +572,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 <div class="cpu-controls-grid">
 <label>OPPONENT<select id="match-mode"><option value="cpu">VS CPU</option><option value="local">2 PLAYERS</option></select></label>
 <label id="cpu-level-wrap">CPU LEVEL<select id="cpu-level"></select></label>
-<label id="human-side-wrap">YOUR TEAM<select id="human-side"><option value="0">BLUE / 1ST</option><option value="1">ORANGE / 2ND</option></select></label>
+<label id="human-side-wrap">YOUR TEAM<select id="human-side"><option value="0">BLUE / 1ST</option><option value="1">RED / 2ND</option></select></label>
 </div><div id="setup-streak" class="streak-chip" aria-live="polite"></div></div>
         </section>
         <section class="panel setup-rules"><span class="eyebrow">FAILURE RULE / LOADS</span><h3>M LIMIT</h3>
@@ -600,7 +600,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
       <div class="battle-topline">
         <div class="battle-team player-blue" id="player0"><span class="eyebrow">PLAYER 01</span><strong>● BLUE</strong><small id="bonus0">5N · 残り1回</small><small id="role0" class="cpu-role"></small></div>
         <div class="turn-center"><span id="turn-indicator">● BLUE TURN</span><strong id="turn-label">BLUE TURN</strong><div class="turn-clock" id="turn-clock" aria-live="off"><span class="clock-icon" aria-hidden="true">◷</span><strong id="turn-timer">30</strong><span id="timer-unit">s</span></div></div>
-        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● ORANGE</strong><small id="bonus1">5N · 残り1回</small><small id="role1" class="cpu-role"></small></div>
+        <div class="battle-team player-orange" id="player1"><span class="eyebrow">PLAYER 02</span><strong>● RED</strong><small id="bonus1">5N · 残り1回</small><small id="role1" class="cpu-role"></small></div>
       </div>
       <div class="battle-toolbar">
         <span class="stage-info" id="battle-stage-info">CENTER · 5m + 5m</span>
@@ -612,7 +612,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
  <div class="cage-row" id="cage-row">
   <div class="bird-cage blue-cage" id="cage-blue" aria-label="BLUE bird cage"></div>
   <div class="drag-hint" id="drag-hint"><span class="hint-arrow">↓</span><strong>BLUE<br>FIRST</strong><small>DRAG ↓</small></div>
-  <div class="bird-cage orange-cage" id="cage-orange" aria-label="ORANGE bird cage"></div>
+  <div class="bird-cage orange-cage" id="cage-orange" aria-label="RED bird cage"></div>
  </div>
  <div class="beam-stage swing-scene" id="drop-scene"><svg id="beam-svg" viewBox="0 0 900 298" role="img" aria-label="Center swing"></svg></div>
  <div class="bird-play-foot"><strong id="turn-help">BLUE FIRST · DRAG ↓</strong><span id="swing-spacing">5m ─ ● ─ 5m</span></div>
@@ -865,7 +865,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
   <div class="quick-grid">
    <label>MODE<select id="quick-mode"><option value="local">2 PLAYERS</option><option value="cpu">VS CPU</option></select></label>
    <label>CPU Lv<select id="quick-level"></select></label>
-   <label>YOU<select id="quick-side"><option value="0">BLUE</option><option value="1">ORANGE</option></select></label>
+   <label>YOU<select id="quick-side"><option value="0">BLUE</option><option value="1">RED</option></select></label>
    <label>M LIMIT<input id="quick-limit" type="number" min="1" max="10000" step="1" value="100"></label>
    <label>TIME / TURN<select id="quick-time"><option value="10">10s</option><option value="15">15s</option><option value="20">20s</option><option value="25">25s</option><option value="30" selected>30s</option><option value="35">35s</option><option value="40">40s</option><option value="45">45s</option><option value="50">50s</option><option value="55">55s</option><option value="60">60s</option><option value="none">∞</option></select></label>
   </div>
@@ -890,7 +890,7 @@ function fatLeft(player,turns=history){return hasFat(player)&&!turns.some((m,i)=
 function stageLimit(){return 100;}
 function stageId(level=storyLevel){return level===1?'center':level===2?'story2':level===3?'story3':level===4?'story4':level===5?'story5':'story6';}
 function buildCages(){
- const labels=['BLUE','ORANGE'];
+ const labels=['BLUE','RED'];
  for(let player=0;player<2;player++){
   const card=$('cage-'+(player?'orange':'blue'));card.replaceChildren();
   const heading=document.createElement('div');heading.className='cage-label';
@@ -1025,7 +1025,7 @@ function updateCages(){
   slot.classList.toggle('is-empty',force===WEIGHT?remainingBirds(player)===0:force===SPECIAL_WEIGHT?!bonusLeft(player):!fatLeft(player));
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
- hint.innerHTML='<span class="hint-arrow">↓</span><strong>'+(turn?'ORANGE':'BLUE')+'<br>'+(history.length?'TURN':'FIRST')+'</strong><small>'+(cpuTurn()?'CPU…':'DRAG ↓')+'</small>';
+ hint.innerHTML='<span class="hint-arrow">↓</span><strong>'+(turn?'RED':'BLUE')+'<br>'+(history.length?'TURN':'FIRST')+'</strong><small>'+(cpuTurn()?'CPU…':'DRAG ↓')+'</small>';
 }
 function openQuick(){
  if(mode!=='battle')return;
@@ -1060,7 +1060,7 @@ function initQuick(){
 
 const {undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove}=MomentGameState;
 const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
-const names=['青チーム','橙チーム'];
+const names=['青チーム','赤チーム'];
 let storyLevel=1,storyBonusUnlocked=false,storyFatUnlocked=false;
 let mode='setup',stage=getStage('center'),stageChoice='center',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
 let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
@@ -1283,9 +1283,9 @@ function drawBird(parent,x,y,player,force,scale=1,classes=''){
  const small=force===SPECIAL_WEIGHT,fat=force===FAT_WEIGHT;
  const k=scale*(small?.74:fat?1.18:1);
  const g=svg('g',{class:classes,transform:`translate(${x} ${y}) scale(${k})`},parent);
- const base=player===0?'#2584ec':'#ff8a31';
- const dark=player===0?'#1558a9':'#c45a20';
- const belly=player===0?'#bfe7ff':'#ffe3ba';
+ const base=player===0?'#2584ec':'#ee4354';
+ const dark=player===0?'#1558a9':'#aa263c';
+ const belly=player===0?'#bfe7ff':'#ffd3d8';
  svg('ellipse',{cx:0,cy:2,rx:fat?22:18,ry:fat?20:17,fill:base,stroke:'#34384b','stroke-width':2},g);
  svg('ellipse',{cx:1,cy:10,rx:fat?15:12,ry:fat?9:7,fill:belly},g);
  svg('path',{d:'M-9 -13 Q-13 -27 -3 -21 M1 -13 Q-1 -28 8 -23',fill:'none',stroke:dark,'stroke-width':4,'stroke-linecap':'round'},g);
@@ -1389,7 +1389,7 @@ function drawPlot(el,data,previous=null,player=null){
  });
  const path=pts=>pts.map((p,i)=>`${i?'L':'M'} ${X(p.x)} ${Y(p.m)}`).join(' ');
  if(previous)svg('path',{d:path(previous.points),fill:'none',stroke:'#92a6a9','stroke-dasharray':'8 7','stroke-width':3},el);
- const color=player===1?'#f1852d':'#267bdc';
+ const color=player===1?'#e04455':'#267bdc';
  svg('path',{d:path(data.points)+` L ${X(span())} ${Y(0)} Z`,fill:color,'fill-opacity':'.16'},el);
  svg('path',{d:path(data.points),fill:'none',stroke:color,'stroke-width':5,'stroke-linejoin':'round','stroke-linecap':'round'},el);
  data.points.forEach(pt=>svg('circle',{cx:X(pt.x),cy:Y(pt.m),r:4,fill:'#ffffff',stroke:color,'stroke-width':2},el));
@@ -1402,12 +1402,12 @@ function render(){
  const data=fromHistory(history,stage,limit),turn=history.length%2,used=specialUsed(history,turn,stage);
  document.body.dataset.turnTheme=turn?'orange':'blue';
  document.body.dataset.moments=showMoments?'shown':'hidden';
- $('turn-indicator').textContent=turn?'● ORANGE TURN':'● BLUE TURN';
- $('turn-label').textContent=turn?'ORANGE TURN':'BLUE TURN';
+ $('turn-indicator').textContent=turn?'● RED TURN':'● BLUE TURN';
+ $('turn-label').textContent=turn?'RED TURN':'BLUE TURN';
  $('undo').disabled=!history.length;
  $('battle-streak').hidden=true;
  $('battle-streak').textContent='';
- $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'ORANGE':'BLUE')+' · DRAG BIRD ↓';
+ $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'RED':'BLUE')+' · DRAG BIRD ↓';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
    $(`bonus${i}`).textContent='10N ×'+remainingBirds(i)+(bonusLeft(i)?' + 5N ×1':'');
@@ -1441,7 +1441,7 @@ function render(){
  if(!history.length){const li=document.createElement('li');li.textContent='—';list.append(li);}
  history.map((move,i)=>({move,i})).reverse().forEach(({move,i})=>{
    const li=document.createElement('li'),a=document.createElement('span'),b=document.createElement('b');
-   a.className=i%2?'orange':'blue';a.textContent=`${i+1} · ${i%2?'ORANGE':'BLUE'}`;
+   a.className=i%2?'orange':'blue';a.textContent=`${i+1} · ${i%2?'RED':'BLUE'}`;
    const m=showMoments?` · M=${fmt(fromHistory(history.slice(0,i+1),stage,limit).maxMoment)}`:'';
    b.textContent=`${hookName(move.x)} / ${move.p}N${move.auto?' (AUTO)':''}${m}`;li.append(a,b);list.append(li);
  });
@@ -1515,7 +1515,7 @@ function showHandoff(initial=false,automatic=false){
  popup.hidden=false;popup.dataset.player=player===0?'blue':'orange';
  $('popup-bird').textContent=player===0?'🐦':'🐤';
  $('popup-kicker').textContent=initial?'READY?':'NEXT TURN!';
- $('popup-title').textContent=player?'ORANGE TURN!':'BLUE TURN!';
+ $('popup-title').textContent=player?'RED TURN!':'BLUE TURN!';
  $('popup-subtitle').textContent=cpuTurn()?'CPU THINKING':automatic?'TIME OUT · AUTO +10N':'YOUR MOVE';
  $('popup-continue').textContent=initial?'PLAY →':'GO →';
  updateClock(turnSeconds===null?0:turnSeconds*1000);
@@ -1604,7 +1604,7 @@ function buildResults(){
  const steps=resultSteps(),last=steps.at(-1);
  if(!last)return;
  const winner=1-last.player,playerWon=winner===humanPlayer;
- $('result-winner').textContent=winner===0?'BLUE WIN':'ORANGE WIN';
+ $('result-winner').textContent=winner===0?'BLUE WIN':'RED WIN';
  $('result-description').textContent='';
  $('result-description').hidden=true;
  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
@@ -1626,7 +1626,7 @@ function buildResults(){
    const X=x=>5+x/span()*110,Y=m=>5+m/Math.max(limit*1.1,step.analysis.maxMoment*1.1)*44;
    const d=step.analysis.points.map((p,j)=>`${j?'L':'M'} ${X(p.x)} ${Y(p.m)}`).join(' ');
    svg('line',{x1:5,x2:115,y1:Y(limit),y2:Y(limit),stroke:'#dc8181','stroke-dasharray':'4 4'},mini);
-   svg('path',{d,fill:'none',stroke:step.player?'#f1852d':'#267bdc','stroke-width':3},mini);
+   svg('path',{d,fill:'none',stroke:step.player?'#e04455':'#267bdc','stroke-width':3},mini);
    b.append(meta,mini);b.addEventListener('click',()=>selectResult(i));box.append(b);
  });
  selectResult(steps.length-1);
@@ -1635,7 +1635,7 @@ function selectResult(n){
  const steps=resultSteps();if(!steps.length)return;
  selectedStep=Math.max(0,Math.min(n,steps.length-1));
  const s=steps[selectedStep],prev=selectedStep>0?steps[selectedStep-1]:null;
- $('result-step-label').textContent=`TURN ${s.turn} · ${s.player?'ORANGE':'BLUE'} · ${s.move.p}N`;
+ $('result-step-label').textContent=`TURN ${s.turn} · ${s.player?'RED':'BLUE'} · ${s.move.p}N`;
  $('result-step-m').textContent=`MAX M ${fmt(s.analysis.maxMoment)} N·m`;
  $('result-step-m').style.color=s.player?'#dd6727':'#176cc4';
  $('result-step-detail').textContent=`M: ${fmt(s.previousMax)} → ${fmt(s.analysis.maxMoment)} N·m`;
