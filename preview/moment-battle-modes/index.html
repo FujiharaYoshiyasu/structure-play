@@ -1308,7 +1308,7 @@ function buildSetup(){
    const title=document.createElement('strong');title.textContent=s.name;
    const bar=document.createElement('div');bar.className='stage-segments';
    s.intervals.forEach(n=>{const e=document.createElement('span');e.style.flex=String(n);e.textContent=`${n}m`;bar.appendChild(e);});
-   const sub=document.createElement('small');sub.textContent=`${fmt(s.span)}m · 3 HOOKS`;
+   const sub=document.createElement('small');sub.textContent=`${fmt(s.span)}m · ${s.hooks.length} SWING${s.hooks.length===1?'':'S'}`;
    b.append(code,title,bar,sub);
    b.addEventListener('click',()=>{stageChoice=s.id;fillIntervals(s.intervals);updateSetup();});options.append(b);
  });
@@ -1323,23 +1323,25 @@ function buildSetup(){
  $('start-game').addEventListener('click',start);
  updateSetup();
 }
-function fillIntervals(intervals){intervals.forEach((n,i)=>{$(`interval-${i}`).value=String(n);});}
+function fillIntervals(intervals){for(let i=0;i<4;i++)$(`interval-${i}`).value=intervals[i]===undefined?'':String(intervals[i]);}
 function readSetup(){
- const lengths=[0,1,2,3].map(i=>{const el=$(`interval-${i}`);return el.value.trim()===''?NaN:Number(el.value);});
+ const isCustom=stageChoice==='custom';
+ const lengths=isCustom?[0,1,2,3].map(i=>{const el=$(`interval-${i}`);return el.value.trim()===''?NaN:Number(el.value);}):
+  getStage(stageChoice).intervals.slice();
  if(lengths.some(n=>!Number.isFinite(n)||n<=0))throw new Error('区間寸法はすべて0より大きい数で指定してください。');
  const sum=lengths.reduce((a,b)=>a+b,0);
  if(sum<1||sum>100)throw new Error('梁の全長は1〜100mにしてください。');
  const entered=$('limit-input').value.trim(),m=entered===''?NaN:Number(entered);
  if(!Number.isFinite(m)||m<1||m>10000)throw new Error('限界曲げモーメントは1〜10000 N·mで設定してください。');
  const seconds=normalizeTurnSeconds($('turn-seconds').value,$('no-time-limit').checked);
- const s=stageChoice==='custom'?createStage(lengths):getStage(stageChoice);
+ const s=isCustom?createStage(lengths):getStage(stageChoice);
  const opponent=$('match-mode').value,lv=Number($('cpu-level').value),side=Number($('human-side').value);
  if(!['cpu','local'].includes(opponent)||!Number.isInteger(lv)||lv<1||lv>10||![0,1].includes(side))throw new Error('CPU設定が正しくありません。');
  return {stage:s,limit:m,turnSeconds:seconds,matchMode:opponent,cpuLevel:lv,humanPlayer:side};
 }
 function updateSetup(){
  document.querySelectorAll('[data-stage]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stage===stageChoice)));
- const values=[0,1,2,3].map(i=>Number($(`interval-${i}`).value));
+ const values=stageChoice==='custom'?[0,1,2,3].map(i=>Number($(`interval-${i}`).value)):getStage(stageChoice).intervals.slice();
  $('setup-preview').replaceChildren();
  if(values.every(v=>v>0&&Number.isFinite(v))){
    values.forEach(v=>{const el=document.createElement('span');el.style.flex=String(v);el.textContent=`${fmt(v)}m`;$('setup-preview').append(el);});
