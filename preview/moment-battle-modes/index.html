@@ -949,14 +949,16 @@ function dragAllowed(player,force){
   (force===WEIGHT?remainingBirds(player)>0:force===SPECIAL_WEIGHT?bonusLeft(player):force===FAT_WEIGHT?fatLeft(player):false);
 }
 function swingIndexAt(x,y){
- // Each hook gets a separate pointer target in STAGE 04.
+ // Choose the nearest of the two swing hitboxes if their touch margins overlap.
  const targets=[...document.querySelectorAll('#beam-svg [data-drop-hook]')];
+ let closest=-1,distance=Infinity;
  for(const target of targets){
   const r=target.getBoundingClientRect(),pad=10;
-  if(x>=r.left-pad&&x<=r.right+pad&&y>=r.top-pad&&y<=r.bottom+pad)
-    return Number(target.dataset.dropHook);
+  if(x<r.left-pad||x>r.right+pad||y<r.top-pad||y>r.bottom+pad)continue;
+  const d=Math.abs(x-(r.left+r.right)/2);
+  if(d<distance){closest=Number(target.dataset.dropHook);distance=d;}
  }
- return -1;
+ return closest;
 }
 function showDragGhost(x,y,player,force){
  const ghost=$('bird-drag-ghost');ghost.hidden=false;
