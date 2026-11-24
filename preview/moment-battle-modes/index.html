@@ -603,6 +603,73 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .mode-choice{align-items:safe center}
 .mode-grid .mode-card{justify-content:center}
 @media(max-width:650px){.mode-shell{max-height:calc(100dvh - 12px)}.mode-grid .mode-card{gap:4px}.mode-grid .mode-icon{font-size:28px}.mode-grid .mode-arrow{margin-top:1px;padding:6px 10px}.mode-grid .mode-tag{padding:2px 7px;font-size:10px}}
+
+/* Intro title, persistent stage progression and chapter clear screen */
+.title-screen,.story-select,.congrats-screen{
+ position:fixed;inset:0;z-index:225;display:grid;place-items:center;
+ padding:14px;overflow:auto;background:linear-gradient(155deg,#a9e9ff,#e7f8d9);
+}
+.title-card{width:min(735px,100%);max-height:96dvh;overflow:auto;background:#fffef4;border:5px solid #6cb89a;
+ border-radius:30px;box-shadow:0 13px 0 #4f9d87,0 28px 55px #3b6c7450;text-align:center;color:#2c7163;padding:20px 23px 18px}
+.title-topline,.title-footer{font-size:11px;font-weight:1000;letter-spacing:1.3px;color:#529a8c}
+.title-art{width:100%;border:4px solid #9dcfb0;border-radius:22px;overflow:hidden;margin-top:11px;background:#9ce1ff}
+.title-art svg{width:100%;height:auto;display:block}
+.title-heading-group{padding:8px 0}
+.title-kicker{font-size:12px;font-weight:1000;color:#4a9e88;letter-spacing:2px}
+.title-heading-group h1{font-size:clamp(33px,7.4vw,62px);margin:0;color:#1d6f9b;font-weight:1000;line-height:1.2;letter-spacing:1px;text-shadow:2px 3px 0 #c2efff}
+.title-heading-group h1 em{font-style:normal;color:#e45f43}
+.title-heading-group p{font-size:clamp(12px,2.2vw,17px);font-weight:900;color:#598378;margin:6px 0 10px}
+.title-enter,.congrats-title-back{cursor:pointer;border-radius:17px;border:3px solid #bf7e34;background:#ffaa47;color:white;
+ font-size:19px;font-weight:1000;padding:12px 30px;box-shadow:0 6px 0 #a8713d;min-width:min(300px,100%)}
+.title-footer{padding-top:14px}
+.story-select{z-index:184}
+.story-select-card{width:min(740px,100%);max-height:95dvh;overflow:auto;text-align:center;background:#fffef3;
+ color:#28665e;border:5px solid #70b8a0;border-radius:25px;padding:18px 22px;box-shadow:0 12px 0 #579c88,0 25px 45px #3d787055}
+.story-select-header{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:1000;color:#579d87}
+#story-select-back{border:2px solid #9fc7b0;background:#e9f7e9;padding:7px 13px;border-radius:10px;color:#376b60;font-weight:1000}
+.story-select-card h2{font-size:clamp(22px,4.5vw,34px);margin:8px 0;font-weight:1000;color:#2d776b}
+.story-select-card p{margin:4px 0 15px;font-size:12px;font-weight:900;color:#638c7e}
+.story-stage-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.story-stage-card{display:grid;gap:4px;min-width:0;min-height:94px;border:3px solid #b3c5c2;border-radius:13px;
+ background:#f0f1ef;color:#7c8987;padding:10px 5px;text-align:center;font:inherit}
+.story-stage-card strong{font-size:17px;font-weight:1000}
+.story-stage-card small{font-size:10px}
+.story-stage-card span{font-size:11px;font-weight:1000}
+.story-stage-card.is-clear{background:#e5fbeb;border-color:#71bf90;color:#2c8060;cursor:pointer}
+.story-stage-card.is-next{background:#fff3c6;border-color:#e5b24d;color:#956228;box-shadow:0 4px 0 #d6b46f;cursor:pointer}
+.story-stage-card[disabled]{cursor:not-allowed;opacity:1}
+.story-stage-card.is-clear:hover,.story-stage-card.is-next:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.story-select-legend{margin-top:15px;display:flex;flex-wrap:wrap;gap:13px;justify-content:center;font-size:11px;font-weight:1000;color:#6b8b7d}
+.congrats-screen{z-index:240;background:radial-gradient(circle at 50% 12%,#fff5b2,#91dfff 65%,#9ce3b4)}
+.congrats-card{width:min(630px,100%);max-height:94dvh;overflow:auto;padding:24px 19px 27px;text-align:center;display:grid;justify-items:center;gap:13px;
+ border:5px solid #dca845;border-radius:30px;background:#fffef2;box-shadow:0 15px 0 #bb8b30,0 28px 55px #8f752a55;color:#996522}
+.congrats-stars{font-size:32px;letter-spacing:12px;color:#e8a535}
+.congrats-kicker{font-size:12px;font-weight:1000;letter-spacing:1.6px;color:#bd863c}
+.congrats-card h2{font-size:clamp(27px,5.5vw,43px);line-height:1.1;font-weight:1000;margin:0;color:#e69a26}
+.congrats-birds{display:flex;align-items:center;gap:15px;font-size:50px}
+.congrats-birds .congrats-trophy{font-size:68px}
+.congrats-card p{font-size:16px;font-weight:950;color:#8f6f3c;margin:0}
+.congrats-unlocks{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.congrats-unlocks div{display:grid;gap:5px;justify-items:center;background:#e7f8ef;border:3px solid #8ac9a3;border-radius:17px;padding:14px 5px;color:#367e61}
+.congrats-unlocks span{font-size:35px}
+.congrats-unlocks strong{font-size:15px}
+@media(max-width:650px){
+ .title-screen,.story-select,.congrats-screen{padding:7px}
+ .title-card,.story-select-card,.congrats-card{border-width:3px;border-radius:20px;padding:11px 10px 14px}
+ .title-art{border-width:2px;margin-top:7px}
+ .title-heading-group h1{font-size:36px}
+ .title-enter,.congrats-title-back{font-size:15px;padding:10px 16px}
+ .story-stage-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .story-stage-card{min-height:62px;padding:6px 4px}
+ .story-stage-card strong{font-size:14px}
+ .congrats-card{gap:7px}
+ .congrats-stars{font-size:21px}
+ .congrats-birds{font-size:38px}
+ .congrats-birds .congrats-trophy{font-size:52px}
+ .congrats-unlocks div{padding:8px 3px}
+ .congrats-unlocks span{font-size:23px}
+ .congrats-unlocks strong{font-size:12px}
+}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -830,7 +897,46 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 });
 
 </script>
-<div id="mode-choice" class="mode-choice" role="dialog" aria-modal="true" aria-label="Choose game mode">
+<div id="title-screen" class="title-screen" role="dialog" aria-modal="true" aria-labelledby="title-screen-heading">
+  <div class="title-card">
+    <div class="title-topline">BIRD BRIDGE · A STRUCTURAL MECHANICS GAME</div>
+    <div class="title-art" role="img" aria-label="青と赤の小鳥が橋のブランコで対決するイラスト">
+      <svg viewBox="0 0 640 255" aria-hidden="true">
+        <defs>
+          <linearGradient id="title-sky" x2="0" y2="1"><stop stop-color="#90dcff"/><stop offset="1" stop-color="#effde9"/></linearGradient>
+        </defs>
+        <rect width="640" height="255" fill="url(#title-sky)" rx="24"/>
+        <circle cx="539" cy="46" r="31" fill="#ffe17c"/>
+        <path d="M0 214 Q100 182 200 223 T440 220 T640 215V255H0Z" fill="#8fe0a0"/>
+        <path d="M0 180Q75 162 124 182V255H0ZM516 182Q575 166 640 180V255H516Z" fill="#60c57c"/>
+        <rect x="105" y="90" width="430" height="18" rx="7" fill="#bf854b" stroke="#81512c" stroke-width="4"/>
+        <path d="M108 108l-15 22h30zM532 108l-15 22h30z" fill="#419975"/>
+        <path d="M228 108V190M272 108V190M380 108V190M424 108V190" stroke="#987048" stroke-width="4"/>
+        <rect x="215" y="189" width="70" height="10" rx="5" fill="#bd8a50"/>
+        <rect x="367" y="189" width="70" height="10" rx="5" fill="#bd8a50"/>
+        <g transform="translate(250 169)">
+          <ellipse rx="27" ry="24" fill="#3796ed" stroke="#2267b8" stroke-width="3"/>
+          <ellipse cy="11" rx="17" ry="10" fill="#cfebff"/>
+          <circle cx="11" cy="-6" r="6" fill="white"/><circle cx="13" cy="-6" r="3" fill="#213448"/>
+          <path d="M23 -2l13 5-13 8z" fill="#ffd46a"/>
+          <path d="M-5-22l-3-14 12 13 8-15 4 18" fill="#266cb4"/>
+        </g>
+        <g transform="translate(402 168)">
+          <ellipse rx="27" ry="24" fill="#ec5566" stroke="#b9344b" stroke-width="3"/>
+          <ellipse cy="11" rx="17" ry="10" fill="#ffd6df"/>
+          <circle cx="11" cy="-6" r="6" fill="white"/><circle cx="13" cy="-6" r="3" fill="#213448"/>
+          <path d="M23 -2l13 5-13 8z" fill="#ffd46a"/>
+          <path d="M-5-22l-3-14 12 13 8-15 4 18" fill="#b9344b"/>
+        </g>
+        <path d="M304 144l14-20 8 13 14-20" fill="none" stroke="#f4ab37" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="title-heading-group"><span class="title-kicker">PLAY · LEARN · THINK</span><h1 id="title-screen-heading">MOMENT <em>BATTLE</em></h1><p>鳥たちと一緒に、曲げモーメントを攻略しよう。</p></div>
+    <button type="button" id="title-enter" class="title-enter">メニューに進む <span aria-hidden="true">→</span></button>
+    <div class="title-footer">STRUCTURE & PLAY</div>
+  </div>
+</div>
+<div id="mode-choice" class="mode-choice" role="dialog" aria-modal="true" aria-label="Choose game mode" hidden>
   <div class="mode-shell">
     <div class="mode-sky"><div class="mode-sun"></div><span class="mode-cloud cloud-a"></span><span class="mode-cloud cloud-b"></span><div class="mode-ground"></div><span class="mode-bird bird-b">🐦</span><span class="mode-bird bird-o">🐤</span></div>
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
@@ -841,6 +947,29 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
       <button type="button" id="edit-choice" class="mode-card mode-edit" disabled><span class="mode-icon">🛠️</span><span class="mode-name">EDIT</span><span class="mode-detail">FREE BEAM / RULE SETTINGS</span><span class="mode-arrow" id="edit-lock">🔒 STORY CLEAR</span></button>
     </div>
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
+  </div>
+</div>
+<div id="story-select" class="story-select" role="dialog" aria-modal="true" aria-labelledby="story-select-title" hidden>
+  <div class="story-select-card">
+    <div class="story-select-header"><button type="button" id="story-select-back">← BACK</button><span id="story-select-subtitle">STORY · PROGRESS</span></div>
+    <h2 id="story-select-title">STORY · STAGE SELECT</h2>
+    <p id="story-select-progress">クリアしたステージと、次のステージに挑戦できます。</p>
+    <div id="story-stage-grid" class="story-stage-grid"></div>
+    <div class="story-select-legend"><span>✓ CLEAR</span><span>▶ NEXT</span><span>🔒 LOCKED</span></div>
+  </div>
+</div>
+<div id="congrats-screen" class="congrats-screen" role="dialog" aria-modal="true" aria-labelledby="congrats-title" hidden>
+  <div class="congrats-card">
+    <div class="congrats-stars" aria-hidden="true">✦　★　✦</div>
+    <span class="congrats-kicker" id="congrats-kicker">STORY COMPLETE · 10 / 10</span>
+    <h2 id="congrats-title">CONGRATULATIONS!</h2>
+    <div class="congrats-birds" aria-hidden="true"><span>🐦</span><span class="congrats-trophy">🏆</span><span>🐦</span></div>
+    <p id="congrats-message">全10ステージクリア！ おめでとうございます！</p>
+    <div id="congrats-unlocks" class="congrats-unlocks">
+      <div><span>🌙</span><strong>裏STORY 解放！</strong></div>
+      <div><span>🛠️</span><strong>EDIT 解放！</strong></div>
+    </div>
+    <button type="button" id="congrats-title-back" class="congrats-title-back">タイトルに戻る →</button>
   </div>
 </div>
 <div id="versus-select" class="versus-select" role="dialog" aria-modal="true" aria-labelledby="versus-select-title" hidden>
