@@ -597,6 +597,12 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .versus-stage-card:hover{border-color:#e5a44a;background:#fff2bf}
 #story-clear-notice:not([hidden]){display:block;font-weight:1000;color:#277958;font-size:14px}
 @media(max-width:650px){.mode-grid{gap:6px}.mode-card{min-width:0;padding:8px!important}.mode-card .mode-name{font-size:15px!important}.mode-card .mode-detail{font-size:9px!important}.mode-card .mode-arrow{font-size:10px!important}.versus-select-card{padding:14px 9px;border-width:3px}.versus-stage-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.versus-stage-card{padding:7px 3px}}
+
+/* Four mode cards need a scrollable shell on landscape phones. */
+.mode-shell{max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
+.mode-choice{align-items:safe center}
+.mode-grid .mode-card{justify-content:center}
+@media(max-width:650px){.mode-shell{max-height:calc(100dvh - 12px)}.mode-grid .mode-card{gap:4px}.mode-grid .mode-icon{font-size:28px}.mode-grid .mode-arrow{margin-top:1px;padding:6px 10px}.mode-grid .mode-tag{padding:2px 7px;font-size:10px}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -1754,8 +1760,9 @@ function buildResults(){
  const advance=storyRoute&&playerWon&&(gameRoute==='back'?storyLevel<10:
    (storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||(storyLevel>=4&&storyLevel<10)));
  const finished=storyRoute&&playerWon&&storyLevel===10;
- $('story-next').hidden=!(advance||finished);
- $('story-next').textContent=finished?'MODE SELECT →':'NEXT STAGE →';
+ $('story-next').hidden=!(advance||finished||gameRoute==='versus'||gameRoute==='edit');
+ $('story-next').textContent=gameRoute==='versus'?'STAGE SELECT →':
+   gameRoute==='edit'?'BACK TO EDIT →':finished?'MODE SELECT →':'NEXT STAGE →';
  $('result-mode-label').textContent=(gameRoute==='story'?'STORY':gameRoute==='back'?'裏STORY':gameRoute==='edit'?'EDIT':'VERSUS')+' · M EVOLUTION';
  const notice=$('story-clear-notice');notice.hidden=!finished;
  notice.textContent=gameRoute==='story'?'STORY CLEAR! EDIT と 裏STORY が解放されました！':'裏STORY CLEAR! おめでとう！';
@@ -1861,6 +1868,14 @@ $('swing-announce-go').addEventListener('click',()=>{
 });
 $('story-next').addEventListener('click',()=>{
  if(mode!=='result'||history.length===0)return;
+ if(gameRoute==='versus'){
+  stopClock();clearHandoff();cancelBreak();clearDrag();
+  openScreen('setup');$('versus-select').hidden=false;return;
+ }
+ if(gameRoute==='edit'){
+  stopClock();clearHandoff();cancelBreak();clearDrag();
+  openScreen('setup');return;
+ }
  if(gameRoute!=='story'&&gameRoute!=='back')return;
  const winner=1-(history.length-1)%2,won=winner===humanPlayer;
  if(!won)return;
