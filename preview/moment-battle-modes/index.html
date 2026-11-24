@@ -524,6 +524,33 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
  .cage-label small{font-size:9px}
 }
 
+
+/* STORY inventory refinements: grey, opaque opposing turn; no unrewarded slots. */
+.bird-cage:not(.is-active){
+ opacity:1!important;
+ filter:grayscale(1)!important;
+ background:#e8ecef!important;
+ border-color:#aeb7bd!important;
+}
+.bird-cage:not(.is-active) .cage-bird:disabled,
+.bird-cage .cage-bird:disabled{
+ opacity:1!important;
+ filter:grayscale(1)!important;
+ background:#e9edf0!important;
+ color:#637078!important;
+ cursor:not-allowed;
+}
+.bird-cage:not(.is-active) .cage-label,
+.bird-cage:not(.is-active) .slot-title,
+.bird-cage:not(.is-active) .stack-count{color:#5b666f!important}
+.bird-cage .cage-tokens.card-inventory,
+.bird-cage.has-special .cage-tokens.card-inventory,
+.bird-cage.has-fat .cage-tokens.card-inventory{
+ grid-template-columns:repeat(var(--available-cols,1),minmax(0,1fr))!important;
+}
+.bird-cage .cage-slot{max-width:120px;width:100%;margin-inline:auto}
+.bird-cage .cage-slot[hidden]{display:none!important}
+
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -652,6 +679,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     story2:createStage([7,3],{id:'story2',name:'STAGE 02',title:'OFFSET SWING'}),
     story3:createStage([8,2],{id:'story3',name:'STAGE 03',title:'EDGE SWING'}),
     story4:createStage([3,4,3],{id:'story4',name:'STAGE 04',title:'DOUBLE SWING'}),
+    story5:createStage([2,6,2],{id:'story5',name:'STAGE 05',title:'WIDE CENTER SPAN'}),
     stage1:createStage([1,2,3,4],{id:'stage1',name:'STAGE 01',title:'基本の梁'}),
     stage2:createStage([2,4,1,3],{id:'stage2',name:'STAGE 02',title:'変則フック配置'})
   });
@@ -750,7 +778,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     <div class="mode-sky"><div class="mode-sun"></div><span class="mode-cloud cloud-a"></span><span class="mode-cloud cloud-b"></span><div class="mode-ground"></div><span class="mode-bird bird-b">🐦</span><span class="mode-bird bird-o">🐤</span></div>
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
     <div class="mode-grid">
-      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 02 → 03 → 04</span><span class="mode-arrow">PLAY →</span></button>
+      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 02 → 03 → 04 → 05</span><span class="mode-arrow">PLAY →</span></button>
       <a class="mode-card mode-versus" href="../moment-battle-versus/"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">CLASSIC · 3 HOOKS</span><span class="mode-arrow">PLAY →</span></a>
     </div>
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
@@ -856,9 +884,10 @@ function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2=
 function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
 function hasBonus(player){return storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer;}
 function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);}
-function fatLeft(player,turns=history){return storyFatUnlocked&&storyLevel>=3&&player===humanPlayer&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
+function hasFat(player){return storyFatUnlocked&&storyLevel>=3&&player===humanPlayer;}
+function fatLeft(player,turns=history){return hasFat(player)&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
 function stageLimit(){return 100;}
-function stageId(level=storyLevel){return level===1?'center':level===2?'story2':level===3?'story3':'story4';}
+function stageId(level=storyLevel){return level===1?'center':level===2?'story2':level===3?'story3':level===4?'story4':'story5';}
 function buildCages(){
  const labels=['BLUE','ORANGE'];
  for(let player=0;player<2;player++){
@@ -977,6 +1006,8 @@ function updateCages(){
   cage.classList.toggle('has-fat',fatLeft(player));
   $('cage-count-'+player).textContent=remaining+' LEFT';
   $('cage-stack-count-'+player).textContent='×'+remaining;
+  const slots=1+Number(hasBonus(player))+Number(hasFat(player));
+  cage.style.setProperty('--available-cols',String(slots));
  }
  document.querySelectorAll('.cage-bird').forEach(b=>{
   const player=Number(b.dataset.player),force=Number(b.dataset.force);
@@ -988,6 +1019,8 @@ function updateCages(){
  });
  document.querySelectorAll('.cage-slot').forEach(slot=>{
   const force=Number(slot.dataset.slotForce),player=Number(slot.dataset.slotPlayer);
+  // Hide the whole category before acquisition; no empty preview or spoiler.
+  slot.hidden=force===SPECIAL_WEIGHT?!hasBonus(player):force===FAT_WEIGHT?!hasFat(player):false;
   slot.classList.toggle('is-empty',force===WEIGHT?remainingBirds(player)===0:force===SPECIAL_WEIGHT?!bonusLeft(player):!fatLeft(player));
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
@@ -1574,7 +1607,7 @@ function buildResults(){
  $('result-description').textContent='';
  $('result-description').hidden=true;
  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
- const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked));
+ const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||storyLevel===4);
  $('story-next').hidden=!advance;
  $('story-next').textContent='NEXT STAGE →';
  $('rematch').hidden=false;
@@ -1655,6 +1688,8 @@ $('bonus-retry').addEventListener('click',()=>{
    storyLevel=3;cpuLevel=10;humanPlayer=0;storyFatUnlocked=false;
  }else if(storyLevel===3&&won&&storyFatUnlocked){
    storyLevel=4;cpuLevel=10;humanPlayer=0;
+ }else if(storyLevel===4&&won){
+   storyLevel=5;cpuLevel=10;humanPlayer=0;
  }else return;
  stage=getStage(stageId());limit=stageLimit();prepareGame();restart();
 });
