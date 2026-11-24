@@ -709,10 +709,10 @@ function buildCages(){
    b.innerHTML=cageSvg();
    row.append(b);
   }
-  if(player===0){
+  {
    const baby=document.createElement('button');baby.type='button';baby.className='cage-bird bird-unit special-unit';
-   baby.dataset.player='0';baby.dataset.force=String(SPECIAL_WEIGHT);baby.dataset.birdIndex='special';
-   baby.setAttribute('aria-label','Blue bonus bird, 5N, one use, drag to swing.');
+   baby.dataset.player=String(player);baby.dataset.force=String(SPECIAL_WEIGHT);baby.dataset.birdIndex='special';
+   baby.setAttribute('aria-label',labels[player]+' bonus bird, 5N, one use, drag to swing.');
    baby.innerHTML=cageSvg()+'<span class="tiny-force">5N</span>';baby.hidden=true;
    row.append(baby);
   }
@@ -1414,8 +1414,19 @@ $('fracture-stage').addEventListener('click',toResult);
 $('result-prev').addEventListener('click',()=>selectResult(selectedStep-1));
 $('result-next').addEventListener('click',()=>selectResult(selectedStep+1));
 
-$('rematch').addEventListener('click',restart);
-$('story-next').addEventListener('click',()=>{
+$('rematch').addEventListener('click',()=>{
+  if(mode!=='result')return;
+  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&history.length>0&&(1-(history.length-1)%2)!==humanPlayer;
+  if(firstLoss){$('story-bonus').hidden=false;return;}
+  restart();
+ });
+$('bonus-retry').addEventListener('click',()=>{
+  if(mode!=='result'||storyLevel!==2||storyBonusUnlocked)return;
+  storyBonusUnlocked=true;$('story-bonus').hidden=true;
+  humanPlayer=0;stage=getStage('story2');limit=100;
+  prepareGame();restart();
+ });
+ $('story-next').addEventListener('click',()=>{
  if(mode!=='result'||history.length===0)return;
  const winner=1-(history.length-1)%2,won=winner===humanPlayer;
  if(storyLevel===1&&won){
@@ -1436,6 +1447,7 @@ document.addEventListener('keydown',e=>{
 });
 buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
 $('story-choice').addEventListener('click',()=>{
+ $('story-bonus').hidden=true;
  storyLevel=1;storyBonusUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
  $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
  $('mode-choice').hidden=true;$('story-rules').hidden=false;
