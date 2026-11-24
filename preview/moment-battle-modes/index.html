@@ -693,6 +693,8 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     story4:createStage([3,4,3],{id:'story4',name:'STAGE 04',title:'DOUBLE SWING'}),
     story5:createStage([2,6,2],{id:'story5',name:'STAGE 05',title:'WIDE CENTER SPAN'}),
     story6:createStage([3,5,2],{id:'story6',name:'STAGE 06',title:'ASYMMETRIC DOUBLE SWING'}),
+    story7:createStage([4,5,1],{id:'story7',name:'STAGE 07',title:'OFFSET DOUBLE SWING'}),
+    story8:createStage([5,2,3],{id:'story8',name:'STAGE 08',title:'CLOSE DOUBLE SWING'}),
     stage1:createStage([1,2,3,4],{id:'stage1',name:'STAGE 01',title:'基本の梁'}),
     stage2:createStage([2,4,1,3],{id:'stage2',name:'STAGE 02',title:'変則フック配置'})
   });
@@ -791,7 +793,7 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     <div class="mode-sky"><div class="mode-sun"></div><span class="mode-cloud cloud-a"></span><span class="mode-cloud cloud-b"></span><div class="mode-ground"></div><span class="mode-bird bird-b">🐦</span><span class="mode-bird bird-o">🐤</span></div>
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
     <div class="mode-grid">
-      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 02 → 03 → 04 → 05 → 06</span><span class="mode-arrow">PLAY →</span></button>
+      <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 08</span><span class="mode-arrow">PLAY →</span></button>
       <a class="mode-card mode-versus" href="../moment-battle-versus/"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">CLASSIC · 3 HOOKS</span><span class="mode-arrow">PLAY →</span></a>
     </div>
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
@@ -900,7 +902,7 @@ function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m
 function hasFat(player){return storyFatUnlocked&&storyLevel>=3&&player===humanPlayer;}
 function fatLeft(player,turns=history){return hasFat(player)&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
 function stageLimit(){return 100;}
-function stageId(level=storyLevel){return level===1?'center':level===2?'story2':level===3?'story3':level===4?'story4':level===5?'story5':'story6';}
+function stageId(level=storyLevel){return level===1?'center':`story${level}`;}
 function buildCages(){
  const labels=['BLUE','RED'];
  for(let player=0;player<2;player++){
@@ -1620,7 +1622,7 @@ function buildResults(){
  $('result-description').textContent='';
  $('result-description').hidden=true;
  const firstLoss=storyLevel===2&&!storyBonusUnlocked&&!playerWon;
- const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||storyLevel===4||storyLevel===5);
+ const advance=playerWon&&(storyLevel===1||(storyLevel===2&&storyBonusUnlocked)||(storyLevel===3&&storyFatUnlocked)||(storyLevel>=4&&storyLevel<8));
  $('story-next').hidden=!advance;
  $('story-next').textContent='NEXT STAGE →';
  $('rematch').hidden=false;
@@ -1703,8 +1705,8 @@ $('bonus-retry').addEventListener('click',()=>{
    storyLevel=4;cpuLevel=10;humanPlayer=0;
  }else if(storyLevel===4&&won){
    storyLevel=5;cpuLevel=10;humanPlayer=0;
- }else if(storyLevel===5&&won){
-   storyLevel=6;cpuLevel=10;humanPlayer=0;
+ }else if(storyLevel>=4&&storyLevel<8&&won){
+   storyLevel+=1;cpuLevel=10;humanPlayer=0;
  }else return;
  stage=getStage(stageId());limit=stageLimit();prepareGame();restart();
 });
@@ -1732,11 +1734,12 @@ $('story-rule-start').addEventListener('click',()=>{
 });
 // Preview-only deep link for development/testing. Does not change story progress.
 const devStage=new URLSearchParams(window.location.search).get('devStage');
-if(devStage==='6'){
- storyLevel=6;
+// Review-only direct entries: stages 6, 7, 8; not linked from the public site.
+if(['6','7','8'].includes(devStage)){
+ storyLevel=Number(devStage);
  storyBonusUnlocked=true;
  storyFatUnlocked=true;
- stage=getStage('story6');
+ stage=getStage(stageId());
  $('match-mode').value='cpu';
  $('cpu-level').value='10';
  $('human-side').value='0';
@@ -1748,7 +1751,7 @@ if(devStage==='6'){
  $('story-bonus').hidden=true;
  $('story-fat-bonus').hidden=true;
  start();
- $('header-stage').textContent='DEV TEST · STAGE 06 · 3m / 5m / 2m';
+ $('header-stage').textContent='DEV TEST · STAGE '+String(storyLevel).padStart(2,'0')+' · '+stage.intervals.join('m / ')+'m';
 }else{
  openScreen('setup');
 }
