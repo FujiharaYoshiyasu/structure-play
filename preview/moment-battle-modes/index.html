@@ -1115,13 +1115,16 @@ function closeQuick(){
  if(mode==='battle'){render();beginClock();}
 }
 function applyQuick(){
- const m=stageLimit();
- const opponent=$('quick-mode').value,secs=$('quick-time').value;
- if(!Number.isFinite(m)||m<1||m>10000){$('quick-limit').focus();return;}
- if(!['local','cpu'].includes(opponent))return;
- limit=stageLimit();turnSeconds=secs==='none'?null:Number(secs);
- matchMode='cpu';cpuLevel=10;humanPlayer=0;
- $('quick-settings').hidden=true;limit=stageLimit();prepareGame();restart();
+ const secs=$('quick-time').value,opponent=$('quick-mode').value;
+ if(!['cpu','local'].includes(opponent))return;
+ const editedLimit=Number($('quick-limit').value);
+ if(gameRoute==='edit'&&(!Number.isFinite(editedLimit)||editedLimit<1||editedLimit>10000))return;
+ limit=gameRoute==='edit'?editedLimit:stageLimit();
+ turnSeconds=secs==='none'?null:Number(secs);
+ matchMode=gameRoute==='versus'?'local':gameRoute==='edit'?opponent:'cpu';
+ cpuLevel=10;
+ humanPlayer=gameRoute==='edit'?Number($('quick-side').value):0;
+ $('quick-settings').hidden=true;prepareGame();restart();
 }
 function initQuick(){
  const lvl=$('quick-level');
@@ -1885,8 +1888,26 @@ document.addEventListener('keydown',e=>{
   if(mode==='result'&&e.key==='ArrowLeft')selectResult(selectedStep-1);
   if(mode==='result'&&e.key==='ArrowRight')selectResult(selectedStep+1);
 });
-buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
+buildSetup();buildCages();setupDrag();initQuick();buildVersusStageSelect();stageChoice='center';
+unlockModes();
+$('versus-choice').addEventListener('click',()=>{
+ dismissAllModeOverlays();
+ $('versus-select').hidden=false;
+});
+$('versus-back').addEventListener('click',()=>{
+ $('versus-select').hidden=true;
+ $('mode-choice').hidden=false;
+});
+$('backstory-choice').addEventListener('click',()=>{
+ if(!storyCleared)return;
+ beginRoute('back',1);
+});
+$('edit-choice').addEventListener('click',()=>{
+ if(!storyCleared)return;
+ beginRoute('edit',1);
+});
 $('story-choice').addEventListener('click',()=>{
+ gameRoute='story';isDeveloperPreview=false;
  $('swing-announcement').hidden=true;
  $('story-bonus').hidden=true;$('story-fat-bonus').hidden=true;
  storyLevel=1;storyBonusUnlocked=false;storyFatUnlocked=false;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='10';$('human-side').value='0';
@@ -1903,6 +1924,7 @@ $('story-rule-start').addEventListener('click',()=>{
 const devStage=new URLSearchParams(window.location.search).get('devStage');
 // Review-only direct entries: stages 6-10; not linked from the public site.
 if(['6','7','8','9','10'].includes(devStage)){
+ gameRoute='story';isDeveloperPreview=true;
  storyLevel=Number(devStage);
  storyBonusUnlocked=true;
  storyFatUnlocked=true;
