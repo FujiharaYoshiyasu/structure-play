@@ -336,7 +336,7 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 @media(max-width:650px){.bird-play{gap:6px!important}.cage-row{min-height:106px;grid-template-columns:minmax(0,1fr) 59px minmax(0,1fr);gap:5px}.bird-cage{padding:5px 4px;border-radius:13px;gap:2px}.cage-label{font-size:11px}.cage-label small{font-size:8px}.cage-tokens{gap:3px}.cage-bird{min-width:0;height:62px;border-radius:11px}.cage-bird svg{height:34px;width:42px}.cage-bird strong{font-size:12px}.drag-hint strong{font-size:11px}.drag-hint small{font-size:9px}.drag-hint .hint-arrow{font-size:22px}.bird-play-title{font-size:13px}.bird-play-foot{font-size:10px}.swing-scene{min-height:170px!important}.quick-grid{gap:8px}}
 
 /* STORY is a single-player CPU journey; level and timer stay adjustable. */
-.quick-grid label:first-child,.quick-grid label:nth-child(3){display:none}
+.quick-grid label:first-child,.quick-grid label:nth-child(3),.quick-grid label:nth-child(4){display:none}
 /* Review-only menu: story path & alternate classic mode */
 .mode-choice{position:fixed;inset:0;z-index:150;display:grid;place-items:center;background:linear-gradient(#9ddfff,#d6f5dd);padding:14px;overflow:auto}
 .mode-shell{position:relative;overflow:hidden;width:min(860px,100%);border:5px solid #6fba9a;border-radius:30px;background:#fffdf6;box-shadow:0 20px 0 #4d9c7b,0 25px 50px #224e6b42;padding:0 25px 25px;color:#28675c}
@@ -359,6 +359,43 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 .mode-story .mode-arrow{background:#ee9141}.mode-card:hover{transform:translateY(-2px)}
 .mode-footer{text-align:center;margin-top:18px;font-size:10px;font-weight:900;color:#86a6a0}
 @media(max-width:600px){.mode-choice{padding:8px}.mode-shell{padding:0 10px 16px;border-radius:20px}.mode-sky{margin:0 -10px;height:120px}.mode-grid{gap:8px}.mode-card{padding:12px 4px;border-width:3px}.mode-icon{font-size:36px}.mode-name{font-size:23px}.mode-detail{font-size:9px}.mode-copy{margin:12px 0}.mode-copy h2{font-size:30px}.mode-sun{width:50px;height:50px}.mode-bird{font-size:44px}.mode-cloud{transform:scale(.6)}}
+
+/* STORY tutorial and physical inventory. The old public game remains unchanged. */
+.story-rules{position:fixed;inset:0;z-index:175;display:grid;place-items:center;background:linear-gradient(155deg,#8bdcfb,#d8f8d7);padding:12px;overflow:auto}
+.story-rule-card{color:#2b6e5f;width:min(560px,100%);max-height:min(95dvh,900px);overflow:auto;border:5px solid #5eb88d;border-radius:28px;background:#fffdf2;padding:19px 23px 21px;box-shadow:0 13px 0 #3294735b,0 22px 45px #386b8055;text-align:center;display:grid;gap:11px}
+.story-rule-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.story-rule-kicker{font-size:11px;letter-spacing:1.4px;color:#439780;font-weight:1000}
+#story-rule-back{border:2px solid #b9d9c0;border-radius:10px;background:#f0fae7;color:#366e59;padding:6px 11px;font-size:11px;font-weight:950}
+.story-rule-card h2{margin:0;color:#24776b;font-size:clamp(25px,5vw,35px);letter-spacing:1px;font-weight:1000}
+.story-rule-scene{height:122px;position:relative;background:linear-gradient(#92dffd,#dcf7fc);border:3px solid #a6dcc2;border-radius:16px;overflow:hidden}
+.story-rule-sun{position:absolute;right:13%;top:14px;width:38px;height:38px;background:#ffdd5b;border:4px solid #fcbf42;border-radius:50%}
+.story-rule-cliff{position:absolute;top:60px;bottom:0;width:15%;background:#bd7d4b;border-top:9px solid #58c567}
+.story-rule-left{left:0}.story-rule-right{right:0}
+.story-rule-bridge{height:13px;position:absolute;left:14%;right:14%;top:60px;background:#bd834f;border:2px solid #7d5134;border-radius:5px}
+.story-rule-swing{position:absolute;left:50%;top:70px;height:43px;width:53px;transform:translateX(-50%);border-left:3px solid #986134;border-right:3px solid #986134;border-bottom:8px solid #a66a3a;display:flex;align-items:flex-end;justify-content:center;font-size:27px;line-height:1}
+.story-rule-leftm,.story-rule-rightm{position:absolute;top:32px;font-weight:1000;font-size:14px;color:#275e79}
+.story-rule-leftm{left:29%}.story-rule-rightm{right:29%}
+.story-rules-lines{display:grid;gap:6px;text-align:left}
+.story-rules-lines>div{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:12px;background:#e9f9e9;color:#246f60;font-size:14px}
+.rule-number{font-size:17px;font-weight:1000;color:#f19c3c}
+.story-reward{display:grid;gap:4px;border:3px dashed #efbf53;background:#fff0b5;border-radius:19px;padding:9px 12px}
+.reward-kicker{font-size:12px;color:#aa6b1d;font-weight:1000;letter-spacing:1px}
+.reward-title{color:#a16324;font-weight:1000;font-size:clamp(24px,5vw,34px);line-height:1.1}
+.reward-title b{color:#e17f2f}
+.story-reward-birds{font-size:clamp(21px,5vw,30px);letter-spacing:2px;white-space:nowrap}
+.story-reward small{color:#99713d;font-size:10px;font-weight:900}
+.story-start-button{border:3px solid #c97d25;background:#fd9637;color:white;font-size:18px;font-weight:1000;border-radius:15px;padding:12px;box-shadow:0 4px 0 #ba7827;cursor:pointer}
+.cage-row{grid-template-columns:minmax(0,1fr) 84px minmax(0,1fr);gap:7px}
+.bird-cage{padding:8px 9px;min-height:116px}
+.cage-label small{font-size:12px}
+.cage-tokens{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;justify-items:stretch;gap:3px}
+.cage-bird.bird-unit{width:100%;min-width:0;max-width:none;height:58px;padding:2px 0;border-radius:10px;flex:none}
+.cage-bird.bird-unit svg{height:39px;width:100%;max-width:45px}
+.cage-bird.bird-unit:disabled{opacity:.64;filter:saturate(.76)}
+.bird-cage:not(.is-active){filter:saturate(.85)}
+#bonus0,#bonus1{font-size:10px}
+@media(max-width:650px){.story-rule-card{gap:8px;padding:11px;border-width:3px}.story-rule-scene{height:95px}.story-rule-cliff{top:53px}.story-rule-bridge{top:53px}.story-rule-swing{top:63px;height:30px}.story-rules-lines>div{padding:7px;font-size:12px}.story-reward{padding:6px}.story-start-button{font-size:15px;padding:9px}.cage-row{grid-template-columns:minmax(0,1fr) 55px minmax(0,1fr);gap:4px;min-height:93px}.bird-cage{padding:4px 3px;min-height:90px}.cage-label{font-size:10px}.cage-label small{font-size:9px}.cage-tokens{gap:1px}.cage-bird.bird-unit{height:44px;padding:0;border-radius:6px;border-width:1px}.cage-bird.bird-unit svg{height:30px;max-width:31px}}
+
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -588,6 +625,35 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
   </div>
 </div>
+<div id="story-rules" class="story-rules" role="dialog" aria-modal="true" aria-labelledby="story-rule-title" hidden>
+ <div class="story-rule-card">
+  <div class="story-rule-top">
+   <span class="story-rule-kicker">STORY · STAGE 01</span>
+   <button id="story-rule-back" type="button" aria-label="Back to mode selection">← BACK</button>
+  </div>
+  <h2 id="story-rule-title">HOW TO PLAY</h2>
+  <div class="story-rule-scene" role="img" aria-label="Two green cliffs with a wooden beam and one swing in the middle under a blue sky">
+   <div class="story-rule-sun"></div>
+   <div class="story-rule-cliff story-rule-left"></div>
+   <div class="story-rule-cliff story-rule-right"></div>
+   <div class="story-rule-bridge"></div>
+   <div class="story-rule-swing"><span>🐦</span></div>
+   <span class="story-rule-leftm">5m</span><span class="story-rule-rightm">5m</span>
+  </div>
+  <div class="story-rules-lines">
+   <div><span class="rule-number">01</span><strong>BLUE FIRST</strong></div>
+   <div><span class="rule-number">02</span><strong>DRAG BIRD → SWING</strong></div>
+   <div><span class="rule-number">03</span><strong>MAX M ≥ 100 N·m = LOSE</strong></div>
+  </div>
+  <div class="story-reward">
+   <span class="reward-kicker">YOU GOT!</span>
+   <div class="reward-title">10N BIRD <b>×5</b></div>
+   <div class="story-reward-birds" aria-label="Five 10N birds">🐦 🐦 🐦 🐦 🐦</div>
+   <small>5 BIRDS / TEAM · 10N ONLY</small>
+  </div>
+  <button type="button" id="story-rule-start" class="story-start-button">START STAGE 01 →</button>
+ </div>
+</div>
 <div id="quick-settings" class="quick-settings" role="dialog" aria-modal="true" aria-label="Options" hidden>
  <div class="quick-card">
   <div class="quick-top"><strong>⚙ OPTIONS</strong><button type="button" id="quick-close" aria-label="Close">✕</button></div>
@@ -609,18 +675,21 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 const {STAGES,getStage,createStage,WEIGHT,SPECIAL_WEIGHT,LIMIT,fromHistory,previewHistory,specialUsed}=BeamPhysics;
 
 function cageSvg(){return '<svg viewBox="0 0 64 63" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 39L2 29L7 51L18 48" fill="var(--bird-dark)"/><ellipse cx="31" cy="34" rx="22" ry="20" fill="var(--bird-color)" stroke="#31535e" stroke-width="2.2"/><ellipse cx="25" cy="41" rx="13" ry="8" fill="var(--bird-wing)"/><path d="M23 17l2-9 6 9 5-10 2 11" fill="var(--bird-dark)"/><circle cx="42" cy="28" r="6" fill="white"/><circle cx="44" cy="27" r="2.8" fill="#253d4b"/><path d="M50 33l13 5-13 6" fill="#ffd252" stroke="#9e7d34" stroke-width="2"/><path d="M25 52l-3 6m16-5v5" stroke="#946032" stroke-width="3" stroke-linecap="round"/></svg>';}
+const STORY_BIRDS = 5;
+function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2===player?1:0),0);}
+function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
 function buildCages(){
  const labels=['BLUE','ORANGE'];
  for(let player=0;player<2;player++){
   const card=$('cage-'+(player?'orange':'blue'));card.replaceChildren();
   const heading=document.createElement('div');heading.className='cage-label';
-  heading.innerHTML='<span>● '+labels[player]+'</span><small>'+(player?'2ND':'1ST')+'</small>';
+  heading.innerHTML='<span>● '+labels[player]+' · 10N</span><small id="cage-count-'+player+'">5 LEFT</small>';
   const row=document.createElement('div');row.className='cage-tokens';
-  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
-   const b=document.createElement('button');b.type='button';b.className='cage-bird';
-   b.dataset.player=String(player);b.dataset.force=String(force);
-   b.setAttribute('aria-label',labels[player]+' '+force+'N bird. Drag to center swing or select and tap swing.');
-   b.innerHTML=cageSvg()+'<strong>'+force+'N</strong>';
+  for(let n=0;n<STORY_BIRDS;n++){
+   const b=document.createElement('button');b.type='button';b.className='cage-bird bird-unit';
+   b.dataset.player=String(player);b.dataset.force=String(WEIGHT);b.dataset.birdIndex=String(n);
+   b.setAttribute('aria-label',labels[player]+' bird '+(n+1)+' of '+STORY_BIRDS+', 10N. Drag to swing.');
+   b.innerHTML=cageSvg();
    row.append(b);
   }
   card.append(heading,row);
@@ -628,8 +697,8 @@ function buildCages(){
 }
 let pointerDrag=null;
 function dragAllowed(player,force){
- return mode==='battle'&&!handoffActive&&!cpuTurn()&&player===history.length%2
-   &&!(force===SPECIAL_WEIGHT&&specialUsed(history,player,stage));
+ return mode==='battle'&&!handoffActive&&!cpuTurn()
+   &&player===history.length%2&&force===WEIGHT&&remainingBirds(player)>0;
 }
 function inSwing(x,y){
  const target=$('swing-drop');if(!target)return false;
@@ -684,12 +753,18 @@ function setupDrag(){
 }
 function updateCages(){
  const turn=history.length%2;
- for(let player=0;player<2;player++)
+ for(let player=0;player<2;player++){
+  const remaining=remainingBirds(player);
   $('cage-'+(player?'orange':'blue')).classList.toggle('is-active',turn===player&&!cpuTurn()&&!handoffActive);
+  $('cage-count-'+player).textContent=remaining+' LEFT';
+ }
  document.querySelectorAll('.cage-bird').forEach(b=>{
-  const player=Number(b.dataset.player),force=Number(b.dataset.force);
-  b.disabled=!dragAllowed(player,force);
-  b.classList.toggle('is-selected',!b.disabled&&force===selectedWeight);
+  const player=Number(b.dataset.player);
+  const remaining=remainingBirds(player);
+  const inStock=Number(b.dataset.birdIndex)<remaining;
+  b.hidden=!inStock;
+  b.disabled=!inStock||!dragAllowed(player,WEIGHT);
+  b.classList.toggle('is-selected',inStock&&!b.disabled);
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
  hint.innerHTML='<span class="hint-arrow">↓</span><strong>'+(turn?'ORANGE':'BLUE')+'<br>'+(history.length?'TURN':'FIRST')+'</strong><small>'+(cpuTurn()?'CPU…':'DRAG ↓')+'</small>';
@@ -713,7 +788,7 @@ function applyQuick(){
  if(!['local','cpu'].includes(opponent)||!Number.isInteger(lv)||lv<1||lv>10)return;
  limit=m;turnSeconds=secs==='none'?null:Number(secs);
  matchMode='cpu';cpuLevel=lv;humanPlayer=0;
- $('quick-settings').hidden=true;prepareGame();restart();
+ $('quick-settings').hidden=true;limit=100;prepareGame();restart();
 }
 function initQuick(){
  const lvl=$('quick-level');
@@ -751,8 +826,9 @@ function chooseCpuMove(){
  const depth=[0,0,1,2,3,4,5,7,10,16][cpuLevel-1];
  const randomness=[1,.75,.5,.32,.2,.12,.07,.04,.015,0][cpuLevel-1];
  function actions(h){
-  const spent=specialUsed(h,h.length%2,stage),choices=[];
-  for(const p of (spent?[10]:[10,5]))for(const x of pos()){
+  const choices=[];
+  if(remainingBirds(h.length%2,h)<=0)return choices;
+  for(const p of [WEIGHT])for(const x of pos()){
    const move={x,p,cpu:true},a=fromHistory([...h,move],stage,limit);
    choices.push({move,failed:a.failed,max:a.maxMoment});
   }
@@ -873,7 +949,7 @@ function updateSetup(){
 function start(){
  let config;try{config=readSetup();}catch(err){updateSetup();return;}
  stopClock();clearHandoff();
- stage=getStage(storyLevel===2?'story2':'center');limit=config.limit;turnSeconds=config.turnSeconds;
+ stage=getStage(storyLevel===2?'story2':'center');limit=100;turnSeconds=config.turnSeconds;
  matchMode=config.matchMode;cpuLevel=config.cpuLevel;humanPlayer=config.humanPlayer;
  history.length=0;selectedWeight=WEIGHT;showMoments=false;practice=false;committed=false;committedSnapshot=null;
  prepareGame();openScreen('battle');render();beginClock();
@@ -1065,7 +1141,7 @@ function render(){
  $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'ORANGE':'BLUE')+' · DRAG BIRD ↓';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
-   $(`bonus${i}`).textContent=specialUsed(history,i,stage)?'5N · USED':'5N · 1 LEFT';
+   $(`bonus${i}`).textContent='10N · '+remainingBirds(i)+' LEFT';
  }
  if(selectedWeight===SPECIAL_WEIGHT&&used)selectedWeight=WEIGHT;
  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
@@ -1111,8 +1187,9 @@ function place(index){
 }
 function applyMove(move){
  if(mode!=='battle')return;
- stopClock();clearHandoff();
  const player=history.length%2;
+ if(move.p!==WEIGHT||!pos().includes(move.x)||remainingBirds(player)<=0)return;
+ stopClock();clearHandoff();
  history.push(move);selectedWeight=WEIGHT;
  const data=fromHistory(history,stage,limit);
  if(data.failed)showBreak(data,player);
@@ -1329,7 +1406,13 @@ buildSetup();buildCages();setupDrag();initQuick();stageChoice='center';
 $('story-choice').addEventListener('click',()=>{
  storyLevel=1;stage=getStage('center');$('match-mode').value='cpu';$('cpu-level').value='1';$('human-side').value='0';
  $('no-time-limit').checked=false;$('turn-seconds').value='30';$('limit-input').value='100';
- $('mode-choice').hidden=true;start();
+ $('mode-choice').hidden=true;$('story-rules').hidden=false;
+});
+$('story-rule-back').addEventListener('click',()=>{
+ $('story-rules').hidden=true;$('mode-choice').hidden=false;
+});
+$('story-rule-start').addEventListener('click',()=>{
+ $('story-rules').hidden=true;start();
 });
 openScreen('setup');
 })();
