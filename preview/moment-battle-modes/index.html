@@ -679,11 +679,35 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .story-prologue p{margin:0;font-size:clamp(12px,2.1vw,14px);line-height:1.65;font-weight:700}
 .story-prologue p:last-child{color:#22816a;font-weight:1000}
 @media(max-width:650px){.story-prologue{padding:8px 10px;gap:4px}.story-prologue p{font-size:12px;line-height:1.5}}
+
+/* Keep the site return action visible above every game screen and modal. */
+.site-home-link{
+ position:fixed;top:max(9px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left));
+ z-index:1000;display:inline-flex;align-items:center;justify-content:center;
+ max-width:calc(100vw - 20px);min-height:34px;
+ border:2px solid #78b99f;border-radius:999px;padding:6px 13px;
+ color:#25695b;background:#fffef1;box-shadow:0 3px 0 #79bba5;
+ font-size:12px;font-weight:900;line-height:1.35;text-decoration:none;
+ white-space:nowrap;transition:background .15s,transform .15s;
+}
+.site-home-link:hover{background:#e8fff1;transform:translateY(-1px)}
+.site-home-link:focus-visible{outline:3px solid #225e9b;outline-offset:3px}
+@media(min-width:761px){
+ .masthead{padding-left:246px!important}
+}
+@media(max-width:760px){
+ .site-home-link{top:max(7px,env(safe-area-inset-top));left:max(7px,env(safe-area-inset-left));font-size:10px;padding:5px 9px;min-height:28px}
+ /* Reserve the top-left of the narrow game header for the always-visible return link. */
+ .masthead{justify-content:flex-end}
+ .masthead .brandmark,.masthead .brand-text{display:none}
+ .masthead .tag{max-width:calc(100vw - 224px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
 </head>
 <body data-turn-theme="blue">
+<a id="site-home-link" class="site-home-link" href="../../" aria-label="ストラクチャーアンドプレイに戻る">← ストラクチャーアンドプレイに戻る</a>
 <div class="app-shell">
   <header class="masthead"><div class="brandmark" aria-hidden="true"><i></i><i></i></div><div class="brand-text"><span class="eyebrow">BIRD BRIDGE / STORY</span><h1>MOMENT <em>BATTLE</em></h1></div><span class="tag" id="header-stage">UI PREVIEW · NOT LIVE</span></header>
 
