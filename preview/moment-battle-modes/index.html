@@ -335,6 +335,8 @@ body[data-turn-theme="orange"] .beam-stage{background:#93e0ff}
 @media(max-width:920px){.cage-row{grid-template-columns:minmax(0,1fr) 72px minmax(0,1fr);gap:6px}.drag-hint strong{font-size:14px}}
 @media(max-width:650px){.bird-play{gap:6px!important}.cage-row{min-height:106px;grid-template-columns:minmax(0,1fr) 59px minmax(0,1fr);gap:5px}.bird-cage{padding:5px 4px;border-radius:13px;gap:2px}.cage-label{font-size:11px}.cage-label small{font-size:8px}.cage-tokens{gap:3px}.cage-bird{min-width:0;height:62px;border-radius:11px}.cage-bird svg{height:34px;width:42px}.cage-bird strong{font-size:12px}.drag-hint strong{font-size:11px}.drag-hint small{font-size:9px}.drag-hint .hint-arrow{font-size:22px}.bird-play-title{font-size:13px}.bird-play-foot{font-size:10px}.swing-scene{min-height:170px!important}.quick-grid{gap:8px}}
 
+/* STORY is a single-player CPU journey; level and timer stay adjustable. */
+.quick-grid label:first-child,.quick-grid label:nth-child(3){display:none}
 /* Review-only menu: story path & alternate classic mode */
 .mode-choice{position:fixed;inset:0;z-index:150;display:grid;place-items:center;background:linear-gradient(#9ddfff,#d6f5dd);padding:14px;overflow:auto}
 .mode-shell{position:relative;overflow:hidden;width:min(860px,100%);border:5px solid #6fba9a;border-radius:30px;background:#fffdf6;box-shadow:0 20px 0 #4d9c7b,0 25px 50px #224e6b42;padding:0 25px 25px;color:#28675c}
@@ -710,7 +712,7 @@ function applyQuick(){
  if(!Number.isFinite(m)||m<1||m>10000){$('quick-limit').focus();return;}
  if(!['local','cpu'].includes(opponent)||!Number.isInteger(lv)||lv<1||lv>10)return;
  limit=m;turnSeconds=secs==='none'?null:Number(secs);
- matchMode=opponent;cpuLevel=lv;humanPlayer=Number($('quick-side').value);
+ matchMode='cpu';cpuLevel=lv;humanPlayer=0;
  $('quick-settings').hidden=true;prepareGame();restart();
 }
 function initQuick(){
@@ -730,7 +732,7 @@ let storyLevel=1;
 let mode='setup',stage=getStage('center'),stageChoice='center',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
 let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
 let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,committedSnapshot=null;
-const STREAK_KEY='moment-battle-v08-cpu-streak';
+const STREAK_KEY='moment-battle-story-preview-streak';
 const storage=(()=>{try{return window.localStorage;}catch(e){return null;}})();
 function freshStreaks(){return {levels:Array.from({length:10},()=>({current:0,best:0,wins:0,losses:0}))};}
 function cleanStreaks(raw){const s=freshStreaks();if(Array.isArray(raw?.levels)){raw.levels.slice(0,10).forEach((rec,i)=>{for(const k of ['current','best','wins','losses'])if(Number.isSafeInteger(rec?.[k])&&rec[k]>=0)s.levels[i][k]=rec[k];s.levels[i].best=Math.max(s.levels[i].best,s.levels[i].current);});}return s;}
