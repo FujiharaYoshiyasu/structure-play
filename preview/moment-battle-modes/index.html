@@ -1270,7 +1270,7 @@ function prepareGame(){
    out.append(b);
  });
  $('span-label').textContent=stage.intervals.join('m + ')+'m · '+pos().length+' SWING'+(pos().length>1?'S':'');
- $('battle-stage-info').textContent=`STAGE 0${storyLevel} · ${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
+ $('battle-stage-info').textContent=`STAGE ${String(storyLevel).padStart(2,'0')} · ${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
  for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'YOU':'CPU'):'PLAYER 0'+(i+1);
  $('battle-streak').hidden=true;
  $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
