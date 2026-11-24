@@ -576,6 +576,27 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .swing-announce-note{font-size:14px;margin:0;color:#4c8578;font-weight:800}
 .swing-announce-go{background:#fb9b3d;border:3px solid #c98335;border-radius:15px;box-shadow:0 5px 0 #b97531;color:white;font-size:17px;font-weight:1000;padding:12px 26px;cursor:pointer;width:100%}
 @media(max-width:650px){.swing-announcement-card{padding:14px 12px 17px;gap:8px;border-width:3px}.swing-announce-icons{font-size:17px}.swing-announce-note{font-size:12px}.swing-announce-go{font-size:15px;padding:10px}}
+
+/* Four modes and same-page stage selection */
+.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mode-card[disabled]{cursor:not-allowed;filter:grayscale(.9);opacity:.78;background:#e8e9ec!important}
+.mode-card[disabled] .mode-arrow{color:#67737e!important}
+.mode-backstory{background:#e8edff;border-color:#9da9df}
+.mode-edit{background:#e8fff1;border-color:#92cba8}
+.mode-backstory:not([disabled]):hover,.mode-edit:not([disabled]):hover{filter:brightness(1.035)}
+.versus-select{position:fixed;inset:0;z-index:180;display:grid;place-items:center;overflow:auto;padding:14px;background:linear-gradient(145deg,#9cdefb,#e2f9dc)}
+.versus-select-card{width:min(750px,100%);padding:22px;background:#fffdf2;border:5px solid #67b6a0;border-radius:24px;box-shadow:0 12px 0 #4c9a85,0 25px 40px #41687655;text-align:center;color:#245f66;max-height:95dvh;overflow:auto}
+.versus-select-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:1000}
+#versus-back{padding:8px 12px;border-radius:9px;border:2px solid #9fcbaf;background:#e7f6e9;color:#35645f}
+.versus-select-card h2{margin:8px 0;font-size:clamp(22px,4vw,32px);font-weight:1000}
+.versus-select-card p{margin:6px 0 15px;font-size:13px;font-weight:900}
+.versus-stage-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.versus-stage-card{padding:9px 5px;border:3px solid #8bc7b0;border-radius:13px;background:#eafbeb;color:#2b6e62;display:grid;gap:5px;cursor:pointer}
+.versus-stage-card strong{font-size:17px}
+.versus-stage-card small{font-size:11px}
+.versus-stage-card:hover{border-color:#e5a44a;background:#fff2bf}
+#story-clear-notice:not([hidden]){display:block;font-weight:1000;color:#277958;font-size:14px}
+@media(max-width:650px){.mode-grid{gap:6px}.mode-card{min-width:0;padding:8px!important}.mode-card .mode-name{font-size:15px!important}.mode-card .mode-detail{font-size:9px!important}.mode-card .mode-arrow{font-size:10px!important}.versus-select-card{padding:14px 9px;border-width:3px}.versus-stage-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.versus-stage-card{padding:7px 3px}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -670,7 +691,7 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     </section>
 
     <section id="result-screen" class="screen result-screen" aria-label="対戦リザルト画面" hidden>
-      <div class="result-heading"><div><span class="eyebrow">STORY · M EVOLUTION</span><h2><span id="result-winner">BLUE WIN</span></h2><p id="result-description" hidden></p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button type="button" id="story-next" class="primary-button" hidden>STAGE 02 →</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
+      <div class="result-heading"><div><span class="eyebrow" id="result-mode-label">STORY · M EVOLUTION</span><h2><span id="result-winner">BLUE WIN</span></h2><p id="result-description" hidden></p><p id="story-clear-notice" hidden>STORY CLEAR! EDIT と 裏STORY が解放されました！</p><div id="result-streak" class="result-streak" hidden></div></div><div class="result-top-actions"><button type="button" id="story-next" class="primary-button" hidden>STAGE 02 →</button><button id="rematch" type="button" class="primary-button">もう一度対戦 →</button></div></div>
       <div class="result-columns"><section class="panel result-inspection"><div class="panel-head"><div><span class="eyebrow">MOMENT EVOLUTION</span><h3 id="result-step-label">各手のモーメント図</h3></div><strong id="result-step-m" class="result-m">—</strong></div><svg id="result-plot-svg" viewBox="0 0 900 300" role="img"></svg>
       <div class="plot-legend"><span><i class="current-line"></i>この手</span><span><i class="previous-line"></i>1手前</span><span><i class="failure-line"></i>破壊ライン</span></div><p id="result-step-detail" class="result-detail"></p><div class="result-controls"><button id="result-prev">← 前の手</button><span id="result-progress"></span><button id="result-next">次の手 →</button></div></section>
       <section class="panel result-timeline-panel"><div class="panel-head"><div><span class="eyebrow">TURN BY TURN</span><h3>手番ごとの変化</h3></div></div><div id="result-timeline" class="result-timeline"></div></section></div>
@@ -809,10 +830,20 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
     <div class="mode-copy"><span class="mode-eyebrow">MOMENT BATTLE</span><h2>PLAY MODE</h2><p>CHOOSE YOUR ADVENTURE</p></div>
     <div class="mode-grid">
       <button type="button" id="story-choice" class="mode-card mode-story"><span class="mode-icon">🌿</span><span class="mode-name">STORY</span><span class="mode-tag">★ おすすめ</span><span class="mode-detail">STAGE 01 → 10</span><span class="mode-arrow">PLAY →</span></button>
-      <a class="mode-card mode-versus" href="../moment-battle-versus/"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">CLASSIC · 3 HOOKS</span><span class="mode-arrow">PLAY →</span></a>
+      <button type="button" id="versus-choice" class="mode-card mode-versus"><span class="mode-icon">⚔️</span><span class="mode-name">VERSUS</span><span class="mode-detail">10 STAGES · 2 PLAYERS</span><span class="mode-arrow">SELECT →</span></button>
+      <button type="button" id="backstory-choice" class="mode-card mode-backstory" disabled><span class="mode-icon">🌙</span><span class="mode-name">裏STORY</span><span class="mode-detail">STAGE 01 → 10 · CPU SPECIAL BIRDS</span><span class="mode-arrow" id="backstory-lock">🔒 STORY CLEAR</span></button>
+      <button type="button" id="edit-choice" class="mode-card mode-edit" disabled><span class="mode-icon">🛠️</span><span class="mode-name">EDIT</span><span class="mode-detail">FREE BEAM / RULE SETTINGS</span><span class="mode-arrow" id="edit-lock">🔒 STORY CLEAR</span></button>
     </div>
     <div class="mode-footer">UI PREVIEW · NOT LIVE</div>
   </div>
+</div>
+<div id="versus-select" class="versus-select" role="dialog" aria-modal="true" aria-labelledby="versus-select-title" hidden>
+ <div class="versus-select-card">
+  <div class="versus-select-top"><button id="versus-back" type="button">← BACK</button><span>BLUE VS RED</span></div>
+  <h2 id="versus-select-title">VERSUS · STAGE SELECT</h2>
+  <p>どちらも 10N ×5 ＋ 5N ×1 ＋ 15N ×1</p>
+  <div id="versus-stage-grid" class="versus-stage-grid"></div>
+ </div>
 </div>
 <div id="story-rules" class="story-rules" role="dialog" aria-modal="true" aria-labelledby="story-rule-title" hidden>
  <div class="story-rule-card">
