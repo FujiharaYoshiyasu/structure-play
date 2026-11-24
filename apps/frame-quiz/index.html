@@ -12,7 +12,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--text);font-family:Inter,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif;font-size:14px;line-height:1.65}button,select{font:inherit}button{cursor:pointer}button:focus-visible,summary:focus-visible{outline:3px solid #70ace4;outline-offset:2px}button:disabled{cursor:default}[hidden]{display:none!important}svg{font-family:inherit}.shell{width:min(1160px,calc(100% - 36px));margin-inline:auto}
 .top{background:#101e30;color:#d4e3f4;padding:11px 0;font-size:12px}.top a{color:inherit;text-decoration:none;font-weight:700}.top a:hover{text-decoration:underline}
 .mast{background:linear-gradient(125deg,#14283f 15%,#234260);color:#fff;padding:32px 0 33px}.mast-inner{display:flex;justify-content:space-between;align-items:center;gap:24px}.eyebrow{color:#96c2e9;letter-spacing:.22em;font-size:11px;font-weight:800}.mast h1{font-size:clamp(29px,4.8vw,45px);line-height:1.24;margin:7px 0 10px;letter-spacing:.005em}.mast h1 span{color:#f5b179}.mast p{margin:0;color:#d1deeb;font-size:13px}.mast-label{border:1px solid #6c8aa6;border-radius:15px;padding:15px 22px;white-space:nowrap;text-align:center;font-size:12px;font-weight:800;letter-spacing:.16em;color:#d0e6f7}.mast-label strong{display:block;font-size:33px;color:#fff;letter-spacing:.04em;line-height:1.3}
-main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 9px 30px #203b5510;padding:24px 27px;margin-bottom:20px}.board-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.step{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e7f1fa;color:#286596;font-size:15px;font-weight:900;flex:0 0 auto}.board-title h2{font-size:20px;line-height:1.3;margin:0}.board-title small{color:var(--muted);font-size:12px}.problem-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-left:auto}.pill-button{border:1px solid #c9d6e2;background:#fff;border-radius:9px;color:#234c70;font-weight:750;padding:9px 12px;font-size:12px}.pill-button:hover{background:#edf5fc}.pill-button.primary{background:#266ca6;color:#fff;border-color:#266ca6}.pill-button.primary:hover{background:#195686}.problem-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.72fr);gap:19px;align-items:stretch}.figure-box{background:#fbfdff;border:1px solid #e3eaf0;border-radius:13px;min-width:0;display:grid;place-items:center;padding:8px}.figure-box svg{display:block;width:100%;max-width:670px;height:auto}.problem-facts{background:#f6f9fc;border:1px solid #e5ecf3;border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:14px}.tag{border-radius:100px;padding:5px 10px;font-weight:800;letter-spacing:.04em;font-size:10px;color:#38628d;background:#e5eff8;display:inline-block;width:max-content}.fact-label{display:block;font-size:10px;font-weight:850;letter-spacing:.12em;color:#8a9db0}.fact-value{font-size:17px;font-weight:850;line-height:1.45;margin:3px 0 0}.fact-note{font-size:11px;color:#6c8296;line-height:1.9;border-top:1px solid #dee7ee;padding-top:12px;margin-top:auto}.instructions{font-size:12px;color:#60778b;margin:11px 0 0}.quiz-head{display:flex;align-items:center;gap:11px;margin:27px 0 15px}.quiz-head h2{font-size:22px;margin:0}.quiz-head .muted{font-size:12px;color:var(--muted)}.question-grid{display:grid;gap:18px}.question{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px 21px;box-shadow:0 6px 22px #25456509}.question-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.letter{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-weight:900;color:#fff}.question[data-type="N"] .letter{background:var(--cyan)}.question[data-type="Q"] .letter{background:var(--blue)}.question[data-type="M"] .letter{background:var(--orange)}.question-head h3{margin:0;font-size:18px}.question-head small{color:var(--muted);font-size:11px}.answer-state{margin-left:auto;color:#7c90a2;font-weight:800;font-size:12px}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choice{min-width:0;padding:12px 10px 8px;background:#fbfdff;border:2px solid #e0e9f1;border-radius:11px;color:var(--text);position:relative;text-align:left;transition:background .14s,border-color .14s,transform .14s}.choice:hover:not(:disabled){border-color:#87b2d5;background:#f0f6fd;transform:translateY(-2px)}.choice.is-selected{border-color:#2a76b3;background:#eff7fd;box-shadow:0 0 0 1px #2a76b333}.choice.is-correct{border-color:#209168!important;background:#edf9f3}.choice.is-wrong{border-color:#c7584b;background:#fff3f0}.choice-title{font-size:12px;font-weight:900;padding-left:9px}.choice svg{display:block;width:100%;height:auto;min-height:188px}.choice .numeric-diagram text{paint-order:stroke;stroke:#fbfdff;stroke-width:3px;stroke-linejoin:round}.choice .numeric-diagram .band-text{stroke:none}.choice-marker{font-weight:900;font-size:11px;position:absolute;right:12px;top:9px}.question[data-type="N"]{--diagram:var(--cyan)}.question[data-type="Q"]{--diagram:var(--blue)}.question[data-type="M"]{--diagram:var(--orange)}.hint-row{border-top:1px solid #eef2f6;margin-top:10px;padding-top:10px;color:#71879a;font-size:11px}.hint-row span{font-weight:750;color:#375875}.answer-feedback{padding:11px 13px;background:#f2f8fd;border-left:3px solid #69a4d1;margin:12px 0 0;border-radius:5px;font-size:12px}.answer-feedback.good{background:#eef8f3;border-color:#209168}.answer-feedback.bad{background:#fff4f1;border-color:#cc6c55}
+main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 9px 30px #203b5510;padding:24px 27px;margin-bottom:20px}.board-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.step{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e7f1fa;color:#286596;font-size:15px;font-weight:900;flex:0 0 auto}.board-title h2{font-size:20px;line-height:1.3;margin:0}.board-title small{color:var(--muted);font-size:12px}.problem-controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px;margin-left:auto}.pill-button{border:1px solid #c9d6e2;background:#fff;border-radius:9px;color:#234c70;font-weight:750;padding:9px 12px;font-size:12px}.pill-button:hover{background:#edf5fc}.pill-button.primary{background:#266ca6;color:#fff;border-color:#266ca6}.pill-button.primary:hover{background:#195686}.pill-button.export{background:#f7fbff;border-color:#b9cde0}.pill-button.export:hover{background:#eaf4fd}.export-hint{font-size:11px;color:#6f8599;margin:8px 0 0}.problem-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.72fr);gap:19px;align-items:stretch}.figure-box{background:#fbfdff;border:1px solid #e3eaf0;border-radius:13px;min-width:0;display:grid;place-items:center;padding:8px}.figure-box svg{display:block;width:100%;max-width:670px;height:auto}.problem-facts{background:#f6f9fc;border:1px solid #e5ecf3;border-radius:12px;padding:19px;display:flex;flex-direction:column;gap:14px}.tag{border-radius:100px;padding:5px 10px;font-weight:800;letter-spacing:.04em;font-size:10px;color:#38628d;background:#e5eff8;display:inline-block;width:max-content}.fact-label{display:block;font-size:10px;font-weight:850;letter-spacing:.12em;color:#8a9db0}.fact-value{font-size:17px;font-weight:850;line-height:1.45;margin:3px 0 0}.fact-note{font-size:11px;color:#6c8296;line-height:1.9;border-top:1px solid #dee7ee;padding-top:12px;margin-top:auto}.instructions{font-size:12px;color:#60778b;margin:11px 0 0}.quiz-head{display:flex;align-items:center;gap:11px;margin:27px 0 15px}.quiz-head h2{font-size:22px;margin:0}.quiz-head .muted{font-size:12px;color:var(--muted)}.question-grid{display:grid;gap:18px}.question{border:1px solid var(--line);background:#fff;border-radius:16px;padding:20px 21px;box-shadow:0 6px 22px #25456509}.question-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.letter{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-weight:900;color:#fff}.question[data-type="N"] .letter{background:var(--cyan)}.question[data-type="Q"] .letter{background:var(--blue)}.question[data-type="M"] .letter{background:var(--orange)}.question-head h3{margin:0;font-size:18px}.question-head small{color:var(--muted);font-size:11px}.answer-state{margin-left:auto;color:#7c90a2;font-weight:800;font-size:12px}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choice{min-width:0;padding:12px 10px 8px;background:#fbfdff;border:2px solid #e0e9f1;border-radius:11px;color:var(--text);position:relative;text-align:left;transition:background .14s,border-color .14s,transform .14s}.choice:hover:not(:disabled){border-color:#87b2d5;background:#f0f6fd;transform:translateY(-2px)}.choice.is-selected{border-color:#2a76b3;background:#eff7fd;box-shadow:0 0 0 1px #2a76b333}.choice.is-correct{border-color:#209168!important;background:#edf9f3}.choice.is-wrong{border-color:#c7584b;background:#fff3f0}.choice-title{font-size:12px;font-weight:900;padding-left:9px}.choice svg{display:block;width:100%;height:auto;min-height:188px}.choice .numeric-diagram text{paint-order:stroke;stroke:#fbfdff;stroke-width:3px;stroke-linejoin:round}.choice .numeric-diagram .band-text{stroke:none}.choice-marker{font-weight:900;font-size:11px;position:absolute;right:12px;top:9px}.question[data-type="N"]{--diagram:var(--cyan)}.question[data-type="Q"]{--diagram:var(--blue)}.question[data-type="M"]{--diagram:var(--orange)}.hint-row{border-top:1px solid #eef2f6;margin-top:10px;padding-top:10px;color:#71879a;font-size:11px}.hint-row span{font-weight:750;color:#375875}.answer-feedback{padding:11px 13px;background:#f2f8fd;border-left:3px solid #69a4d1;margin:12px 0 0;border-radius:5px;font-size:12px}.answer-feedback.good{background:#eef8f3;border-color:#209168}.answer-feedback.bad{background:#fff4f1;border-color:#cc6c55}
 .actions{display:flex;gap:11px;justify-content:center;align-items:center;flex-wrap:wrap;margin:27px 0 16px}.main-button{border:0;border-radius:12px;background:#235f9b;color:#fff;font-weight:850;padding:15px 30px;font-size:15px;min-width:205px}.main-button:hover{background:#174c7f}.main-button:disabled{background:#9db0c0;opacity:.7}.secondary-button{border:1px solid #c3d3e1;color:#27547b;border-radius:12px;background:#fff;padding:14px 21px;font-weight:800}.secondary-button:hover{background:#eaf4fa}.score{background:#fff;border:1px solid #c4e1d2;border-radius:13px;padding:17px 21px;margin:19px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:16px}.score strong{font-size:24px;color:#207851}.score p{margin:0;color:#566e80;font-size:12px}.usage{background:#fff;border:1px solid var(--line);border-radius:13px;margin-top:26px;padding:17px 21px}.usage summary{font-weight:800;cursor:pointer;color:#334f6a}.usage p{font-size:12px;color:#607587}.usage ul{font-size:12px;color:#607587;line-height:2;margin-bottom:0}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#8293a2;font-size:11px;border-top:1px solid #dae4ed;padding:23px 0 8px}.footer a{color:#4d779b}
 @media(max-width:920px){.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.problem-layout{grid-template-columns:minmax(0,1fr) minmax(210px,.62fr)}.problem-controls{margin-left:0}.board-title{align-items:flex-start}}@media(max-width:650px){.choice-grid{grid-template-columns:1fr}.mast{padding:26px 0}.mast-label{display:none}.mast p{font-size:12px}.shell{width:calc(100% - 22px)}main{padding:11px 0 35px}.board{padding:15px 13px}.board-title h2{font-size:17px}.problem-layout{grid-template-columns:1fr;gap:9px}.problem-facts{flex-direction:row;flex-wrap:wrap;gap:12px;padding:12px}.problem-facts>div{flex:1;min-width:130px}.fact-value{font-size:14px}.fact-note{margin-top:0;min-width:100%;padding-top:7px}.question{padding:14px 10px}.question-head h3{font-size:15px}.question-head small{display:none}.question-head{gap:8px}.choice-grid{gap:7px}.choice{padding:8px 2px 3px}.choice-title{padding-left:7px}.choice-marker{right:6px;top:7px}.quiz-head{flex-wrap:wrap;margin:21px 0 12px}.quiz-head h2{font-size:18px}.quiz-head .muted{width:100%}.actions{gap:8px}.main-button,.secondary-button{width:100%}.figure-box{padding:0;overflow-x:auto;display:block}.figure-box svg{min-width:510px;max-width:none}.hint-row{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
@@ -162,9 +162,9 @@ main{padding:25px 0 48px}.board{background:#fff;border:1px solid var(--line);bor
   </section>
   <div class="quiz-workspace">
   <section class="board workspace-problem" aria-labelledby="problemTitle">
-    <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">ラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button></div></div>
+    <div class="board-title"><div class="step">01</div><div><h2 id="problemTitle">ラーメンの支持条件と荷重</h2><small>作用位置は整数表示。骨組は寸法通りの縮尺で表示</small></div><div class="problem-controls"><button id="nextTop" type="button" class="pill-button primary">別の問題を出す ↻</button><button id="saveAllImages" type="button" class="pill-button export">画像4枚を書き出す ⤓</button><button id="saveProblemImage" type="button" class="pill-button export">問題図</button><button id="saveNImage" type="button" class="pill-button export">N図4択</button><button id="saveQImage" type="button" class="pill-button export">Q図4択</button><button id="saveMImage" type="button" class="pill-button export">M図4択</button></div></div>
     <div class="problem-layout"><div class="figure-box"><div id="problemFigure" style="width:100%"></div></div><div class="problem-facts"><div><span class="tag" id="questionNumber">QUESTION 01</span></div><div><span class="fact-label">SUPPORTS / 支持条件</span><p class="fact-value" id="supportDescription">—</p></div><div><span class="fact-label">LOAD / 荷重条件</span><p class="fact-value" id="loadDescription">—</p></div><div class="fact-note" id="factNote">部材：A→B→C。応力図の方向と荷重位置を確認してください。</div></div></div>
-    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。一定値の部材は数値を1か所に集約し、変化がある部材では変化に必要な値を記載します。</p>
+    <p class="instructions">図中の長さは m、荷重は kN、分布荷重は kN/m です。N・Q図は符号付き、M図は符号を省いた大きさ（kN·m）を表示します。一定値の部材は数値を1か所に集約し、変化がある部材では変化に必要な値を記載します。</p><p class="export-hint">「画像4枚を書き出す」で、問題図1枚と N図4択・Q図4択・M図4択の計4枚をPNG画像として保存できます。授業資料・課題・小テスト作成にも利用できます。</p>
   </section>
   <div class="workspace-answers" id="workspaceAnswers" tabindex="0" aria-label="N・Q・M図の選択肢。ここをスクロールして解答します。">
   <div class="quiz-head"><div class="step">02</div><h2>正しい N・Q・M 図を選ぼう</h2><span class="muted">応力図内の記号・数値・単位を確認（全3問）</span></div>
@@ -1570,6 +1570,117 @@ async function portalGrade(){
   renderRankings();
  }catch(_){/* Leave cantilever experience as-is; status messages shown when played. */}
 })();
+
+function safeFileStem(text){
+ return String(text||'frame_quiz').normalize('NFKC').replace(/[\\/:*?"<>|\s]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'')||'frame_quiz';
+}
+function currentQuestionStem(){
+ const q=(document.getElementById('questionNumber')?.textContent||'QUESTION').trim().replace(/\s+/g,'_');
+ const title=(document.getElementById('problemTitle')?.textContent||'frame_quiz').trim();
+ return safeFileStem(`${q}_${title}`);
+}
+function svgOuterWithPlacement(svgMarkup,x,y,w,h){
+ return svgMarkup.replace(/<svg\b/i,`<svg x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" `);
+}
+function svgToPngBlob(svgMarkup,width,height){
+ return new Promise((resolve,reject)=>{
+  const blob=new Blob([svgMarkup],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=()=>{
+   try{
+    const canvas=document.createElement('canvas');
+    canvas.width=width; canvas.height=height;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(0,0,width,height);
+    ctx.drawImage(img,0,0,width,height);
+    canvas.toBlob(b=>{
+      URL.revokeObjectURL(url);
+      if(!b)reject(new Error('PNG画像を作成できませんでした。'));
+      else resolve(b);
+    },'image/png');
+   }catch(err){URL.revokeObjectURL(url);reject(err)}
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('SVG画像の読み込みに失敗しました。'));};
+  img.src=url;
+ });
+}
+function downloadBlob(blob,filename){
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function buildProblemExportSvg(){
+ const figure=document.querySelector('#problemFigure svg');
+ if(!figure)throw new Error('問題図がまだ表示されていません。');
+ const questionNo=(document.getElementById('questionNumber')?.textContent||'QUESTION').trim();
+ const title=(document.getElementById('problemTitle')?.textContent||'ラーメンの支持条件と荷重').trim();
+ const support=(document.getElementById('supportDescription')?.textContent||'').trim();
+ const load=(document.getElementById('loadDescription')?.textContent||'').trim();
+ const note=(document.getElementById('factNote')?.textContent||'').trim();
+ const body=svgOuterWithPlacement(figure.outerHTML,50,130,1100,560);
+ return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+ <rect width="1200" height="760" fill="#ffffff"/>
+ <text x="50" y="54" font-size="22" font-weight="800" fill="#26435c">${HTML(questionNo)}　${HTML(title)}</text>
+ <text x="50" y="86" font-size="16" font-weight="700" fill="#4e6982">支持条件：${HTML(support)}</text>
+ <text x="600" y="86" font-size="16" font-weight="700" fill="#4e6982">荷重条件：${HTML(load)}</text>
+ <text x="50" y="730" font-size="14" fill="#6c8296">${HTML(note)}</text>
+ ${body}
+</svg>`;
+}
+function buildChoiceExportSvg(type){
+ const labels={N:'軸力図（N図）4択',Q:'せん断力図（Q図）4択',M:'曲げモーメント図（M図）4択'};
+ const figure=document.querySelector(`#questionGrid .question[data-type="${type}"]`);
+ if(!figure)throw new Error(`${type}図の選択肢がまだ表示されていません。`);
+ const choiceSvgs=[...figure.querySelectorAll('.choice svg')];
+ if(choiceSvgs.length!==4)throw new Error(`${type}図の4択が見つかりません。`);
+ const questionNo=(document.getElementById('questionNumber')?.textContent||'QUESTION').trim();
+ const title=(document.getElementById('problemTitle')?.textContent||'ラーメン').trim();
+ const load=(document.getElementById('loadDescription')?.textContent||'').trim();
+ const support=(document.getElementById('supportDescription')?.textContent||'').trim();
+ const W=1200,H=980,cardW=540,cardH=330;
+ const positions=[[40,130],[620,130],[40,500],[620,500]];
+ const cards=choiceSvgs.map((svg,i)=>{
+  const [x,y]=positions[i];
+  return `
+   <g>
+    <rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" rx="18" fill="#fbfdff" stroke="#d6e1eb" stroke-width="2"/>
+    <text x="${x+26}" y="${y+36}" font-size="26" font-weight="900" fill="#26435c">${'ABCD'[i]}</text>
+    ${svgOuterWithPlacement(svg.outerHTML,x+18,y+48,cardW-36,cardH-64)}
+   </g>`;
+  }).join('');
+ return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="980" viewBox="0 0 1200 980">
+ <rect width="1200" height="980" fill="#ffffff"/>
+ <text x="40" y="50" font-size="22" font-weight="800" fill="#26435c">${HTML(questionNo)}　${HTML(title)}</text>
+ <text x="40" y="82" font-size="18" font-weight="800" fill="#31516d">${HTML(labels[type])}</text>
+ <text x="40" y="106" font-size="14" fill="#6c8296">支持条件：${HTML(support)}　／　荷重条件：${HTML(load)}</text>
+ ${cards}
+</svg>`;
+}
+async function saveExport(kind){
+ const stem=currentQuestionStem();
+ let items=[];
+ if(kind==='all')items=[['problem',buildProblemExportSvg(),1200,760],['N',buildChoiceExportSvg('N'),1200,980],['Q',buildChoiceExportSvg('Q'),1200,980],['M',buildChoiceExportSvg('M'),1200,980]];
+ else if(kind==='problem')items=[['problem',buildProblemExportSvg(),1200,760]];
+ else items=[[kind,buildChoiceExportSvg(kind),1200,980]];
+ showStatus('画像を書き出しています…');
+ try{
+  for(let i=0;i<items.length;i++){
+   const [suffix,svg,w,h]=items[i];
+   const blob=await svgToPngBlob(svg,w,h);
+   downloadBlob(blob,`${stem}_${suffix}.png`);
+   if(i<items.length-1)await new Promise(r=>setTimeout(r,220));
+  }
+  showStatus(items.length===4?'問題図1枚とN・Q・M図4択の計4枚を書き出しました。ブラウザが複数ダウンロードを確認する場合は許可してください。':'画像を保存しました。');
+ }catch(err){
+  showStatus('画像保存に失敗しました：'+err.message);
+ }
+}
+
 document.getElementById('playerForm').addEventListener('submit',onStart);
 document.getElementById('changeNickname').addEventListener('click',changePlayer);
 for(const tab of document.querySelectorAll('[data-rank-category]'))tab.addEventListener('click',()=>{rankCategory=tab.dataset.rankCategory;renderRankings()});
@@ -1578,6 +1689,11 @@ document.getElementById('questionGrid').addEventListener('click',e=>{
 });
 document.getElementById('grade').addEventListener('click',grade);
 for(const id of ['nextTop','nextBottom'])document.getElementById(id).addEventListener('click',newQuestion);
+document.getElementById('saveAllImages').addEventListener('click',()=>saveExport('all'));
+document.getElementById('saveProblemImage').addEventListener('click',()=>saveExport('problem'));
+document.getElementById('saveNImage').addEventListener('click',()=>saveExport('N'));
+document.getElementById('saveQImage').addEventListener('click',()=>saveExport('Q'));
+document.getElementById('saveMImage').addEventListener('click',()=>saveExport('M'));
 for(const id of ['structureType','framePattern','loadType','loadCount','supportSide'])document.getElementById(id).addEventListener('change',newQuestion);
 try{document.getElementById('nickname').value=localStorage.getItem(NICK_KEY)||''}catch(_){}
 // ローカルHTMLはCloudflare側のCORS制限によりオンライン採点できない。
