@@ -956,9 +956,9 @@ function cageSvg(){return '<svg viewBox="0 0 64 63" xmlns="http://www.w3.org/200
 const STORY_BIRDS = 5;
 function usedBirds(player,turns=history){return turns.reduce((n,move,i)=>n+(i%2===player&&move.p===WEIGHT?1:0),0);}
 function remainingBirds(player,turns=history){return Math.max(0,STORY_BIRDS-usedBirds(player,turns));}
-function hasBonus(player){return storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer;}
+function hasBonus(player){return gameRoute==='versus'||gameRoute==='edit'||gameRoute==='back'||(storyBonusUnlocked&&storyLevel>=2&&player===humanPlayer);}
 function bonusLeft(player,turns=history){return hasBonus(player)&&!turns.some((m,i)=>i%2===player&&m.p===SPECIAL_WEIGHT);}
-function hasFat(player){return storyFatUnlocked&&storyLevel>=3&&player===humanPlayer;}
+function hasFat(player){return gameRoute==='versus'||gameRoute==='edit'||gameRoute==='back'||(storyFatUnlocked&&storyLevel>=3&&player===humanPlayer);}
 function fatLeft(player,turns=history){return hasFat(player)&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
 function stageLimit(){return 100;}
 function stageId(level=storyLevel){return level===1?'center':`story${level}`;}
@@ -1137,11 +1137,62 @@ const {undoHistory,resultTimeline,normalizeTurnSeconds,timeoutMove}=MomentGameSt
 const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
 const names=['青チーム','赤チーム'];
 let storyLevel=1,storyBonusUnlocked=false,storyFatUnlocked=false;
+let gameRoute='story',storyCleared=false,isDeveloperPreview=false;
 let mode='setup',stage=getStage('center'),stageChoice='center',limit=LIMIT,selectedWeight=WEIGHT,showMoments=false,selectedStep=0,turnSeconds=30;
 let clockInterval=null,deadline=0,handoffTimeout=null,handoffActive=false,cpuTimer=null,cpuEpoch=0;
 let matchMode='cpu',cpuLevel=5,humanPlayer=0,practice=false,committed=false,committedSnapshot=null;
 const STREAK_KEY='moment-battle-story-preview-streak';
 const storage=(()=>{try{return window.localStorage;}catch(e){return null;}})();
+const STORY_CLEAR_KEY='moment-battle-story-ten-stage-clear-v1';
+try{storyCleared=storage?.getItem(STORY_CLEAR_KEY)==='1';}catch(e){storyCleared=false;}
+function unlockModes(){
+ if(!storyCleared)return;
+ for(const id of ['backstory-choice','edit-choice'])$(id).disabled=false;
+ $('backstory-lock').textContent='PLAY →';
+ $('edit-lock').textContent='OPEN →';
+}
+function saveStoryClear(){
+ if(gameRoute!=='story'||storyLevel!==10||isDeveloperPreview||storyCleared)return;
+ storyCleared=true;
+ try{storage?.setItem(STORY_CLEAR_KEY,'1');}catch(e){}
+ unlockModes();
+}
+function dismissAllModeOverlays(){
+ for(const id of ['mode-choice','versus-select','story-rules','story-bonus','story-fat-bonus','swing-announcement'])$(id).hidden=true;
+}
+function returnToModeMenu(){
+ stopClock();clearHandoff();cancelBreak();clearDrag();
+ dismissAllModeOverlays();openScreen('setup');
+ $('mode-choice').hidden=false;unlockModes();
+}
+function beginRoute(route,level=1){
+ gameRoute=route;storyLevel=level;cpuLevel=10;humanPlayer=0;
+ storyBonusUnlocked=route==='back'||route==='versus'||route==='edit';
+ storyFatUnlocked=route==='back'||route==='versus'||route==='edit';
+ if(route==='story'){storyBonusUnlocked=false;storyFatUnlocked=false;}
+ stage=getStage(stageId());limit=100;turnSeconds=30;
+ dismissAllModeOverlays();
+ if(route==='edit'){
+  if(!storyCleared){returnToModeMenu();return;}
+  stageChoice='stage1';fillIntervals(STAGES.stage1.intervals);updateSetup();
+  $('match-mode').value='local';$('cpu-level').value='10';
+  openScreen('setup');return;
+ }
+ start();
+}
+function buildVersusStageSelect(){
+ const grid=$('versus-stage-grid');grid.replaceChildren();
+ for(let level=1;level<=10;level++){
+  const st=getStage(stageId(level)),b=document.createElement('button');
+  b.type='button';b.className='versus-stage-card';
+  const strong=document.createElement('strong');strong.textContent='STAGE '+String(level).padStart(2,'0');
+  const detail=document.createElement('small');detail.textContent=st.intervals.join(' + ')+'m · '+st.hooks.length+' SWING'+(st.hooks.length>1?'S':'');
+  b.append(strong,detail);
+  b.addEventListener('click',()=>beginRoute('versus',level));
+  grid.append(b);
+ }
+}
+
 function freshStreaks(){return {levels:Array.from({length:10},()=>({current:0,best:0,wins:0,losses:0}))};}
 function cleanStreaks(raw){const s=freshStreaks();if(Array.isArray(raw?.levels)){raw.levels.slice(0,10).forEach((rec,i)=>{for(const k of ['current','best','wins','losses'])if(Number.isSafeInteger(rec?.[k])&&rec[k]>=0)s.levels[i][k]=rec[k];s.levels[i].best=Math.max(s.levels[i].best,s.levels[i].current);});}return s;}
 function loadStreaks(){try{return cleanStreaks(JSON.parse(storage?.getItem(STREAK_KEY)||'null'));}catch(e){return freshStreaks();}}
@@ -1286,10 +1337,19 @@ function updateSetup(){
  catch(err){$('setup-error').hidden=false;$('setup-error').textContent=err.message;$('start-game').disabled=true;}
 }
 function start(){
- let config;try{config=readSetup();}catch(err){updateSetup();return;}
- stopClock();clearHandoff();
- stage=getStage(stageId());limit=stageLimit();turnSeconds=config.turnSeconds;
- matchMode='cpu';cpuLevel=10;humanPlayer=0;
+ let config=null;
+ if(gameRoute==='edit'){
+  if(!storyCleared){returnToModeMenu();return;}
+  try{config=readSetup();}catch(err){updateSetup();return;}
+ }
+ stopClock();clearHandoff();cancelBreak();
+ if(gameRoute==='edit'){
+  stage=config.stage;limit=config.limit;turnSeconds=config.turnSeconds;
+  matchMode=config.matchMode;cpuLevel=config.cpuLevel;humanPlayer=config.humanPlayer;
+ }else{
+  stage=getStage(stageId());limit=stageLimit();turnSeconds=30;
+  matchMode=gameRoute==='versus'?'local':'cpu';cpuLevel=10;humanPlayer=0;
+ }
  history.length=0;selectedWeight=WEIGHT;showMoments=false;practice=false;committed=false;committedSnapshot=null;
  prepareGame();openScreen('battle');render();beginClock();
 }
@@ -1301,7 +1361,7 @@ function prepareGame(){
    out.append(b);
  });
  $('span-label').textContent=stage.intervals.join('m + ')+'m · '+pos().length+' SWING'+(pos().length>1?'S':'');
- $('battle-stage-info').textContent=`STAGE ${String(storyLevel).padStart(2,'0')} · ${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
+ $('battle-stage-info').textContent=`${gameRoute==='edit'?'EDIT':gameRoute==='versus'?'VERSUS':gameRoute==='back'?'裏STORY':'STORY'} · ${gameRoute==='edit'?'':('STAGE '+String(storyLevel).padStart(2,'0')+' · ')}${stage.intervals.join('m + ')}m · LIMIT ${fmt(limit)} N·m`;
  for(let i=0;i<2;i++)$('role'+i).textContent=isCpu()?(i===humanPlayer?'YOU':'CPU'):'PLAYER 0'+(i+1);
  $('battle-streak').hidden=true;
  $('limit-unit').textContent=`/ ${fmt(limit)} N·m`;
