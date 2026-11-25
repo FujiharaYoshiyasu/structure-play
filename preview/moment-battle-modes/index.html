@@ -705,6 +705,10 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 .cage-slot .single-slot .special-unit{top:calc(10px + var(--stack-index) * 9px)!important}
 .cage-slot .single-slot .special-unit:not([hidden]):last-of-type{z-index:2}
 @media(max-width:650px){.cage-slot .single-slot .special-unit{top:calc(7px + var(--stack-index) * 7px)!important}}
+
+/* Backstory STAGE 03: stack two actual 15N cards after the reward. */
+.cage-slot .single-slot .fat-unit{top:calc(10px + var(--stack-index) * 9px)!important}
+@media(max-width:650px){.cage-slot .single-slot .fat-unit{top:calc(7px + var(--stack-index) * 7px)!important}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -884,7 +888,7 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
       if(!m||!hooks.includes(m.x)||![WEIGHT,SPECIAL_WEIGHT,FAT_WEIGHT].includes(m.p))throw new TypeError('invalid move: 5N, 10N or 15N only');
       // Physics accepts two 5N cards; actual inventory limits are enforced by each game mode.
       if(m.p===SPECIAL_WEIGHT&&++bonus[i%2]>2)throw new RangeError('5N is limited to two per player');
-      if(m.p===FAT_WEIGHT&&++fat[i%2]>1)throw new RangeError('15N is once per player');
+      if(m.p===FAT_WEIGHT&&++fat[i%2]>2)throw new RangeError('15N is limited to two per player');
       return {x:m.x,p:m.p};
     });
   }
@@ -1143,7 +1147,13 @@ function bonusRemaining(player,turns=history){
 }
 function bonusLeft(player,turns=history){return bonusRemaining(player,turns)>0;}
 function hasFat(player){return gameRoute==='versus'||gameRoute==='edit'||gameRoute==='back'||(storyFatUnlocked&&storyLevel>=3&&player===humanPlayer);}
-function fatLeft(player,turns=history){return hasFat(player)&&!turns.some((m,i)=>i%2===player&&m.p===FAT_WEIGHT);}
+function fatAllowance(player){
+ return !hasFat(player)?0:1+Number(gameRoute==='back'&&storyLevel>=3&&player===humanPlayer&&backExtraFifteenUnlocked);
+}
+function fatRemaining(player,turns=history){
+ return Math.max(0,fatAllowance(player)-turns.reduce((n,m,i)=>n+(i%2===player&&m.p===FAT_WEIGHT?1:0),0));
+}
+function fatLeft(player,turns=history){return fatRemaining(player,turns)>0;}
 function stageLimit(){return 100;}
 function stageId(level=storyLevel){return level===1?'center':`story${level}`;}
 function buildCages(){
@@ -1160,14 +1170,14 @@ function buildCages(){
    header.textContent=force+'N';
    const contents=document.createElement('div');
    contents.className=force===WEIGHT?'slot-body cage-deck':'slot-body single-slot';
-   const total=force===WEIGHT?STORY_BIRDS:force===SPECIAL_WEIGHT?2:1;
+   const total=force===WEIGHT?STORY_BIRDS:2;
    for(let n=0;n<total;n++){
     const b=document.createElement('button');b.type='button';
     b.className='cage-bird bird-unit'+(force===WEIGHT?' deck-card':force===SPECIAL_WEIGHT?' special-unit':' fat-unit');
     b.dataset.player=String(player);b.dataset.force=String(force);
-    b.dataset.birdIndex=force===WEIGHT||force===SPECIAL_WEIGHT?String(n):'fat';
+    b.dataset.birdIndex=String(n);
     b.style.setProperty('--stack-index',String(n));
-    b.setAttribute('aria-label',labels[player]+' '+force+'N bird'+(force===WEIGHT?' '+(n+1)+' of '+STORY_BIRDS:force===SPECIAL_WEIGHT?' '+(n+1)+' of '+total:'')+'. Drag to swing.');
+    b.setAttribute('aria-label',labels[player]+' '+force+'N bird '+(n+1)+' of '+total+'. Drag to swing.');
     b.innerHTML=cageSvg();
     b.hidden=force!==WEIGHT;
     contents.append(b);
@@ -1272,7 +1282,7 @@ function updateCages(){
  document.querySelectorAll('.cage-bird').forEach(b=>{
   const player=Number(b.dataset.player),force=Number(b.dataset.force);
   const inStock=force===WEIGHT?Number(b.dataset.birdIndex)<remainingBirds(player)
-   :force===SPECIAL_WEIGHT?Number(b.dataset.birdIndex)<bonusRemaining(player):force===FAT_WEIGHT?fatLeft(player):false;
+   :force===SPECIAL_WEIGHT?Number(b.dataset.birdIndex)<bonusRemaining(player):force===FAT_WEIGHT?Number(b.dataset.birdIndex)<fatRemaining(player):false;
   b.hidden=!inStock;
   b.disabled=!inStock||!dragAllowed(player,force);
   b.classList.toggle('is-selected',inStock&&!b.disabled&&force===selectedWeight);
@@ -1282,6 +1292,7 @@ function updateCages(){
   // Hide the whole category before acquisition; no empty preview or spoiler.
   slot.hidden=force===SPECIAL_WEIGHT?!hasBonus(player):force===FAT_WEIGHT?!hasFat(player):false;
   if(force===SPECIAL_WEIGHT)slot.querySelector('.slot-title').textContent='5N ×'+bonusRemaining(player);
+  if(force===FAT_WEIGHT)slot.querySelector('.slot-title').textContent='15N ×'+fatRemaining(player);
   slot.classList.toggle('is-empty',force===WEIGHT?remainingBirds(player)===0:force===SPECIAL_WEIGHT?!bonusLeft(player):!fatLeft(player));
  });
  const hint=$('drag-hint');hint.classList.toggle('orange-turn',Boolean(turn));
@@ -1335,6 +1346,7 @@ const STORY_CLEAR_KEY='moment-battle-story-ten-stage-clear-v1';
 const STORY_PROGRESS_KEY='moment-battle-story-highest-v1';
 const BACK_PROGRESS_KEY='moment-battle-backstory-highest-v1';
 const BACK_EXTRA_FIVE_KEY='moment-battle-backstory-stage2-extra-5n-v1';
+const BACK_EXTRA_FIFTEEN_KEY='moment-battle-backstory-stage3-extra-15n-v1';
 const STORY_BONUS_KEY='moment-battle-story-5N-earned-v1';
 const STORY_FAT_KEY='moment-battle-story-15N-earned-v1';
 function storedFlag(key){try{return storage?.getItem(key)==='1';}catch(e){return false;}}
@@ -1350,6 +1362,7 @@ storyCleared=storedFlag(STORY_CLEAR_KEY);
 let storyHighest=storyCleared?10:storedLevel(STORY_PROGRESS_KEY);
 let backHighest=storedLevel(BACK_PROGRESS_KEY);
 let backExtraFiveUnlocked=storedFlag(BACK_EXTRA_FIVE_KEY);
+let backExtraFifteenUnlocked=storedFlag(BACK_EXTRA_FIFTEEN_KEY);
 if(storyHighest===10&&!storyCleared){storyCleared=true;setStoredFlag(STORY_CLEAR_KEY);}
 function highestCleared(route){return route==='back'?backHighest:storyHighest;}
 function noteStageVictory(){
@@ -1508,7 +1521,7 @@ function chooseCpuMove(){
   if(++visited>budget)return 0;
   const key=pos().map(x=>h.filter(m=>m.x===x).reduce((s,m)=>s+m.p/5,0)).join(',')
    +'|'+[0,1].map(p=>remainingBirds(p,h)).join(',')
-   +'|'+[0,1].map(p=>bonusRemaining(p,h)+':'+Number(fatLeft(p,h))).join(',')
+   +'|'+[0,1].map(p=>bonusRemaining(p,h)+':'+fatRemaining(p,h)).join(',')
    +'|'+(h.length%2)+'|'+d;
   if(memo.has(key))return memo.get(key);
   const ok=actions(h).filter(a=>!a.failed);
@@ -1827,7 +1840,7 @@ function render(){
  $('turn-help').textContent=cpuTurn()?'CPU THINKING…':(turn?'RED':'BLUE')+' · DRAG BIRD ↓';
  for(let i=0;i<2;i++){
    $(`player${i}`).classList.toggle('active',turn===i);
-   $(`bonus${i}`).textContent='10N ×'+remainingBirds(i)+(bonusLeft(i)?' + 5N ×'+bonusRemaining(i):'');
+   $(`bonus${i}`).textContent='10N ×'+remainingBirds(i)+(bonusLeft(i)?' + 5N ×'+bonusRemaining(i):'')+(fatLeft(i)?' + 15N ×'+fatRemaining(i):'');
  }
  if(selectedWeight===SPECIAL_WEIGHT&&remaining5===0)selectedWeight=WEIGHT;
  for(const force of [WEIGHT,SPECIAL_WEIGHT]){
