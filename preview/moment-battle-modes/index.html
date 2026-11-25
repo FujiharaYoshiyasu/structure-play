@@ -709,6 +709,15 @@ body[data-turn-theme="orange"] .hook-button:hover:not(:disabled){background:#ffe
 /* Backstory STAGE 03: stack two actual 15N cards after the reward. */
 .cage-slot .single-slot .fat-unit{top:calc(10px + var(--stack-index) * 9px)!important}
 @media(max-width:650px){.cage-slot .single-slot .fat-unit{top:calc(7px + var(--stack-index) * 7px)!important}}
+
+/* A consistent color-filled circle for both BLUE and RED turn announcements. */
+#turn-indicator{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+#turn-indicator::before{content:"";display:inline-block;flex:0 0 11px;width:11px;height:11px;border-radius:50%;background:#278fe8;border:1px solid #156bb8}
+#turn-indicator[data-player="red"]::before{background:#e74659;border-color:#b82e41}
+#popup-bird{display:flex;align-items:center;justify-content:center;min-height:64px;margin:5px auto 0;filter:none}
+#popup-bird::before{content:"";display:block;width:52px;height:52px;border-radius:50%;background:#278fe8;border:3px solid #fff;box-shadow:0 3px 0 #156bb8}
+#popup-bird[data-player="red"]::before{background:#e74659;box-shadow:0 3px 0 #b82e41}
+@media(max-width:650px){#turn-indicator::before{width:9px;height:9px;flex-basis:9px}#popup-bird{min-height:52px}#popup-bird::before{width:43px;height:43px}}
 </style>
 <title>MOMENT BATTLE | STORY & VERSUS PREVIEW</title>
   <link rel="canonical" href="https://fujiharayoshiyasu.github.io/structure-play/apps/moment-battle/">
@@ -1832,7 +1841,8 @@ function render(){
  const data=fromHistory(history,stage,limit),turn=history.length%2,remaining5=bonusRemaining(turn);
  document.body.dataset.turnTheme=turn?'orange':'blue';
  document.body.dataset.moments=showMoments?'shown':'hidden';
- $('turn-indicator').textContent=turn?'● RED TURN':'● BLUE TURN';
+ $('turn-indicator').dataset.player=turn?'red':'blue';
+ $('turn-indicator').textContent=turn?'RED TURN':'BLUE TURN';
  $('turn-label').textContent=turn?'RED TURN':'BLUE TURN';
  $('undo').disabled=!history.length;
  $('battle-streak').hidden=true;
@@ -1943,7 +1953,8 @@ function showHandoff(initial=false,automatic=false){
  const player=history.length%2;
  const popup=$('turn-popup');
  popup.hidden=false;popup.dataset.player=player===0?'blue':'orange';
- $('popup-bird').textContent=player===0?'🐦':'🔴';
+ $('popup-bird').dataset.player=player===0?'blue':'red';
+ $('popup-bird').textContent='';
  $('popup-kicker').textContent=initial?'READY?':'NEXT TURN!';
  $('popup-title').textContent=player?'RED TURN!':'BLUE TURN!';
  $('popup-subtitle').textContent=cpuTurn()?'CPU THINKING':automatic?'TIME OUT · AUTO +10N':'YOUR MOVE';
@@ -2050,7 +2061,9 @@ function buildResults(){
  const steps=resultSteps(),last=steps.at(-1);
  if(!last)return;
  const winner=1-last.player,playerWon=winner===humanPlayer;
- $('result-winner').textContent=winner===0?'BLUE WIN':'RED WIN';
+ $('result-winner').textContent=
+  (gameRoute==='story'||gameRoute==='back')?(playerWon?'あなたの勝ち':'あなたの負け'):
+  (winner===0?'BLUE WIN':'RED WIN');
  $('result-description').textContent='';
  $('result-description').hidden=true;
  const storyRoute=gameRoute==='story'||gameRoute==='back';
