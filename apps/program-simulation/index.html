@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>プログラム ステップ実行</title>
+  <meta name="description" content="共通テスト用プログラム表記（DNCL）のプログラムを1行ずつ実行し、変数や配列の変化を見せる教材">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="app-heading"><a class="home-link" href="../../index.html">← STRUCTURE &amp; PLAY</a><h1>プログラム ステップ実行</h1><a class="source-link" href="https://github.com/ryog27/code_simulator" target="_blank" rel="noopener noreferrer">原作：ryog27/code_simulator</a></div>
+    <div class="tools">
+      <select id="sample" aria-label="例題"></select>
+      <div class="group" role="group" aria-label="文字の大きさ">
+        <button id="fontDown" title="文字を小さく">A−</button>
+        <button id="fontUp" title="文字を大きく">A＋</button>
+      </div>
+      <button id="share" title="このプログラムを開くリンクをコピー">リンクをコピー</button>
+      <button id="helpBtn">書き方</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel code-panel">
+      <div class="panel-head">
+        <span>プログラム</span>
+        <span id="modeBadge" class="badge">編集中</span>
+      </div>
+      <div id="editor" class="editor">
+        <div id="gutter" class="gutter" aria-hidden="true"></div>
+        <div class="code-wrap">
+          <pre id="hlLayer" class="hl-layer" aria-hidden="true"></pre>
+          <textarea id="src" spellcheck="false" autocomplete="off" wrap="off" aria-label="プログラム"></textarea>
+        </div>
+      </div>
+      <div id="viewer" class="viewer" hidden>
+        <div id="lines" class="lines">
+          <div id="hlBar" class="hl-bar"></div>
+        </div>
+      </div>
+      <div id="parseError" class="parse-error" hidden></div>
+      <div class="edit-hint" id="editHint">
+        <span class="legend"><span class="hl-k">命令</span><span class="hl-v">変数</span><span class="hl-a">配列</span><span class="hl-f">関数</span><span class="hl-n">数</span><span class="hl-s">"文字列"</span><span class="hl-c"># コメント</span></span>
+        <span>Tab で <code>│</code> を入れる・Shift+Tab で戻す・Ctrl+Enter で実行</span>
+      </div>
+    </section>
+
+    <section class="side">
+      <div id="explain" class="panel explain kind-idle">
+        <div class="ex-title">「▶ 実行してみる」を押すと、ここに1行ずつの説明が出ます</div>
+      </div>
+
+      <div class="panel state-panel">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="vars" role="tab">変数と配列</button>
+          <button class="tab" data-tab="trace" role="tab">トレース表</button>
+        </div>
+        <div id="tab-vars" class="tab-body">
+          <div id="scalars" class="vars-grid"></div>
+          <div id="arrays"></div>
+        </div>
+        <div id="tab-trace" class="tab-body" hidden>
+          <div id="traceWrap" class="trace-wrap"></div>
+        </div>
+      </div>
+
+      <div class="panel output-panel">
+        <div class="panel-head"><span>画面への表示</span></div>
+        <div id="output" class="output"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="controls">
+    <div id="editControls" class="ctrl-row">
+      <button id="runBtn" class="primary big">▶ 実行してみる</button>
+    </div>
+    <div id="runControls" class="ctrl-row" hidden>
+      <button id="editBtn" title="編集に戻る（Esc）">✎ 編集に戻る</button>
+      <div class="group">
+        <button id="firstBtn" title="最初へ（Home）">⏮</button>
+        <button id="prevBtn" class="big" title="1つ戻る（←）">◀ 戻る</button>
+        <button id="playBtn" class="big" title="自動で進める（P）">▶ 自動</button>
+        <button id="nextBtn" class="primary big" title="1つ進む（→ / スペース）">次へ ▶</button>
+        <button id="lastBtn" title="最後へ（End）">⏭</button>
+      </div>
+      <input id="scrub" class="scrub" type="range" min="0" max="0" value="0" aria-label="手順">
+      <span id="counter" class="counter"></span>
+      <label class="speed">速さ <input id="speed" type="range" min="1" max="10" value="4"></label>
+    </div>
+  </footer>
+
+  <dialog id="helpDlg" class="help">
+    <form method="dialog" class="help-close"><button>閉じる</button></form>
+    <h2>書き方（共通テスト用プログラム表記）</h2>
+    <table>
+      <tr><th>代入</th><td><code>x = 10</code>　<code>Data = [3, 8, 2]</code>　<code>a = 1, b = 2</code></td></tr>
+      <tr><th>増やす・減らす</th><td><code>x を 1 増やす</code>　<code>x を 2 減らす</code></td></tr>
+      <tr><th>すべての要素</th><td><code>Hindo のすべての要素を 0 にする</code></td></tr>
+      <tr><th>表示</th><td><code>表示する("合計は", goukei)</code>（並べた値をつなげて1行に表示）</td></tr>
+      <tr><th>計算</th><td><code>+ - * /</code>　<code>÷</code>（商・整数）　<code>%</code>（余り）　<code>**</code>（べき乗）</td></tr>
+      <tr><th>比較</th><td><code>==　!=　&lt;　&gt;　&lt;=　&gt;=</code>（<code>≠ ≦ ≧</code> も可）</td></tr>
+      <tr><th>論理</th><td><code>and　or　not</code></td></tr>
+      <tr><th>配列</th><td><code>Data[i]</code>（添字は 0 から）　<code>Hyo[i][j]</code> または <code>Hyo[i, j]</code></td></tr>
+      <tr><th>関数</th><td><code>要素数(Data)</code>　<code>整数(x)</code>　<code>切り上げ(x)</code>　<code>四捨五入(x)</code>　<code>絶対値(x)</code>　<code>平方根(x)</code>　<code>乱数()</code>　<code>乱数(1, 6)</code>　<code>二進(x)</code>　<code>文字列(x)</code>　<code>数値(s)</code></td></tr>
+      <tr><th>コメント</th><td><code># ここから行の終わりまで</code></td></tr>
+    </table>
+    <h3>条件分岐</h3>
+<pre>もし x &lt; 3 ならば:
+│ 表示する("小さい")
+そうでなくもし x &lt; 6 ならば:
+│ 表示する("中くらい")
+そうでなければ:
+└ 表示する("大きい")</pre>
+    <h3>繰り返し</h3>
+<pre>i を 0 から 9 まで 1 ずつ増やしながら繰り返す:
+└ goukei = goukei + i
+
+x &gt; 0 の間繰り返す:
+└ x = x ÷ 2
+
+繰り返す:
+└ n = n + 1
+を, n * n &gt; 50 になるまで実行する</pre>
+    <p>字下げには <code>│</code> <code>└</code> と空白のどちらも使えます。同じかたまりの行は、行の始めの幅をそろえてください（<code>│</code> 1つと空白1つは同じ幅）。</p>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/dncl.js"></script>
+  <script src="js/highlight.js"></script>
+  <script src="js/samples.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -4,6 +4,7 @@ const APP_STATUS = {
   '765': 'published',
   'nqm': 'published',
   'frame-quiz': 'published',
+  'program-simulation': 'published',
 };
 
 (() => {

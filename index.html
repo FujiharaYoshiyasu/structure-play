@@ -12,10 +12,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fffaf2">
-  <meta name="description" content="無料で遊べる構造力学ゲーム「MOMENT BATTLE」、数字戦略ゲーム「765」、NQM図作成ツール、ラーメン応力図4択クイズを公開。スマホ・PCで使える学習用Webアプリ集。">
+  <meta name="description" content="無料で遊べる構造力学ゲーム「MOMENT BATTLE」、数字戦略ゲーム「765」、NQM図作成ツール、ラーメン応力図4択クイズ、プログラム実行シミュレーターを公開。スマホ・PCで使える学習用Webアプリ集。">
   <meta property="og:type" content="website">
   <meta property="og:title" content="構造力学ゲームと学習ツール | STRUCTURE & PLAY">
-  <meta property="og:description" content="無料で遊べる構造力学ゲーム、数字戦略ゲーム765、NQM図作成ツール、ラーメン応力図4択クイズ。">
+  <meta property="og:description" content="無料で遊べる構造力学ゲーム、数字戦略ゲーム765、NQM図作成ツール、ラーメン応力図4択クイズ、プログラム実行シミュレーター。">
   <title>構造力学ゲーム・NQM図作成・数字ゲーム765 | STRUCTURE & PLAY</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/style.css">
@@ -39,6 +39,8 @@
     .about-summary h2 { font-size: 16px; margin: 0 0 6px; }
     .about-summary p { margin: 0; font-size: 14px; }
     .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    @media (min-width: 1200px) { .app-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+    @media (min-width: 801px) and (max-width: 1199px) { .app-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 800px) {
       .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .card-content { padding: 12px; }
@@ -115,9 +117,20 @@
               </div>
             </a>
           </article>
+          <article class="app-card" data-category="study" data-app="program-simulation">
+            <a class="app-tile" href="apps/program-simulation/index.html">
+              <div class="card-media media-nqm"><img src="assets/program-simulation.svg" alt=""></div>
+              <div class="card-content">
+                <h2>プログラムツール（仮）</h2>
+                <p>プログラムを1行ずつ実行する</p>
+                <span class="tile-arrow" aria-hidden="true">→</span>
+                <span class="status-tag visually-hidden" data-status="program-simulation">公開中</span>
+              </div>
+            </a>
+          </article>
         </div>
-        <span id="visible-count" hidden>04</span>
-        <p id="app-list-status" class="visually-hidden" aria-live="polite">4つのアプリを表示しています。</p>
+        <span id="visible-count" hidden>05</span>
+        <p id="app-list-status" class="visually-hidden" aria-live="polite">5つのアプリを表示しています。</p>
       </div>
     </section>
     <section class="shell about-summary" id="about" aria-labelledby="about-heading">
